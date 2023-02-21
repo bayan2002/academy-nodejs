@@ -1,25 +1,21 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../db/config/connection");
+const Sequelize = require("../db/config/connection");
 
-const Admin = sequelize.define("Admin", {
+const F2FSessionStd = Sequelize.define("F2FSessionStd", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  email: {
+  price: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  password: {
+  currency: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-module.exports = Admin;
+module.exports = F2FSessionStd;

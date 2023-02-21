@@ -1,25 +1,30 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../db/config/connection");
+const Sequelize = require("../db/config/connection");
 
-const Admin = sequelize.define("Admin", {
+const certificates = Sequelize.define("certificates", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  password: {
+  subject: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  from: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  to: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  
 });
 
-module.exports = Admin;
+module.exports = certificates;
