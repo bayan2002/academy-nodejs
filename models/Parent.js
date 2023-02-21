@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
-const Seqalize = require("../db/config/connection");
+const sequelize = require("../db/config/connection");
 
-const Parent = Seqalize.define("Parent", {
+const Parent = sequelize.define("Parent", {
   email: {
     type: DataTypes.STRING,
     required: true,

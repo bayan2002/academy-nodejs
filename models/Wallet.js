@@ -1,21 +1,21 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/config/connection");
 
-const Level = sequelize.define("Level", {
+const Wallet = sequelize.define("Wallet", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  titleAR: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  money: {
+    type: DataTypes.INTEGER,
+    default: 0,
   },
-  titleEN: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  status: {
+    type: DataTypes.BOOLEAN,
+    default: false,
   },
 });
 
-module.exports = Level;
+module.exports = Wallet;

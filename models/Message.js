@@ -1,21 +1,17 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/config/connection");
 
-const Level = sequelize.define("Level", {
+const Message = sequelize.define("Message", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  titleAR: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  titleEN: {
-    type: DataTypes.STRING,
+  senderId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
 
-module.exports = Level;
+module.exports = Message;

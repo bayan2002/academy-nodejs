@@ -1,21 +1,29 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/config/connection");
 
-const Level = sequelize.define("Level", {
+const EducationDegree = sequelize.define("EducationDegree", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  titleAR: {
+  UniversityName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  titleEN: {
+  from: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  to: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  degree: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-module.exports = Level;
+module.exports = EducationDegree;
