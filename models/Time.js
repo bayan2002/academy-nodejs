@@ -1,29 +1,21 @@
 const { DataTypes } = require("sequelize");
 const Sequelize = require("../db/config/connection");
 
-const Experience = Sequelize.define("Experience", {
+const Time = Sequelize.define("Time", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
-  }, 
-  jobTitle: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  companyName: {
-    type: DataTypes.STRING,
-    allowNull: false
   },
   from: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
   },
-  to:{
+  to: {
     type: DataTypes.DATE,
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 
-module.exports = Experience;
+module.exports = Time;
