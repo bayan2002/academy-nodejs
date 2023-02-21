@@ -4,19 +4,18 @@ const Seqalize = require("../db/config/connection");
 const Parent = Seqalize.define("Parent", {
   email: {
     type: DataTypes.STRING,
-    required: true,
+    allowNull: false,
   },
   password: {
     type: DataTypes.STRING,
-    required: true,
+    allowNull: false,
   },
   name: {
     type: DataTypes.STRING,
-    required: true,
+    allowNull: false,
   },
   image: {
     type: DataTypes.STRING,
-    default: "",
   },
 });
 

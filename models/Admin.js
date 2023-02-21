@@ -10,15 +10,15 @@ const Admin = Seqalize.define("Admin", {
   },
   email: {
     type: DataTypes.STRING,
-    required: true,
+    allowNull: false,
   },
   name: {
     type: DataTypes.STRING,
-    required: true,
+    allowNull: false,
   },
   password: {
     type: DataTypes.STRING,
-    required: true,
+    allowNull: false,
   },
 });
 
