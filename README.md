@@ -1,2 +1,2 @@
 # academy-nodejs
-![academy](https://user-images.githubusercontent.com/77805478/219868437-04d14639-78d6-4276-9882-217e3e3e48f6.jpg)
+![academy schema](https://user-images.githubusercontent.com/77805478/220586722-8f2e318d-dcc4-48c3-8be9-2855569ae0b2.jpg)
