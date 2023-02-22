@@ -34,7 +34,7 @@ const Student = sequelize.define("Student", {
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    default: false,
   },
   dateOfBirth: {
     type: DataTypes.BOOLEAN,

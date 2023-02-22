@@ -89,11 +89,11 @@ const Teacher = Sequelize.define('Teacher', {
   },
   isRegistered: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    default: false,
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    default: false,
   }
 
 })

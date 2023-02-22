@@ -16,6 +16,7 @@ const Parent = sequelize.define("Parent", {
   },
   image: {
     type: DataTypes.STRING,
+    default: "",
   },
 });
 
