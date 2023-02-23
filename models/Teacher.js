@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const Seqalize = require("../db/config/connection");
+const Sequelize = require("../db/config/connection");
 
 const Teacher = Sequelize.define('Teacher', {
   id: {
@@ -59,7 +59,7 @@ const Teacher = Sequelize.define('Teacher', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  certificates: {
+  haveCertificates: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
