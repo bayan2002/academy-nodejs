@@ -4,7 +4,7 @@ const teacherRouter = require("./teacher");
 
 const router = express.Router();
 
-router.use("/teacher", adminRouter);
+router.use("/admin", adminRouter);
 router.use("/teacher", teacherRouter);
 
 module.exports = router;

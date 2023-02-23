@@ -14,12 +14,25 @@ const signUp = async (req, res) => {
   });
   if (admin) throw serverErrs.BAD_REQUEST("email is already used");
 
-  const newAdmin = await Admin.create({
-    name,
-    email,
-    password,
-  });
+  const hashedPassword = await hash(password, 12);
+
+  const newAdmin = await Admin.create(
+    {
+      name,
+      email,
+      password: hashedPassword,
+    },
+    {
+      returning: true,
+    }
+  );
   await newAdmin.save();
+  const { id } = newAdmin;
+  const token = await generateToken({ userID: id, name });
+
+  res.cookie("token", token);
+
+  res.send({ status: 201, data: newAdmin, msg: "successful sign up" });
 };
 
 const login = async (req, res) => {
@@ -38,11 +51,7 @@ const login = async (req, res) => {
   const token = await generateToken({ userID: id, name });
   res.cookie("token", token);
 
-  return {
-    status: 200,
-    msg: "logged in successfully",
-    data: { userID: id, name },
-  };
+  res.send({ status: 201, data: admin, msg: "successful log in" });
 };
 
 module.exports = { signUp, login };
