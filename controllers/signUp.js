@@ -1,5 +1,5 @@
 const { Teacher, Student, Parent } = require("../models");
-const validateTeacherEmail = require("../validation");
+const { validateTeacherEmail } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
 const sendEmail = require("../middlewares/sendEmail");
@@ -22,7 +22,7 @@ const signUp = async (req, res) => {
       email,
     },
   });
-   
+
   const parent = await Parent.findOne({
     where: {
       email,
@@ -41,6 +41,7 @@ const signUp = async (req, res) => {
   await newTeacher.save();
 
   sendEmail(email, code);
+  res.send({ status: 201, data: teacher, msg: "successful send email" });
 };
 
 const verifyCode = async (req, res) => {
@@ -69,10 +70,12 @@ const verifyCode = async (req, res) => {
     throw serverErrs.BAD_REQUEST("email is already used");
   if (student) throw serverErrs.BAD_REQUEST("email is already used");
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
-  if (teacher.registerCode !== registerCode)
+  if (teacher.registerCode != registerCode) {
     throw serverErrs.BAD_REQUEST("code is wrong");
+  }
 
   await teacher.update({ isRegister: true });
+  res.send({ status: 201, data: teacher, msg: "Verified code successfully" });
 };
 
 const signPassword = async (req, res) => {
