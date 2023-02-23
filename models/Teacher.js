@@ -94,6 +94,10 @@ const Teacher = Sequelize.define('Teacher', {
   isVerified: {
     type: DataTypes.BOOLEAN,
     default: false,
+  },
+  registerCode: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 
 })
