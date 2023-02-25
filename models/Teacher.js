@@ -43,6 +43,7 @@ const Teacher = Sequelize.define('Teacher', {
     type: DataTypes.BOOLEAN,
   },
   experienceYears: {
+    type: DataTypes.INTEGER,
   },
   favStdGender: {
     type: DataTypes.STRING,

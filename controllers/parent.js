@@ -12,7 +12,22 @@ const signUp = async (req, res) => {
       email,
     },
   });
+
+  const teacher = await Teacher.findOne({
+    where: {
+      email,
+      isRegistered: true,
+    },
+  });
+
+  const student = await Student.findOne({
+    where: {
+      email,
+    },
+  });
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
+  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
+  if (student) throw serverErrs.BAD_REQUEST("email is already used");
 
   const hashedPassword = await hash(password, 12);
 
@@ -29,7 +44,7 @@ const signUp = async (req, res) => {
   );
   await newParent.save();
   const { id } = newParent;
-  const token = await generateToken({ userID: id, name });
+  const token = await generateToken({ userId: id, name });
 
   res.cookie("token", token);
 
@@ -49,7 +64,7 @@ const login = async (req, res) => {
 
   const { id, name } = parent;
 
-  const token = await generateToken({ userID: id, name });
+  const token = await generateToken({ userId: id, name });
   res.cookie("token", token);
 
   res.send({ status: 201, data: parent, msg: "successful log in" });

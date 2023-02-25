@@ -28,7 +28,7 @@ const signUp = async (req, res) => {
   );
   await newAdmin.save();
   const { id } = newAdmin;
-  const token = await generateToken({ userID: id, name });
+  const token = await generateToken({ userId: id, name });
 
   res.cookie("token", token);
 
@@ -48,7 +48,7 @@ const login = async (req, res) => {
 
   const { id, name } = admin;
 
-  const token = await generateToken({ userID: id, name });
+  const token = await generateToken({ userId: id, name });
   res.cookie("token", token);
 
   res.send({ status: 201, data: admin, msg: "successful log in" });

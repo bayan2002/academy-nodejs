@@ -115,4 +115,23 @@ const signPassword = async (req, res) => {
   res.send({ status: 201, data: teacher, msg: "successful sign up" });
 };
 
-module.exports = { signUp, verifyCode, signPassword };
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  await loginValidation.validate({ email, password });
+
+  const teacher = await Teacher.findOne({ where: { email } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
+
+  const result = await compare(password, teacher.password);
+  if (!result) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
+
+  const { id, name } = teacher;
+
+  const token = await generateToken({ userId: id, name });
+  res.cookie("token", token);
+
+  res.send({ status: 201, data: teacher, msg: "successful log in" });
+};
+
+module.exports = { signUp, verifyCode, signPassword, login };
