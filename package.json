@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./index.js",
     "dev": "cross-env NODE_ENV=development nodemon ./index.ts",
-    "db:seed": "cross-env SEED=true NODE_ENV=development db/config/build.js"
+    "db:seed": "cross-env SEED=true NODE_ENV=development node db/config/build.js"
   },
   "repository": {
     "type": "git",

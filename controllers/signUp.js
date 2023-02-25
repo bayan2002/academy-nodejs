@@ -74,7 +74,7 @@ const verifyCode = async (req, res) => {
     throw serverErrs.BAD_REQUEST("code is wrong");
   }
 
-  await teacher.update({ isRegister: true });
+  await teacher.update({ isRegistered: true });
   res.send({ status: 201, data: teacher, msg: "Verified code successfully" });
 };
 
