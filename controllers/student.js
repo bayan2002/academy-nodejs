@@ -1,5 +1,5 @@
 const { Teacher, Student, Parent } = require("../models");
-const { validateTeacher, loginValidation } = require("../validation");
+const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
 const sendEmail = require("../middlewares/sendEmail");
@@ -8,7 +8,7 @@ const generateToken = require("../middlewares/generateToken");
 
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
-  await validateTeacher.validate({ email, name, location });
+  await validateStudent.validate({ email, name, location });
 
   const teacher = await Teacher.findOne({
     where: {
@@ -158,23 +158,4 @@ const signData = async (req, res) => {
   res.send({ status: 201, data: student, msg: "signed up successfully" });
 };
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  await loginValidation.validate({ email, password });
-
-  const student = await Student.findOne({ where: { email } });
-  if (!student) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
-
-  const result = await compare(password, student.password);
-  if (!result) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
-
-  const { id, name } = student;
-
-  const token = await generateToken({ userId: id, name });
-  res.cookie("token", token);
-
-  res.send({ status: 201, data: student, msg: "successful log in" });
-};
-
-module.exports = { signUp, verifyCode, signPassword, signData, login };
+module.exports = { signUp, verifyCode, signPassword, signData};

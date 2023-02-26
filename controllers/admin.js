@@ -1,4 +1,4 @@
-const { Admin } = require("../models");
+const { Admin, Level } = require("../models");
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
@@ -54,4 +54,9 @@ const login = async (req, res) => {
   res.send({ status: 201, data: admin, msg: "successful log in" });
 };
 
-module.exports = { signUp, login };
+const getLevels = async (req, res) => {
+  const levels = await Level.findAll();
+  res.send({ status: 201, data: levels, msg: "successful get all levels" });
+};
+
+module.exports = { signUp, login, getLevels };
