@@ -8,11 +8,11 @@ const Curriculum = Sequelize.define("Curriculum", {
     allowNull: false,
     primaryKey: true,
   },
-  titleAr: {
+  titleAR: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  titleEn: {
+  titleEN: {
     type: DataTypes.STRING,
     allowNull: false,
   }
