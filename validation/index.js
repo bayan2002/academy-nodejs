@@ -2,13 +2,12 @@ const yup = require("yup");
 
 const validateTeacher = yup.object().shape({
   email: yup.string().required().email(),
-  name: yup.string().required(),
-  location: yup.string().required(),
 });
 
 const validateStudent = yup.object().shape({
   email: yup.string().required().email(),
-  password: yup.string().required().length(4),
+  name: yup.string().required(),
+  location: yup.string().required(),
 });
 
 const validateAdminSignUp = yup.object().shape({

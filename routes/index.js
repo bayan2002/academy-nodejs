@@ -3,6 +3,8 @@ const adminRouter = require("./admin");
 const studentRouter = require("./student");
 const teacherRouter = require("./teacher");
 const parentRouter = require("./parent");
+const login = require("../middlewares/login");
+const logout = require("../middlewares/logout");
 
 const router = express.Router();
 
@@ -10,6 +12,8 @@ router.use("/admin", adminRouter);
 router.use("/teacher", teacherRouter);
 router.use('/student',studentRouter)
 router.use("/parent", parentRouter);
+router.post('/login', login);
+router.get('/logout', logout)
 
 
 module.exports = router;

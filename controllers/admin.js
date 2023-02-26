@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const {
   Admin,
   Class,
@@ -6,6 +7,9 @@ const {
   SubjectCategory,
   Curriculum,
 } = require("../models");
+=======
+const { Admin, Level } = require("../models");
+>>>>>>> ea59a437908bdcde10e3ec7576ac5eee8325d654
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
@@ -61,6 +65,7 @@ const login = async (req, res) => {
   res.send({ status: 201, data: admin, msg: "successful log in" });
 };
 
+<<<<<<< HEAD
 const createSubjectCategory = async (req, res) => {
   const { titleAR, titleEN } = req.body;
   const newSubjectCategory = await SubjectCategory.create(
@@ -198,10 +203,13 @@ const getSingleClass = async (req, res) => {
     msg: "successful get single singleClass",
   });
 };
+=======
+>>>>>>> ea59a437908bdcde10e3ec7576ac5eee8325d654
 const getLevels = async (req, res) => {
   const levels = await Level.findAll();
   res.send({ status: 201, data: levels, msg: "successful get all levels" });
 };
+<<<<<<< HEAD
 const getSinglelevel = async (req, res) => {
   const { levelId } = req.params;
   const level = await Class.findOne({
@@ -253,3 +261,7 @@ module.exports = {
   getCurriculums,
   getSingleCurriculum,
 };
+=======
+
+module.exports = { signUp, login, getLevels };
+>>>>>>> ea59a437908bdcde10e3ec7576ac5eee8325d654

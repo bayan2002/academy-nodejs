@@ -1,13 +1,11 @@
 const express = require("express");
 
 const studentRouter = express.Router();
-const signUp = require("../controllers/student");
-const logout = require("../middlewares/logout")
+const {signUp, verifyCode, signPassword, signData} = require("../controllers/student");
 
-studentRouter.post("/signup", signUp.signUp);
-studentRouter.post("/signup/code", signUp.verifyCode);
-studentRouter.post("/signup/pass", signUp.signPassword);
-studentRouter.post("/signup/data", signUp.signData);
-studentRouter.post("/logout", logout );
+studentRouter.post("/signup", signUp);
+studentRouter.post("/signup/code", verifyCode);
+studentRouter.post("/signup/pass", signPassword);
+studentRouter.post("/signup/data", signData);
 
 module.exports = studentRouter;

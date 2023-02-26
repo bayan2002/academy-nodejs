@@ -1,5 +1,5 @@
 const { Teacher, Student, Parent } = require("../models");
-const { validateTeacherEmail } = require("../validation");
+const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
 const sendEmail = require("../middlewares/sendEmail");
@@ -8,7 +8,7 @@ const generateToken = require("../middlewares/generateToken");
 
 const signUp = async (req, res) => {
   const { email } = req.body;
-  await validateTeacherEmail.validate({ email });
+  await validateTeacher.validate({ email });
 
   const teacher = await Teacher.findOne({
     where: {
@@ -70,6 +70,10 @@ const verifyCode = async (req, res) => {
     throw serverErrs.BAD_REQUEST("email is already used");
   if (student) throw serverErrs.BAD_REQUEST("email is already used");
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
+  console.log('teacher.registerCode != registerCode: ', teacher.registerCode != registerCode);
+  console.log('sterCode: ', registerCode);
+  console.log('teacher.registerCode: ', teacher.registerCode);
+
   if (teacher.registerCode != registerCode) {
     throw serverErrs.BAD_REQUEST("code is wrong");
   }
@@ -115,23 +119,5 @@ const signPassword = async (req, res) => {
   res.send({ status: 201, data: teacher, msg: "successful sign up" });
 };
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
 
-  await loginValidation.validate({ email, password });
-
-  const teacher = await Teacher.findOne({ where: { email } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
-
-  const result = await compare(password, teacher.password);
-  if (!result) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
-
-  const { id, name } = teacher;
-
-  const token = await generateToken({ userId: id, name, role: "teacher" });
-  res.cookie("token", token);
-
-  res.send({ status: 201, data: teacher, msg: "successful log in" });
-};
-
-module.exports = { signUp, verifyCode, signPassword, login };
+module.exports = { signUp, verifyCode, signPassword };

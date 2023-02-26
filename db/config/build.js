@@ -7,6 +7,12 @@ const {
   subjectCategories,
   subjects,
   levels,
+  classes,
+  curriculums,
+  languages,
+  experiences,
+  educationDegree,
+  certificates
 } = require("./fakeData");
 const {
   Admin,
@@ -16,6 +22,12 @@ const {
   SubjectCategory,
   Subject,
   Level,
+  Class,
+  Curriculum,
+  Language,
+  Experience,
+  EducationDegree,
+  Certificates
 } = require("../../models");
 
 const insertDB = async () => {
@@ -27,6 +39,12 @@ const insertDB = async () => {
   await SubjectCategory.bulkCreate(subjectCategories);
   await Subject.bulkCreate(subjects);
   await Level.bulkCreate(levels);
+  await Class.bulkCreate(classes);
+  await Curriculum.bulkCreate(curriculums);
+  await Language.bulkCreate(languages);
+  await Experience.bulkCreate(experiences);
+  await EducationDegree.bulkCreate(educationDegree);
+  await Certificates.bulkCreate(certificates);
 };
 if (process.env.SEED) {
   insertDB();

@@ -1,11 +1,8 @@
 const express = require("express");
 
 const parentRouter = express.Router();
-const parent = require("../controllers/parent");
-const logout = require("../middlewares/logout")
+const {signUp} = require("../controllers/parent");
 
-parentRouter.post("/signup", parent.signUp);
-parentRouter.post("/login", parent.login);
-parentRouter.post("/logout", logout);
+parentRouter.post("/signup", signUp);
 
 module.exports = parentRouter;
