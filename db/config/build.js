@@ -20,13 +20,13 @@ const {
 
 const insertDB = async () => {
   await sequelize.sync({ force: true });
-  // await Admin.bulkCreate(admin);
-  // await Student.bulkCreate(students);
-  // await Parent.bulkCreate(parents);
-  // await Teacher.bulkCreate(teachers);
-  // await SubjectCategory.bulkCreate(subjectCategories);
-  // await Subject.bulkCreate(subjects);
-  // await Level.bulkCreate(levels);
+  await Admin.bulkCreate(admin);
+  await Student.bulkCreate(students);
+  await Parent.bulkCreate(parents);
+  await Teacher.bulkCreate(teachers);
+  await SubjectCategory.bulkCreate(subjectCategories);
+  await Subject.bulkCreate(subjects);
+  await Level.bulkCreate(levels);
 };
 if (process.env.SEED) {
   insertDB();

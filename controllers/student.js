@@ -111,7 +111,11 @@ const signPassword = async (req, res) => {
   await student.update({ password: hashedPassword });
   await student.save();
 
-  const token = await generateToken({ userId: student.id });
+  const token = await generateToken({
+    userId: student.id,
+    name: student.name,
+    role: "student",
+  });
 
   res.cookie("token", token);
   res.send({ status: 201, data: student, msg: "successful sign password" });

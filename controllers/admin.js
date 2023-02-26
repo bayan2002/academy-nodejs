@@ -48,7 +48,7 @@ const login = async (req, res) => {
 
   const { id, name } = admin;
 
-  const token = await generateToken({ userId: id, name });
+  const token = await generateToken({ userId: id, name, role: "admin" });
   res.cookie("token", token);
 
   res.send({ status: 201, data: admin, msg: "successful log in" });
