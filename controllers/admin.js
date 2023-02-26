@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const {
   Admin,
   Class,
@@ -7,9 +6,7 @@ const {
   SubjectCategory,
   Curriculum,
 } = require("../models");
-=======
-const { Admin, Level } = require("../models");
->>>>>>> ea59a437908bdcde10e3ec7576ac5eee8325d654
+
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
@@ -65,7 +62,6 @@ const login = async (req, res) => {
   res.send({ status: 201, data: admin, msg: "successful log in" });
 };
 
-<<<<<<< HEAD
 const createSubjectCategory = async (req, res) => {
   const { titleAR, titleEN } = req.body;
   const newSubjectCategory = await SubjectCategory.create(
@@ -84,6 +80,7 @@ const createSubjectCategory = async (req, res) => {
     msg: "successful create new SubjectCategory",
   });
 };
+
 const createSubject = async (req, res) => {
   const { titleAR, titleEN, subjectCategoryId } = req.body;
   const newSubject = await Subject.create(
@@ -103,6 +100,7 @@ const createSubject = async (req, res) => {
     msg: "successful create new Subject",
   });
 };
+
 const createLevel = async (req, res) => {
   const { titleAR, titleEN } = req.body;
   const newLevel = await Level.create(
@@ -117,6 +115,7 @@ const createLevel = async (req, res) => {
   await newLevel.save();
   res.send({ status: 201, data: newLevel, msg: "successful create new level" });
 };
+
 const createClass = async (req, res) => {
   const { titleAR, titleEN, levelId } = req.body;
   const newClassCreated = await Class.create(
@@ -132,6 +131,7 @@ const createClass = async (req, res) => {
   await newClassCreated.save();
   res.send({ status: 201, data: newClassCreated, msg: "successful create new level" });
 };
+
 const createCurriculum = async (req, res) => {
   const { titleAR, titleEN, levelId } = req.body;
   const newCurriculum = await Curriculum.create(
@@ -151,10 +151,12 @@ const createCurriculum = async (req, res) => {
     msg: "successful create new curriculum",
   });
 };
+
 const getSubjects = async (req, res) => {
   const subjects = await Subject.findAll();
   res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });
 };
+
 const getSingleSubject = async (req, res) => {
   const { subjectId } = req.params;
   const subject = await Subject.findOne({
@@ -167,6 +169,7 @@ const getSingleSubject = async (req, res) => {
     msg: "successful get single subject",
   });
 };
+
 const getSubjectCategories = async (req, res) => {
   const subjectCategories = await SubjectCategory.findAll();
   res.send({
@@ -175,6 +178,7 @@ const getSubjectCategories = async (req, res) => {
     msg: "successful get all subjectCategories",
   });
 };
+
 const getSingleSubjectCategory = async (req, res) => {
   const { subjectCategoryId } = req.params;
   const subjectCategory = await Subject.findOne({
@@ -187,10 +191,12 @@ const getSingleSubjectCategory = async (req, res) => {
     msg: "successful get single subjectCategory",
   });
 };
+
 const getClasses = async (req, res) => {
   const classes = await Class.findAll();
   res.send({ status: 201, data: classes, msg: "successful get all classes" });
 };
+
 const getSingleClass = async (req, res) => {
   const { classId } = req.params;
   const singleClass = await Class.findOne({
@@ -203,14 +209,13 @@ const getSingleClass = async (req, res) => {
     msg: "successful get single singleClass",
   });
 };
-=======
->>>>>>> ea59a437908bdcde10e3ec7576ac5eee8325d654
+
 const getLevels = async (req, res) => {
   const levels = await Level.findAll();
   res.send({ status: 201, data: levels, msg: "successful get all levels" });
 };
-<<<<<<< HEAD
-const getSinglelevel = async (req, res) => {
+
+const getSingleLevel = async (req, res) => {
   const { levelId } = req.params;
   const level = await Class.findOne({
     where: { id: levelId },
@@ -222,6 +227,7 @@ const getSinglelevel = async (req, res) => {
     msg: "successful get single level",
   });
 };
+
 const getCurriculums = async (req, res) => {
   const curriculums = await Curriculum.findAll();
   res.send({
@@ -230,6 +236,7 @@ const getCurriculums = async (req, res) => {
     msg: "successful get all Curriculums",
   });
 };
+
 const getSingleCurriculum = async (req, res) => {
   const { curriculumId } = req.params;
   const curriculum = await Curriculum.findOne({
@@ -242,6 +249,7 @@ const getSingleCurriculum = async (req, res) => {
     msg: "successful get single curriculum",
   });
 };
+
 module.exports = {
   signUp,
   login,
@@ -257,11 +265,7 @@ module.exports = {
   getClasses,
   getSingleClass,
   getLevels,
-  getSinglelevel,
+  getSingleLevel,
   getCurriculums,
   getSingleCurriculum,
 };
-=======
-
-module.exports = { signUp, login, getLevels };
->>>>>>> ea59a437908bdcde10e3ec7576ac5eee8325d654

@@ -1,25 +1,23 @@
 const express = require("express");
 
 const adminRouter = express.Router();
-const { login, signUp, getLevels} = require("../controllers/admin");
+const { login, signUp, getLevels, getSubjectCategories, getSingleSubjectCategory, getSubjects, getSingleSubject, getClasses,
+  getSingleClass, getSingleLevel, getCurriculums, getSingleCurriculum  } = require("../controllers/admin");
 const logout = require("../middlewares/logout")
 
 adminRouter.post("/signup", signUp);
 adminRouter.post("/login", login);
 adminRouter.post("/logout", logout);
 adminRouter.get("/get", getLevels );
-
-
-
-adminRouter.get("/subCategories", admin.getSubjectCategories);
-adminRouter.get("/subCategoriy", admin.getSingleSubjectCategory);
-adminRouter.get("/subjects", admin.getSubjects);
-adminRouter.get("/subject", admin.getSingleSubject);
-adminRouter.get("/classes", admin.getClasses);
-adminRouter.get("/class", admin.getSingleClass);
-adminRouter.get("/levels", admin.getLevels);
-adminRouter.get("/level", admin.getSinglelevel);
-adminRouter.get("/Curriculums", admin.getCurriculums);
-adminRouter.get("/Curriculums", admin.getSingleCurriculum);
+adminRouter.get("/subCategories", getSubjectCategories);
+adminRouter.get("/subCategory", getSingleSubjectCategory);
+adminRouter.get("/subjects", getSubjects);
+adminRouter.get("/subject", getSingleSubject);
+adminRouter.get("/classes", getClasses);
+adminRouter.get("/class", getSingleClass);
+adminRouter.get("/levels", getLevels);
+adminRouter.get("/level", getSingleLevel);
+adminRouter.get("/Curriculums", getCurriculums);
+adminRouter.get("/Curriculums", getSingleCurriculum);
 
 module.exports = adminRouter;
