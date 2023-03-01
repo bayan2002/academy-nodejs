@@ -4,8 +4,8 @@
   "description": "![academy](https://user-images.githubusercontent.com/77805478/219868437-04d14639-78d6-4276-9882-217e3e3e48f6.jpg)",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./index.js",
-    "dev": "cross-env NODE_ENV=development nodemon ./index.ts",
+    "start": "node ./index.js",
+    "dev": "nodemon ./index.ts",
     "db:seed": "cross-env SEED=true NODE_ENV=development node db/config/build.js"
   },
   "repository": {
@@ -28,6 +28,7 @@
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
+    "mysql2": "^3.1.2",
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.20",
     "pg": "^8.9.0",
