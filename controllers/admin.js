@@ -63,11 +63,13 @@ const login = async (req, res) => {
 };
 
 const createSubjectCategory = async (req, res) => {
+  const image = req.file.fileName
   const { titleAR, titleEN } = req.body;
   const newSubjectCategory = await SubjectCategory.create(
     {
       titleAR,
       titleEN,
+      image
     },
     {
       returning: true,
@@ -82,12 +84,11 @@ const createSubjectCategory = async (req, res) => {
 };
 
 const createSubject = async (req, res) => {
-  const { titleAR, titleEN, image, subjectCategoryId } = req.body;
+  const { titleAR, titleEN, subjectCategoryId } = req.body;
   const newSubject = await Subject.create(
     {
       titleAR,
       titleEN,
-      image,
       SubjectCategoryId: subjectCategoryId,
     },
     {
