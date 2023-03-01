@@ -6,6 +6,7 @@ const {
   SubjectCategory,
   Curriculum,
   CurriculumLevel,
+  ParentStudent,
 } = require("../models");
 
 const { validateAdminSignUp, loginValidation } = require("../validation");
@@ -37,8 +38,8 @@ const signUp = async (req, res) => {
   );
   await newAdmin.save();
   const { id } = newAdmin;
-  const token = await generateToken({ userId: id, name, role: "admin"});
-console.log(token);
+  const token = await generateToken({ userId: id, name, role: "admin" });
+  console.log(token);
   res.cookie("token", token);
 
   res.send({ status: 201, data: newAdmin, msg: "successful sign up" });
@@ -158,16 +159,17 @@ const createCurriculum = async (req, res) => {
   });
 };
 
-const linkedCurriculumLevel = async(req, res) => {
-  const {levelId, curriculumId} = req.body
+const linkedCurriculumLevel = async (req, res) => {
+  const { levelId, curriculumId } = req.body;
   const curriculumLevel = await CurriculumLevel.findOne({
     where: {
       CurriculumId: curriculumId,
       LevelId: levelId,
-    }
-  })
+    },
+  });
 
-  if(curriculumLevel) throw serverErrs.BAD_REQUEST("already linked curriculum with level");
+  if (curriculumLevel)
+    throw serverErrs.BAD_REQUEST("already linked curriculum with level");
 
   const newCurriculumLevel = await CurriculumLevel.create(
     {
@@ -184,7 +186,7 @@ const linkedCurriculumLevel = async(req, res) => {
     data: newCurriculumLevel,
     msg: "successful linked curriculum with level",
   });
-}
+};
 const getSubjects = async (req, res) => {
   const subjects = await Subject.findAll();
   res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });
@@ -283,6 +285,38 @@ const getSingleCurriculum = async (req, res) => {
   });
 };
 
+const acceptStudent = async (req, res) => {
+  const { parentStudentId } = req.params;
+  const parentStudent = await ParentStudent.findOne({
+    where: { id: parentStudentId },
+    include: { all: true },
+  });
+  if (!parentStudent) throw serverErrs.BAD_REQUEST("parent student not found");
+
+  await parentStudent.update({ status: 1 });
+  res.send({
+    status: 201,
+    data: parentStudent,
+    msg: "Student has been accepted",
+  });
+};
+
+const rejectStudent = async (req, res) => {
+  const { parentStudentId } = req.params;
+  const parentStudent = await ParentStudent.findOne({
+    where: { id: parentStudentId },
+    include: { all: true },
+  });
+  if (!parentStudent) throw serverErrs.BAD_REQUEST("parent student not found");
+
+  await parentStudent.update({ status: -1 });
+  res.send({
+    status: 201,
+    data: parentStudent,
+    msg: "Student has been rejected",
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -302,4 +336,6 @@ module.exports = {
   getCurriculums,
   getSingleCurriculum,
   linkedCurriculumLevel,
+  acceptStudent,
+  rejectStudent
 };
