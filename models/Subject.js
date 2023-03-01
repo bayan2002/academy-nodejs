@@ -16,6 +16,10 @@ const Subject = sequelize.define("Subject", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  image: {
+    type: DataTypes.STRING,
+    default: "",
+  },
 });
 
 module.exports = Subject;
