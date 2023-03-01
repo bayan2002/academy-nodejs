@@ -30,7 +30,7 @@ const Student = sequelize.define("Student", {
     type: DataTypes.STRING,
   },
   dateOfBirth: {
-    type: DataTypes.BOOLEAN,
+    type: DataTypes.STRING,
   },
   nationality: {
     type: DataTypes.STRING,
