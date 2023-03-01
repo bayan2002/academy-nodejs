@@ -8,6 +8,10 @@ const ParentStudent = sequelize.define("ParentStudent", {
     allowNull: false,
     primaryKey: true,
   },
+  status: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 });
 
 module.exports = ParentStudent;

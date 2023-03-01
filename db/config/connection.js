@@ -21,9 +21,23 @@ switch (NODE_ENV) {
 }
 
 if (!url) throw new Error("NODE_ENV is not set");
-const sequelize = new Sequelize(url, {
+// const sequelize = new Sequelize(url, {
+//   logging: false,
+//   dialect: "postgres",
+//   dialectOptions: {
+//     ssl,
+//   },
+// });
+// const sequelize = new Sequelize("academy", "root", "root", {
+//   logging: false,
+//   dialect: "mysql",
+//   dialectOptions: {
+//     ssl,
+//   },
+// });
+const sequelize = new Sequelize("academyrescteeh_amman_db", "rescteeh_root", "059283805928388", {
   logging: false,
-  dialect: "postgres",
+  dialect: "mysql",
   dialectOptions: {
     ssl,
   },
