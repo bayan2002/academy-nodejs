@@ -44,7 +44,7 @@ const signUp = async (req, res) => {
   );
   await newParent.save();
   const { id } = newParent;
-  const token = await generateToken({ userId: id, name });
+  const token = await generateToken({ userId: id, name, role: "parent" });
 
   res.cookie("token", token);
 
