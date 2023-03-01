@@ -12,7 +12,8 @@ const {
   languages,
   experiences,
   educationDegree,
-  certificates
+  certificates,
+  curriculumLevels
 } = require("./fakeData");
 const {
   Admin,
@@ -27,7 +28,8 @@ const {
   Language,
   Experience,
   EducationDegree,
-  Certificates
+  Certificates,
+  CurriculumLevel
 } = require("../../models");
 
 const insertDB = async () => {
@@ -40,7 +42,8 @@ const insertDB = async () => {
   await Level.bulkCreate(levels).then(() => console.log("level data have been saved"));
   await Class.bulkCreate(classes).then(() => console.log("Class data have been saved"));
   await Curriculum.bulkCreate(curriculums).then(() => console.log("Curriculum data have been saved"));
-  await Student.bulkCreate(students).then(() => console.log("student data have been saved"));
+  await CurriculumLevel.bulkCreate(curriculumLevels).then(() => console.log("CurriculumLevel data have been saved"));
+  await Student.bulkCreate(students).then(() => console.log("Student data have been saved"));
   await Language.bulkCreate(languages).then(() => console.log("Language data have been saved"));
   await Experience.bulkCreate(experiences).then(() => console.log("Experience data have been saved"));
   await EducationDegree.bulkCreate(educationDegree).then(() => console.log("EducationDegree data have been saved"));
