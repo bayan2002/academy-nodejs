@@ -95,6 +95,10 @@ TeacherSubjectCategory.belongsTo(Teacher);
 Teacher.hasOne(Wallet);
 Wallet.belongsTo(Teacher);
 
+//
+Student.belongsTo(Parent);
+Parent.hasMany(Student);
+
 module.exports = {
   Admin,
   Student,
