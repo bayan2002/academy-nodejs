@@ -5,7 +5,7 @@ const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
 
 const signUp = async (req, res) => {
-  const { name, email, password, image } = req.body;
+  const { name, email, password } = req.body;
   await validateParentSignUp.validate({ name, email, password });
   const parent = await Parent.findOne({
     where: {
@@ -51,4 +51,68 @@ const signUp = async (req, res) => {
   res.send({ status: 201, data: newParent, msg: "successful sign up" });
 };
 
-module.exports = { signUp };
+const getSingleParent = async (req, res) => {
+  const { parentId } = req.params;
+  const parent = await Parent.findOne({
+    where: { id: parentId },
+    include: { all: true },
+  });
+  res.send({
+    status: 201,
+    data: parent,
+    msg: "successful get single parent",
+  });
+};
+
+const addStudentToParent = async (req, res) => {
+  const { parentId, studentId } = req.body;
+  const parent = await Parent.findOne({
+    where: { id: parentId },
+    include: { all: true },
+  });
+  const student = await Student.findOne({
+    where: { id: studentId },
+    include: { all: true },
+  });
+  if (!parent) throw serverErrs.BAD_REQUEST("parent not exist");
+  if (!student) throw serverErrs.BAD_REQUEST("student not exist");
+  if (student.parentId)
+    throw serverErrs.BAD_REQUEST("student already have a parent");
+  if (student.status !== 0)
+    throw serverErrs.BAD_REQUEST({
+      msgEN: "student already in parent waiting",
+      msgAR: "الطالب موجود في جدول الانتظار",
+    });
+  const newParentStudent = await ParentStudent.create({
+    parentId,
+    studentId,
+  });
+  await newParentStudent.save();
+
+  res.send({
+    status: 201,
+    data: newParentStudent,
+    msg: "successful added student to parent waiting list",
+  });
+};
+
+const getStudentsByParentId = async (req, res) => {
+  const { parentId } = req.params;
+  const students = await Parent.findAll({
+    where: { id: parentId },
+    include: { all: true },
+  });
+
+  res.send({
+    status: 201,
+    data: students,
+    msg: "successful get all Students for single Parent",
+  });
+};
+
+module.exports = {
+  signUp,
+  getSingleParent,
+  addStudentToParent,
+  getStudentsByParentId,
+};
