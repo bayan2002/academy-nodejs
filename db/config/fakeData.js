@@ -264,78 +264,108 @@ const curriculums = [
     titleEN: "emarites curriculum",
   }, //4
 ];
+const curriculumLevels = [
+  {
+    LevelId: 1,
+    CurriculumId: 1,
+  },
+  {
+    LevelId: 2,
+    CurriculumId: 1,
+  },
+  {
+    LevelId: 3,
+    CurriculumId: 2,
+  },
+  {
+    LevelId: 2,
+    CurriculumId: 3,
+  },
+  {
+    LevelId: 4,
+    CurriculumId: 1,
+  },
+  {
+    LevelId: 4,
+    CurriculumId: 4,
+  },
+  {
+    LevelId: 3,
+    CurriculumId: 4,
+  },
+];
 
 const languages = [
   {
-    title: "english"
+    title: "english",
   },
   {
-    title: "arabic"
+    title: "arabic",
   },
   {
-    title: "french"
+    title: "french",
   },
   {
-    title: "italian"
-  }
-]
+    title: "italian",
+  },
+];
 
 const experiences = [
   {
-    jobTitle : "arabic teacher",
+    jobTitle: "arabic teacher",
     companyName: "islam school",
     from: "12/4/2010",
-    to: "8/8/2020"
+    to: "8/8/2020",
   },
   {
-    jobTitle : "english teacher",
+    jobTitle: "english teacher",
     companyName: "american school",
     from: "3/3/3303",
-    to: "4/5/5505"
+    to: "4/5/5505",
   },
   {
-    jobTitle : "math teacher",
+    jobTitle: "math teacher",
     companyName: "ahmed school",
     from: "2/4/2003",
-    to: "2/5/2023"
-  }
-]
+    to: "2/5/2023",
+  },
+];
 
 const educationDegree = [
   {
-    UniversityName: "azhar university", 
+    UniversityName: "azhar university",
     degree: "BA",
     from: "23/5/2000",
-    to: "23/5/2007"
+    to: "23/5/2007",
   },
   {
-    UniversityName: "islamic university", 
+    UniversityName: "islamic university",
     degree: "master",
     from: "30/3/2020",
-    to: "3/4/2022"
+    to: "3/4/2022",
   },
   {
-    UniversityName: "gaza university", 
+    UniversityName: "gaza university",
     degree: "BA",
     from: "22/3/1987",
-    to: "5/6/1988"
-  }
-]
+    to: "5/6/1988",
+  },
+];
 
 const certificates = [
   {
     name: "web development",
     subject: "technology",
     from: "22/3/1987",
-    to: "5/6/1988"
+    to: "5/6/1988",
   },
   {
     name: "algorethims",
     subject: "math",
     from: "22/3/1987",
-    to: "5/6/1988"
-  }
-]
+    to: "5/6/1988",
+  },
+];
 
 const parents = [
   {
@@ -361,5 +391,6 @@ module.exports = {
   languages,
   experiences,
   educationDegree,
-  certificates
+  certificates,
+  curriculumLevels,
 };

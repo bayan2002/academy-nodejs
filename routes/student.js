@@ -2,12 +2,13 @@ const express = require("express");
 
 const studentRouter = express.Router();
 const {signUp, verifyCode, signPassword, signData, getStudents, getSingleStudent} = require("../controllers/student");
+const errorCatcher = require("../middlewares/errorCatcher");
 
-studentRouter.post("/signup", signUp);
-studentRouter.post("/signup/code", verifyCode);
-studentRouter.post("/signup/pass", signPassword);
-studentRouter.post("/signup/data", signData);
-studentRouter.post("/all", getStudents);
-studentRouter.post("singleStudent", getSingleStudent);
+studentRouter.post("/signup", errorCatcher(signUp));
+studentRouter.post("/signup/code", errorCatcher(verifyCode));
+studentRouter.post("/signup/pass", errorCatcher(signPassword));
+studentRouter.post("/signup/data", errorCatcher(signData));
+studentRouter.post("/all", errorCatcher(getStudents));
+studentRouter.post("singleStudent", errorCatcher(getSingleStudent));
 
 module.exports = studentRouter;

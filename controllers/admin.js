@@ -5,6 +5,7 @@ const {
   Subject,
   SubjectCategory,
   Curriculum,
+  CurriculumLevel,
 } = require("../models");
 
 const { validateAdminSignUp, loginValidation } = require("../validation");
@@ -36,8 +37,8 @@ const signUp = async (req, res) => {
   );
   await newAdmin.save();
   const { id } = newAdmin;
-  const token = await generateToken({ userId: id, name });
-
+  const token = await generateToken({ userId: id, name, role: "admin"});
+console.log(token);
   res.cookie("token", token);
 
   res.send({ status: 201, data: newAdmin, msg: "successful sign up" });
@@ -63,13 +64,13 @@ const login = async (req, res) => {
 };
 
 const createSubjectCategory = async (req, res) => {
-  const image = req.file.fileName
+  // const image = req.file.fileName
   const { titleAR, titleEN } = req.body;
   const newSubjectCategory = await SubjectCategory.create(
     {
       titleAR,
       titleEN,
-      image
+      // image
     },
     {
       returning: true,
@@ -134,26 +135,43 @@ const createClass = async (req, res) => {
   res.send({
     status: 201,
     data: newClassCreated,
-    msg: "successful create new level",
+    msg: "successful create new class",
   });
 };
 
 const createCurriculum = async (req, res) => {
-  const { titleAR, titleEN, levelId } = req.body;
+  const { titleAR, titleEN } = req.body;
   const newCurriculum = await Curriculum.create(
     {
       titleAR,
       titleEN,
-      LevelId: levelId,
     },
     {
       returning: true,
     }
   );
   await newCurriculum.save();
-  const newCurriculumLevel = await Curriculum.create(
+  res.send({
+    status: 201,
+    data: newCurriculum,
+    msg: "successful create new curriculum",
+  });
+};
+
+const linkedCurriculumLevel = async(req, res) => {
+  const {levelId, curriculumId} = req.body
+  const curriculumLevel = await CurriculumLevel.findOne({
+    where: {
+      CurriculumId: curriculumId,
+      LevelId: levelId,
+    }
+  })
+
+  if(curriculumLevel) throw serverErrs.BAD_REQUEST("already linked curriculum with level");
+
+  const newCurriculumLevel = await CurriculumLevel.create(
     {
-      CurriculumId: newCurriculum.id,
+      CurriculumId: curriculumId,
       LevelId: levelId,
     },
     {
@@ -163,10 +181,10 @@ const createCurriculum = async (req, res) => {
   await newCurriculumLevel.save();
   res.send({
     status: 201,
-    data: { newCurriculum, newCurriculumLevel },
-    msg: "successful create new curriculum",
+    data: newCurriculumLevel,
+    msg: "successful linked curriculum with level",
   });
-};
+}
 const getSubjects = async (req, res) => {
   const subjects = await Subject.findAll();
   res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });
@@ -196,7 +214,7 @@ const getSubjectCategories = async (req, res) => {
 
 const getSingleSubjectCategory = async (req, res) => {
   const { subjectCategoryId } = req.params;
-  const subjectCategory = await Subject.findOne({
+  const subjectCategory = await SubjectCategory.findOne({
     where: { id: subjectCategoryId },
     include: { all: true },
   });
@@ -232,7 +250,7 @@ const getLevels = async (req, res) => {
 
 const getSingleLevel = async (req, res) => {
   const { levelId } = req.params;
-  const level = await Class.findOne({
+  const level = await Level.findOne({
     where: { id: levelId },
     include: { all: true },
   });
@@ -283,4 +301,5 @@ module.exports = {
   getSingleLevel,
   getCurriculums,
   getSingleCurriculum,
+  linkedCurriculumLevel,
 };
