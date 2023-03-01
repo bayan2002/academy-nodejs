@@ -356,4 +356,10 @@ module.exports = {
   subjectCategories,
   subjects,
   teachers,
+  classes,
+  curriculums,
+  languages,
+  experiences,
+  educationDegree,
+  certificates
 };
