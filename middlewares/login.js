@@ -23,7 +23,7 @@ const login = async (req, res) => {
     const token = await generateToken({ userId: data.id, name: data.name, role });
 
     res.cookie("token", token);
-    res.send({ status: 201, data: parent, msg: "successful log in" });
+    res.send({ status: 201, data: data, msg: "successful log in" });
   };
 
   module.exports = login
