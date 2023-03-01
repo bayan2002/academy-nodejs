@@ -158,4 +158,22 @@ const signData = async (req, res) => {
   res.send({ status: 201, data: student, msg: "signed up successfully" });
 };
 
-module.exports = { signUp, verifyCode, signPassword, signData};
+const getStudents = async (req, res) => {
+  const Students = await Student.findAll();
+  res.send({ status: 201, data: Students, msg: "successful get all Students" });
+};
+
+const getSingleStudent = async (req, res) => {
+  const { studentId } = req.params;
+  const student = await Student.findOne({
+    where: { id: studentId },
+    include: { all: true },
+  });
+  res.send({
+    status: 201,
+    data: student,
+    msg: "successful get single student",
+  });
+};
+
+module.exports = { signUp, verifyCode, signPassword, signData, getStudents, getSingleStudent};
