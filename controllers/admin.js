@@ -82,11 +82,12 @@ const createSubjectCategory = async (req, res) => {
 };
 
 const createSubject = async (req, res) => {
-  const { titleAR, titleEN, subjectCategoryId } = req.body;
+  const { titleAR, titleEN, image, subjectCategoryId } = req.body;
   const newSubject = await Subject.create(
     {
       titleAR,
       titleEN,
+      image,
       SubjectCategoryId: subjectCategoryId,
     },
     {
@@ -129,7 +130,11 @@ const createClass = async (req, res) => {
     }
   );
   await newClassCreated.save();
-  res.send({ status: 201, data: newClassCreated, msg: "successful create new level" });
+  res.send({
+    status: 201,
+    data: newClassCreated,
+    msg: "successful create new level",
+  });
 };
 
 const createCurriculum = async (req, res) => {
@@ -145,13 +150,22 @@ const createCurriculum = async (req, res) => {
     }
   );
   await newCurriculum.save();
+  const newCurriculumLevel = await Curriculum.create(
+    {
+      CurriculumId: newCurriculum.id,
+      LevelId: levelId,
+    },
+    {
+      returning: true,
+    }
+  );
+  await newCurriculumLevel.save();
   res.send({
     status: 201,
-    data: newCurriculum,
+    data: { newCurriculum, newCurriculumLevel },
     msg: "successful create new curriculum",
   });
 };
-
 const getSubjects = async (req, res) => {
   const subjects = await Subject.findAll();
   res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });

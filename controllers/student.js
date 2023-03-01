@@ -150,8 +150,8 @@ const signData = async (req, res) => {
   await student.update({
     gender,
     LevelId: levelId,
-    curriculumId: curriculumId,
-    classId: classId,
+    CurriculumId: curriculumId,
+    ClassId: classId,
     isRegistered: true,
   });
   await student.save();
