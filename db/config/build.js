@@ -39,12 +39,12 @@ const insertDB = async () => {
   await Subject.bulkCreate(subjects).then(() => console.log("Subject data have been saved"));
   await Level.bulkCreate(levels).then(() => console.log("level data have been saved"));
   await Class.bulkCreate(classes).then(() => console.log("Class data have been saved"));
-  // await Curriculum.bulkCreate(curriculums);
-  // await Student.bulkCreate(students).then(() => console.log("student data have been saved"));
-  // await Language.bulkCreate(languages);
-  // await Experience.bulkCreate(experiences);
-  // await EducationDegree.bulkCreate(educationDegree);
-  // await Certificates.bulkCreate(certificates);
+  await Curriculum.bulkCreate(curriculums).then(() => console.log("Curriculum data have been saved"));
+  await Student.bulkCreate(students).then(() => console.log("student data have been saved"));
+  await Language.bulkCreate(languages).then(() => console.log("Language data have been saved"));
+  await Experience.bulkCreate(experiences).then(() => console.log("Experience data have been saved"));
+  await EducationDegree.bulkCreate(educationDegree).then(() => console.log("EducationDegree data have been saved"));
+  await Certificates.bulkCreate(certificates).then(() => console.log("Certificates data have been saved"));
 };
 if (process.env.SEED) {
   insertDB();
