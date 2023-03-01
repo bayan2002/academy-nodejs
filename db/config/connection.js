@@ -36,10 +36,6 @@ switch (NODE_ENV) {
 //   },
 // });
 const sequelize = new Sequelize("rescteeh_amman_db", "rescteeh_root", "059283805928388", {
-  logging: false,
-  dialect: "mysql",
-  dialectOptions: {
-    ssl,
-  },
+  dialect:'mysql',host:"localhost"
 });
 module.exports = sequelize;
