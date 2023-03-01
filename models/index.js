@@ -64,7 +64,7 @@ Teacher.hasMany(F2FSessionTeacher);
 F2FSessionTeacher.belongsTo(Teacher);
 Parent.hasMany(ParentStudent);
 ParentStudent.belongsTo(Parent);
-Student.hasOne(ParentStudent);
+Student.hasMany(ParentStudent);
 ParentStudent.belongsTo(Student);
 Curriculum.hasMany(CurriculumLevel);
 CurriculumLevel.belongsTo(Curriculum);
@@ -94,8 +94,6 @@ Teacher.hasMany(TeacherSubjectCategory);
 TeacherSubjectCategory.belongsTo(Teacher);
 Teacher.hasOne(Wallet);
 Wallet.belongsTo(Teacher);
-
-//
 Student.belongsTo(Parent);
 Parent.hasMany(Student);
 
