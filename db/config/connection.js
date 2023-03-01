@@ -20,7 +20,7 @@ switch (NODE_ENV) {
     throw new Error("NODE_ENV is not set");
 }
 
-if (!url) throw new Error("NODE_ENV is not set");
+// if (!url) throw new Error("NODE_ENV is not set");
 // const sequelize = new Sequelize(url, {
 //   logging: false,
 //   dialect: "postgres",
@@ -35,11 +35,7 @@ if (!url) throw new Error("NODE_ENV is not set");
 //     ssl,
 //   },
 // });
-const sequelize = new Sequelize("academyrescteeh_amman_db", "rescteeh_root", "059283805928388", {
-  logging: false,
-  dialect: "mysql",
-  dialectOptions: {
-    ssl,
-  },
+const sequelize = new Sequelize("rescteeh_amman_db", "rescteeh_root", "059283805928388", {
+  dialect:'mysql',host:"localhost"
 });
 module.exports = sequelize;
