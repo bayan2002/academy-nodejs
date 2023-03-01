@@ -3,6 +3,7 @@ const { Parent, Student, Teacher } = require('../models');
 const { loginValidation } = require('../validation');
 const { compare } = require("bcrypt");
 const generateToken = require('./generateToken');
+const { serverErrs } = require('./customError');
 
 const login = async (req, res) => {
     const { email, password } = req.body;
