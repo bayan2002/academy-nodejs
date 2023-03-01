@@ -35,7 +35,7 @@ if (!url) throw new Error("NODE_ENV is not set");
 //     ssl,
 //   },
 // });
-const sequelize = new Sequelize("academyrescteeh_amman_db", "rescteeh_root", "059283805928388", {
+const sequelize = new Sequelize("rescteeh_amman_db", "rescteeh_root", "059283805928388", {
   logging: false,
   dialect: "mysql",
   dialectOptions: {
