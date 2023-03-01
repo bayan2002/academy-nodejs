@@ -79,10 +79,7 @@ const addStudentToParent = async (req, res) => {
   if (student.parentId)
     throw serverErrs.BAD_REQUEST("student already have a parent");
   if (student.status !== 0)
-    throw serverErrs.BAD_REQUEST({
-      msgEN: "student already in parent waiting",
-      msgAR: "الطالب موجود في جدول الانتظار",
-    });
+    throw serverErrs.BAD_REQUEST("student already in parent waiting");
   const newParentStudent = await ParentStudent.create({
     parentId,
     studentId,

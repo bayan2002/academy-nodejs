@@ -9,6 +9,6 @@ studentRouter.post("/signup/code", errorCatcher(verifyCode));
 studentRouter.post("/signup/pass", errorCatcher(signPassword));
 studentRouter.post("/signup/data", errorCatcher(signData));
 studentRouter.post("/all", errorCatcher(getStudents));
-studentRouter.post("singleStudent", errorCatcher(getSingleStudent));
+studentRouter.post("singleStudent/:studentId", errorCatcher(getSingleStudent));
 
 module.exports = studentRouter;
