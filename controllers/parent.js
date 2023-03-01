@@ -1,4 +1,4 @@
-const { Parent, Teacher, Student } = require("../models");
+const { Parent, Teacher, Student, ParentStudent } = require("../models");
 const { validateParentSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
@@ -36,7 +36,6 @@ const signUp = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      image,
     },
     {
       returning: true,
@@ -78,11 +77,19 @@ const addStudentToParent = async (req, res) => {
   if (!student) throw serverErrs.BAD_REQUEST("student not exist");
   if (student.parentId)
     throw serverErrs.BAD_REQUEST("student already have a parent");
-  if (student.status !== 0)
-    throw serverErrs.BAD_REQUEST("student already in parent waiting");
+
+  const oldParentStudent = await ParentStudent.findOne({
+    where: { ParentId: parentId, StudentId:studentId },
+    include: { all: true },
+  });
+  if (
+    oldParentStudent &&
+    (oldParentStudent.status === 0 || oldParentStudent.status === 1)
+  )
+    throw serverErrs.BAD_REQUEST("student request is already exist");
+
   const newParentStudent = await ParentStudent.create({
-    parentId,
-    studentId,
+    ParentId: parentId, StudentId:studentId
   });
   await newParentStudent.save();
 
@@ -95,8 +102,8 @@ const addStudentToParent = async (req, res) => {
 
 const getStudentsByParentId = async (req, res) => {
   const { parentId } = req.params;
-  const students = await Parent.findAll({
-    where: { id: parentId },
+  const students = await Student.findAll({
+    where: { ParentId: parentId },
     include: { all: true },
   });
 
