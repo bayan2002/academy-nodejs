@@ -6,6 +6,8 @@ const {
   SubjectCategory,
   Curriculum,
   CurriculumLevel,
+  ParentStudent,
+  Student,
 } = require("../models");
 const dotenv = require("dotenv");
 
@@ -293,6 +295,41 @@ const getSingleCurriculum = async (req, res) => {
   });
 };
 
+const acceptStudent = async (req, res) => {
+  const { ParentStudentId } = req.params;
+  const parentStudent = await ParentStudent.findOne({
+    where: { id: ParentStudentId },
+    include: { all: true },
+  });
+  if (!parentStudent) throw serverErrs.BAD_REQUEST("parent student not found");
+
+  await parentStudent.update({ status: 1 });
+  const student = await Student.findOne({
+    where: { id: parentStudent.StudentId },
+    include: { all: true },
+  });
+  await student.update({ ParentId: parentStudent.ParentId })
+  res.send({
+    status: 201,
+    msg: "Student has been accepted",
+  });
+};
+
+const rejectStudent = async (req, res) => {
+  const { ParentStudentId } = req.params;
+  const parentStudent = await ParentStudent.findOne({
+    where: { id: ParentStudentId },
+    include: { all: true },
+  });
+  if (!parentStudent) throw serverErrs.BAD_REQUEST("parent student not found");
+
+  await parentStudent.update({ status: -1 });
+  res.send({
+    status: 201,
+    msg: "Student has been rejected",
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -312,4 +349,6 @@ module.exports = {
   getCurriculums,
   getSingleCurriculum,
   linkedCurriculumLevel,
+  acceptStudent,
+  rejectStudent,
 };
