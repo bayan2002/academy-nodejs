@@ -5,21 +5,45 @@ const morgan = require("morgan");
 const router = require("./routes");
 const dotenv = require("dotenv");
 const { clientError, serverError } = require("./middlewares/error");
+const cors = require("cors");
+const multer = require("multer");
 
 dotenv.config();
 const app = express();
 
-app.set("port", process.env.PORT || 3500);
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
+app.set("port", process.env.PORT || 3500);
+app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,PUT,DELETE,POST,PATCH");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type , Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 app.use([
   express.json(),
   cookieParser(),
   compression(),
   express.urlencoded({ extended: false }),
 ]);
+
+app.use(multer({ storage: fileStorage }).single("image"));
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
 app.use("/api/v1", router);
 
 app.use(clientError);
