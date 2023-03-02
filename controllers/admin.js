@@ -67,7 +67,7 @@ const login = async (req, res) => {
 };
 
 const createSubjectCategory = async (req, res) => {
-  const image = req.file.fileName;
+  const image = req.file.filename;
   const { titleAR, titleEN } = req.body;
   const newSubjectCategory = await SubjectCategory.create(
     {

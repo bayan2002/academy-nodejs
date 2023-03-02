@@ -71,12 +71,14 @@ adminRouter.post(
 
 adminRouter.post(
   "/studentParent/accept/:ParentStudentId",
+  verifyToken,
   checkUserAuth("admin"),
   errorCatcher(acceptStudent)
 );
 
 adminRouter.post(
   "/studentParent/reject/:ParentStudentId",
+  verifyToken,
   checkUserAuth("admin"),
   errorCatcher(rejectStudent)
 );
