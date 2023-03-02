@@ -126,26 +126,20 @@ const signPassword = async (req, res) => {
   res.send({ status: 201, data: teacher, msg: "successful sign up" });
 };
 const signAbout = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
   const {
     firstName,
     lastName,
     gender,
     dateOfBirth,
-    email,
     phone,
     country,
     city,
     languages,
   } = req.body;
-
-  const teacher = await Teacher.findOne({
-    where: {
-      email,
-    },
-  });
-
-  if (!teacher) throw serverErrs.BAD_REQUEST("email not found");
-  if (teacher.isRegister) throw serverErrs.BAD_REQUEST("email is already used");
 
   await teacher.update({
     firstName,
@@ -166,13 +160,25 @@ const signAbout = async (req, res) => {
     console.log("LangTeachStd data have been created")
   );
 
-  const langTeachers = await LangTeachStd.findAll({ include: { all: true } });
+  const langTeachers = await LangTeachStd.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
   await teacher.save();
   res.send({
     status: 201,
     data: { teacher, langTeachers },
-    msg: "successful sign data",
+    msg: "successful sign about data",
   });
 };
 
-module.exports = { signUp, verifyCode, signPassword, signAbout };
+
+
+module.exports = {
+  signUp,
+  verifyCode,
+  signPassword,
+  signAbout,
+};

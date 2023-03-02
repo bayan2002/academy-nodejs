@@ -12,6 +12,6 @@ const errorCatcher = require("../middlewares/errorCatcher");
 teacherRouter.post("/signup", errorCatcher(signUp));
 teacherRouter.post("/signup/code", errorCatcher(verifyCode));
 teacherRouter.post("/signup/pass", errorCatcher(signPassword));
-teacherRouter.post("/about", errorCatcher(signAbout));
+teacherRouter.post("/about/:teacherId", errorCatcher(signAbout));
 
 module.exports = teacherRouter;
