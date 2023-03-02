@@ -40,10 +40,20 @@ adminRouter.post(
   "/subject",
   verifyToken,
   checkUserAuth("admin"),
- errorCatcher(createSubject)
+  errorCatcher(createSubject)
 );
-adminRouter.post("/level", verifyToken, checkUserAuth("admin"), errorCatcher(createLevel));
-adminRouter.post("/class", verifyToken, checkUserAuth("admin"), errorCatcher(createClass));
+adminRouter.post(
+  "/level",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(createLevel)
+);
+adminRouter.post(
+  "/class",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(createClass)
+);
 adminRouter.post(
   "/curriculum",
   verifyToken,
@@ -58,14 +68,17 @@ adminRouter.post(
 );
 
 adminRouter.get("/subCategories", getSubjectCategories);
-adminRouter.get("/subCategory/:subjectCategoryId", getSingleSubjectCategory);
+adminRouter.get(
+  "/subCategory/:subjectCategoryId",
+  errorCatcher(getSingleSubjectCategory)
+);
 adminRouter.get("/subjects", getSubjects);
-adminRouter.get("/subject/:subjectId", getSingleSubject);
+adminRouter.get("/subject/:subjectId", errorCatcher(getSingleSubject));
 adminRouter.get("/classes", getClasses);
-adminRouter.get("/class/:classId", getSingleClass);
+adminRouter.get("/class/:classId", errorCatcher(getSingleClass));
 adminRouter.get("/levels", getLevels);
-adminRouter.get("/level/:levelId", getSingleLevel);
+adminRouter.get("/level/:levelId", errorCatcher(getSingleLevel));
 adminRouter.get("/Curriculums", getCurriculums);
-adminRouter.get("/Curriculum/:curriculumId", getSingleCurriculum);
+adminRouter.get("/Curriculum/:curriculumId", errorCatcher(getSingleCurriculum));
 
 module.exports = adminRouter;
