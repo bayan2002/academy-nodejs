@@ -114,6 +114,7 @@ const students = [
     LevelId: 1,
     ClassId: 1,
     CurriculumId: 1,
+    ParentId: 1
     // 1
   },
   {
@@ -133,6 +134,7 @@ const students = [
     LevelId: 2,
     ClassId: 2,
     CurriculumId: 2,
+    ParentId: 1
     // 2
   },
   {
@@ -152,6 +154,7 @@ const students = [
     LevelId: 3,
     ClassId: 3,
     CurriculumId: 3,
+    ParentId: 1
     // 3
   },
 ];

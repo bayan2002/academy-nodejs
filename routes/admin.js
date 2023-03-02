@@ -58,14 +58,14 @@ adminRouter.post(
 );
 
 adminRouter.get("/subCategories", getSubjectCategories);
-adminRouter.get("/subCategory", getSingleSubjectCategory);
+adminRouter.get("/subCategory/:subjectCategoryId", getSingleSubjectCategory);
 adminRouter.get("/subjects", getSubjects);
-adminRouter.get("/subject", getSingleSubject);
+adminRouter.get("/subject/:subjectId", getSingleSubject);
 adminRouter.get("/classes", getClasses);
-adminRouter.get("/class", getSingleClass);
+adminRouter.get("/class/:classId", getSingleClass);
 adminRouter.get("/levels", getLevels);
-adminRouter.get("/level", getSingleLevel);
+adminRouter.get("/level/:levelId", getSingleLevel);
 adminRouter.get("/Curriculums", getCurriculums);
-adminRouter.get("/Curriculums", getSingleCurriculum);
+adminRouter.get("/Curriculum/:curriculumId", getSingleCurriculum);
 
 module.exports = adminRouter;
