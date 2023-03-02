@@ -7,15 +7,15 @@ const {
   addStudentToParent,
   getStudentsByParentId,
 } = require("../controllers/parent");
+const checkUserAuth = require("../middlewares/checkUserAuth");
 const errorCatcher = require("../middlewares/errorCatcher");
 const login = require("../middlewares/login");
-// const checkUserAuth = require("../middlewares/checkUserAuth");
 
 parentRouter.post("/signup", errorCatcher(signUp));
 parentRouter.post('/login', errorCatcher(login));
-parentRouter.post("/add", errorCatcher(addStudentToParent));
-parentRouter.get("/get/:ParentId", errorCatcher(getSingleParent));
-parentRouter.get("/getStudents/:ParentId", errorCatcher(getStudentsByParentId));
+parentRouter.post("/add",checkUserAuth('parent'), errorCatcher(addStudentToParent));
+parentRouter.get("/get/:ParentId",checkUserAuth('parent') , errorCatcher(getSingleParent));
+parentRouter.get("/getStudents/:ParentId",checkUserAuth('parent'), errorCatcher(getStudentsByParentId));
 
 
 
