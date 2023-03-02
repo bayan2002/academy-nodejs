@@ -20,7 +20,7 @@ const fileStorage = multer.diskStorage({
   },
 });
 
-app.set("port", process.env.PORT || 3500);
+app.set("port", process.env.PORT || 4000);
 app.use(cors());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
