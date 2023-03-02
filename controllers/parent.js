@@ -1,8 +1,9 @@
 const { Parent, Teacher, Student, ParentStudent } = require("../models");
-const { validateParentSignUp, loginValidation } = require("../validation");
+const { validateParentSignUp } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
+const { Op } = require("sequelize");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -51,9 +52,9 @@ const signUp = async (req, res) => {
 };
 
 const getSingleParent = async (req, res) => {
-  const { parentId } = req.params;
+  const { ParentId } = req.params;
   const parent = await Parent.findOne({
-    where: { id: parentId },
+    where: { id: ParentId },
     include: { all: true },
   });
   res.send({
@@ -64,22 +65,22 @@ const getSingleParent = async (req, res) => {
 };
 
 const addStudentToParent = async (req, res) => {
-  const { parentId, studentId } = req.body;
+  const { ParentId, StudentId } = req.body;
   const parent = await Parent.findOne({
-    where: { id: parentId },
+    where: { id: ParentId },
     include: { all: true },
   });
   const student = await Student.findOne({
-    where: { id: studentId },
+    where: { id: StudentId },
     include: { all: true },
   });
   if (!parent) throw serverErrs.BAD_REQUEST("parent not exist");
   if (!student) throw serverErrs.BAD_REQUEST("student not exist");
-  if (student.parentId)
+  if (student.ParentId)
     throw serverErrs.BAD_REQUEST("student already have a parent");
 
   const oldParentStudent = await ParentStudent.findOne({
-    where: { ParentId: parentId, StudentId:studentId },
+    where: { ParentId, StudentId, status: { [Op.ne]: -1 } },
     include: { all: true },
   });
   if (
@@ -89,7 +90,8 @@ const addStudentToParent = async (req, res) => {
     throw serverErrs.BAD_REQUEST("student request is already exist");
 
   const newParentStudent = await ParentStudent.create({
-    ParentId: parentId, StudentId:studentId
+    ParentId,
+    StudentId,
   });
   await newParentStudent.save();
 
@@ -101,9 +103,9 @@ const addStudentToParent = async (req, res) => {
 };
 
 const getStudentsByParentId = async (req, res) => {
-  const { parentId } = req.params;
+  const { ParentId } = req.params;
   const students = await Student.findAll({
-    where: { ParentId: parentId },
+    where: { ParentId },
     include: { all: true },
   });
 

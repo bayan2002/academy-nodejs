@@ -70,13 +70,13 @@ adminRouter.post(
 );
 
 adminRouter.post(
-  "/studentParent/accept/:parentStudentId",
+  "/studentParent/accept/:ParentStudentId",
   // checkUserAuth("admin"),
   errorCatcher(acceptStudent)
 );
 
 adminRouter.post(
-  "/studentParent/reject/:parentStudentId",
+  "/studentParent/reject/:ParentStudentId",
   // checkUserAuth("admin"),
   errorCatcher(rejectStudent)
 );

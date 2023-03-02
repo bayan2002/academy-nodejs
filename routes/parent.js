@@ -14,8 +14,8 @@ const login = require("../middlewares/login");
 parentRouter.post("/signup", errorCatcher(signUp));
 parentRouter.post('/login', errorCatcher(login));
 parentRouter.post("/add", errorCatcher(addStudentToParent));
-parentRouter.get("/get/:parentId", errorCatcher(getSingleParent));
-parentRouter.get("/getStudents/:parentId", errorCatcher(getStudentsByParentId));
+parentRouter.get("/get/:ParentId", errorCatcher(getSingleParent));
+parentRouter.get("/getStudents/:ParentId", errorCatcher(getStudentsByParentId));
 
 
 
