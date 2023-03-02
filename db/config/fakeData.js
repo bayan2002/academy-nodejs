@@ -410,6 +410,48 @@ const parents = [
     // 1
   },
 ];
+const LangTeachStds = [
+  {
+    level: "beginner",
+    LanguageId: "1",
+    TeacherId: "1",
+  },
+  {
+    level: "native",
+    LanguageId: "2",
+    TeacherId: "1",
+  },
+  {
+    level: "intermediate",
+    LanguageId: "3",
+    TeacherId: "1",
+  },
+  {
+    level: "native",
+    LanguageId: "4",
+    TeacherId: "1",
+  },
+  {
+    level: "beginner",
+    LanguageId: "1",
+    TeacherId: "2",
+  },
+  {
+    level: "native",
+    LanguageId: "2",
+    TeacherId: "2",
+  },
+  {
+    level: "intermediate",
+    LanguageId: "3",
+    TeacherId: "2",
+  },
+  {
+    level: "native",
+    LanguageId: "4",
+    TeacherId: "2",
+  },
+];
 
 module.exports = {
   admin,
@@ -426,4 +468,5 @@ module.exports = {
   educationDegree,
   certificates,
   curriculumLevels,
+  LangTeachStds,
 };
