@@ -20,6 +20,8 @@ const {
   createClass,
   createCurriculum,
   linkedCurriculumLevel,
+  acceptStudent,
+  rejectStudent,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -65,6 +67,20 @@ adminRouter.post(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(linkedCurriculumLevel)
+);
+
+adminRouter.post(
+  "/studentParent/accept/:ParentStudentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(acceptStudent)
+);
+
+adminRouter.post(
+  "/studentParent/reject/:ParentStudentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(rejectStudent)
 );
 
 adminRouter.get("/subCategories", getSubjectCategories);
