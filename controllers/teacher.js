@@ -1,4 +1,4 @@
-const { Teacher, Student, Parent } = require("../models");
+const { Teacher, Student, Parent, LangTeachStd } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
@@ -70,9 +70,12 @@ const verifyCode = async (req, res) => {
     throw serverErrs.BAD_REQUEST("email is already used");
   if (student) throw serverErrs.BAD_REQUEST("email is already used");
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
-  console.log('teacher.registerCode != registerCode: ', teacher.registerCode != registerCode);
-  console.log('sterCode: ', registerCode);
-  console.log('teacher.registerCode: ', teacher.registerCode);
+  console.log(
+    "teacher.registerCode != registerCode: ",
+    teacher.registerCode != registerCode
+  );
+  console.log("sterCode: ", registerCode);
+  console.log("teacher.registerCode: ", teacher.registerCode);
 
   if (teacher.registerCode != registerCode) {
     throw serverErrs.BAD_REQUEST("code is wrong");
@@ -113,11 +116,63 @@ const signPassword = async (req, res) => {
   await teacher.update({ password: hashedPassword });
   await teacher.save();
 
-  const token = await generateToken({ userId: teacher.id, name: teacher.name, role: "teacher"});
+  const token = await generateToken({
+    userId: teacher.id,
+    name: teacher.name,
+    role: "teacher",
+  });
 
   res.cookie("token", token);
   res.send({ status: 201, data: teacher, msg: "successful sign up" });
 };
+const signAbout = async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    gender,
+    dateOfBirth,
+    email,
+    phone,
+    country,
+    city,
+    languages,
+  } = req.body;
 
+  const teacher = await Teacher.findOne({
+    where: {
+      email,
+    },
+  });
 
-module.exports = { signUp, verifyCode, signPassword };
+  if (!teacher) throw serverErrs.BAD_REQUEST("email not found");
+  if (teacher.isRegister) throw serverErrs.BAD_REQUEST("email is already used");
+
+  await teacher.update({
+    firstName,
+    lastName,
+    gender,
+    dateOfBirth,
+    phone,
+    country,
+    city,
+  });
+  const langTeacher = await LangTeachStd.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await LangTeachStd.bulkCreate(languages).then(() =>
+    console.log("LangTeachStd data have been created")
+  );
+
+  const langTeachers = await LangTeachStd.findAll({ include: { all: true } });
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: { teacher, langTeachers },
+    msg: "successful sign data",
+  });
+};
+
+module.exports = { signUp, verifyCode, signPassword, signAbout };
