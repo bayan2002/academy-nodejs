@@ -7,6 +7,7 @@ const {
   Curriculum,
   CurriculumLevel,
 } = require("../models");
+const dotenv = require("dotenv");
 
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -37,8 +38,8 @@ const signUp = async (req, res) => {
   );
   await newAdmin.save();
   const { id } = newAdmin;
-  const token = await generateToken({ userId: id, name, role: "admin"});
-console.log(token);
+  const token = await generateToken({ userId: id, name, role: "admin" });
+  console.log(token);
   res.cookie("token", token);
 
   res.send({ status: 201, data: newAdmin, msg: "successful sign up" });
@@ -64,13 +65,13 @@ const login = async (req, res) => {
 };
 
 const createSubjectCategory = async (req, res) => {
-  // const image = req.file.fileName
+  const image = req.file.fileName;
   const { titleAR, titleEN } = req.body;
   const newSubjectCategory = await SubjectCategory.create(
     {
       titleAR,
       titleEN,
-      // image
+      image,
     },
     {
       returning: true,
@@ -158,16 +159,17 @@ const createCurriculum = async (req, res) => {
   });
 };
 
-const linkedCurriculumLevel = async(req, res) => {
-  const {levelId, curriculumId} = req.body
+const linkedCurriculumLevel = async (req, res) => {
+  const { levelId, curriculumId } = req.body;
   const curriculumLevel = await CurriculumLevel.findOne({
     where: {
       CurriculumId: curriculumId,
       LevelId: levelId,
-    }
-  })
+    },
+  });
 
-  if(curriculumLevel) throw serverErrs.BAD_REQUEST("already linked curriculum with level");
+  if (curriculumLevel)
+    throw serverErrs.BAD_REQUEST("already linked curriculum with level");
 
   const newCurriculumLevel = await CurriculumLevel.create(
     {
@@ -184,9 +186,9 @@ const linkedCurriculumLevel = async(req, res) => {
     data: newCurriculumLevel,
     msg: "successful linked curriculum with level",
   });
-}
+};
 const getSubjects = async (req, res) => {
-  const subjects = await Subject.findAll();
+  const subjects = await Subject.findAll({ include: { all: true } });
   res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });
 };
 
@@ -196,6 +198,7 @@ const getSingleSubject = async (req, res) => {
     where: { id: subjectId },
     include: { all: true },
   });
+  if (!subject) throw serverErrs.BAD_REQUEST("Invalid subjectId! ");
   res.send({
     status: 201,
     data: subject,
@@ -204,7 +207,9 @@ const getSingleSubject = async (req, res) => {
 };
 
 const getSubjectCategories = async (req, res) => {
-  const subjectCategories = await SubjectCategory.findAll();
+  const subjectCategories = await SubjectCategory.findAll({
+    include: { all: true },
+  });
   res.send({
     status: 201,
     data: subjectCategories,
@@ -218,6 +223,8 @@ const getSingleSubjectCategory = async (req, res) => {
     where: { id: subjectCategoryId },
     include: { all: true },
   });
+  if (!subjectCategory)
+    throw serverErrs.BAD_REQUEST("Invalid subjectCategoryId! ");
   res.send({
     status: 201,
     data: subjectCategory,
@@ -226,7 +233,7 @@ const getSingleSubjectCategory = async (req, res) => {
 };
 
 const getClasses = async (req, res) => {
-  const classes = await Class.findAll();
+  const classes = await Class.findAll({ include: { all: true } });
   res.send({ status: 201, data: classes, msg: "successful get all classes" });
 };
 
@@ -236,6 +243,7 @@ const getSingleClass = async (req, res) => {
     where: { id: classId },
     include: { all: true },
   });
+  if (!singleClass) throw serverErrs.BAD_REQUEST("Invalid classId! ");
   res.send({
     status: 201,
     data: singleClass,
@@ -244,7 +252,7 @@ const getSingleClass = async (req, res) => {
 };
 
 const getLevels = async (req, res) => {
-  const levels = await Level.findAll();
+  const levels = await Level.findAll({ include: { all: true } });
   res.send({ status: 201, data: levels, msg: "successful get all levels" });
 };
 
@@ -254,6 +262,7 @@ const getSingleLevel = async (req, res) => {
     where: { id: levelId },
     include: { all: true },
   });
+  if (!level) throw serverErrs.BAD_REQUEST("Invalid levelId! ");
   res.send({
     status: 201,
     data: level,
@@ -262,7 +271,7 @@ const getSingleLevel = async (req, res) => {
 };
 
 const getCurriculums = async (req, res) => {
-  const curriculums = await Curriculum.findAll();
+  const curriculums = await Curriculum.findAll({ include: { all: true } });
   res.send({
     status: 201,
     data: curriculums,
@@ -276,6 +285,7 @@ const getSingleCurriculum = async (req, res) => {
     where: { id: curriculumId },
     include: { all: true },
   });
+  if (!curriculum) throw serverErrs.BAD_REQUEST("Invalid curriculumId! ");
   res.send({
     status: 201,
     data: curriculum,
