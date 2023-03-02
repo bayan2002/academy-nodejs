@@ -114,7 +114,7 @@ const students = [
     LevelId: 1,
     ClassId: 1,
     CurriculumId: 1,
-    ParentId: 1
+    ParentId: 1,
     // 1
   },
   {
@@ -134,7 +134,7 @@ const students = [
     LevelId: 2,
     ClassId: 2,
     CurriculumId: 2,
-    ParentId: 1
+    ParentId: 1,
     // 2
   },
   {
@@ -154,7 +154,7 @@ const students = [
     LevelId: 3,
     ClassId: 3,
     CurriculumId: 3,
-    ParentId: 1
+    ParentId: 1,
     // 3
   },
 ];
@@ -300,16 +300,48 @@ const curriculumLevels = [
 
 const languages = [
   {
-    title: "english",
+    titleAR: "العربية",
+    titleEN: "Arabic",
   },
   {
-    title: "arabic",
+    titleAR: "الإنجليزية",
+    titleEN: "English",
   },
   {
-    title: "french",
+    titleAR: "التركية",
+    titleEN: "Turkish",
   },
   {
-    title: "italian",
+    titleAR: "الفرنسية",
+    titleEN: "French",
+  },
+  {
+    titleAR: "الألمانية",
+    titleEN: "German",
+  },
+  {
+    titleAR: "الإسبانية",
+    titleEN: "Spanish",
+  },
+  {
+    titleAR: "الإيطالية",
+    titleEN: "Italian",
+  },
+  {
+    titleAR: "الصينية",
+    titleEN: "Chinese",
+  },
+  {
+    titleAR: "اليابانية",
+    titleEN: "Japanese",
+  },
+  {
+    titleAR: "الكورية",
+    titleEN: "Korean",
+  },
+  {
+    titleAR: "الروسية",
+    titleEN: "Russian",
   },
 ];
 
