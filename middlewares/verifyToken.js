@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
 
 dotenv.config();
+const { JWT_SECRET } = process.env;
 
 const verifyToken = (req, res, next) => {
   try {
@@ -10,7 +11,7 @@ const verifyToken = (req, res, next) => {
     if (!token) {
       next(serverErrs.UNAUTHORIZED("unauthorized"));
     } else {
-      const decoded = jwt.verify(token, 'secret');
+      const decoded = jwt.verify(token, JWT_SECRET);
       req.user = decoded;
       console.log(decoded);
       next();
