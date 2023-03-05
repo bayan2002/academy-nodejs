@@ -6,7 +6,9 @@ dotenv.config();
 
 const verifyToken = (req, res, next) => {
   try {
-    const { token } = req.cookies;
+    // const { token } = req.cookies;
+    const authHeader=req.get('Authorization');
+    const token = authHeader
     if (!token) {
       next(serverErrs.UNAUTHORIZED("unauthorized"));
     } else {

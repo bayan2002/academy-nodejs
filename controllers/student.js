@@ -117,8 +117,8 @@ const signPassword = async (req, res) => {
     role: "student",
   });
 
-  res.cookie("token", token);
-  res.send({ status: 201, data: student, msg: "successful sign password" });
+  // res.cookie("token", token);
+  res.send({ status: 201, data: student, msg: "successful sign password", token: token });
 };
 
 const signData = async (req, res) => {
