@@ -27,6 +27,7 @@ const CurriculumTeacher = require("./CurriculumTeacher");
 const Curriculum = require("./Curriculum");
 const CurriculumLevel = require("./CurriculumLevel");
 const Certificates = require("./Certificates");
+const LanguageLevel = require("./LanguageLevel");
 
 Teacher.hasMany(LangTeachStd);
 LangTeachStd.belongsTo(Teacher);
@@ -127,4 +128,5 @@ module.exports = {
   Certificates,
   CurriculumLevel,
   CurriculumTeacher,
+  LanguageLevel,
 };

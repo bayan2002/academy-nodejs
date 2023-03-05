@@ -124,7 +124,8 @@ const signPassword = async (req, res) => {
   });
 
   if (!teacher) throw serverErrs.BAD_REQUEST("email not found");
-  if (teacher.isRegister) throw serverErrs.BAD_REQUEST("email is already used");
+  if (!teacher.isRegistered)
+    throw serverErrs.BAD_REQUEST("verify your code please");
   if (student) throw serverErrs.BAD_REQUEST("email is already used");
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
 
@@ -257,10 +258,24 @@ const signAdditionalInfo = async (req, res) => {
   });
 };
 
+const getSingleTeacher = async (req, res) => {
+  const { TeacherId } = req.params;
+  const teacher = await Teacher.findOne({
+    where: { id: TeacherId },
+    include: { all: true },
+  });
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "successful get single Teacher",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
   signPassword,
   signAbout,
   signAdditionalInfo,
+  getSingleTeacher,
 };
