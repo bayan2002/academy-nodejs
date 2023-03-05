@@ -34,12 +34,22 @@ const signUp = async (req, res) => {
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
 
   const code = generateRandomCode();
-  const newTeacher = await Teacher.create({
-    email,
-    registerCode: code,
-  });
-  await newTeacher.save();
 
+  const existTeacher = await Teacher.findOne({
+    where: {
+      email,
+      isRegistered: false,
+    },
+  });
+  console.log(existTeacher)
+  if(existTeacher) await existTeacher.update({ registerCode: code });
+  else {
+    const newTeacher = await Teacher.create({
+      email,
+      registerCode: code,
+    });
+  }
+  
   sendEmail(email, code);
   res.send({ status: 201, data: teacher, msg: "successful send email" });
 };
