@@ -16,8 +16,8 @@ const login = async (req, res) => {
 
   const teacher = await Teacher.findOne({ where: { email } });
   
-  const found = !parent || !student || !teacher;
-  if (found) throw serverErrs.BAD_REQUEST("Email not found");
+  const found = parent || student || teacher;
+  if (!found) throw serverErrs.BAD_REQUEST("Email not found");
 
   const result = await compare(
     password,
