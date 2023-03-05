@@ -1,4 +1,11 @@
-const { Teacher, Student, Parent, LangTeachStd, TeacherLevel, CurriculumTeacher } = require("../models");
+const {
+  Teacher,
+  Student,
+  Parent,
+  LangTeachStd,
+  TeacherLevel,
+  CurriculumTeacher,
+} = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
@@ -41,15 +48,15 @@ const signUp = async (req, res) => {
       isRegistered: false,
     },
   });
-  console.log(existTeacher)
-  if(existTeacher) await existTeacher.update({ registerCode: code });
+  console.log(existTeacher);
+  if (existTeacher) await existTeacher.update({ registerCode: code });
   else {
     const newTeacher = await Teacher.create({
       email,
       registerCode: code,
     });
   }
-  
+
   sendEmail(email, code);
   res.send({ status: 201, data: teacher, msg: "successful send email" });
 };
@@ -133,7 +140,12 @@ const signPassword = async (req, res) => {
   });
 
   // res.cookie("token", token);
-  res.send({ status: 201, data: teacher, msg: "successful sign up", token: token });
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "successful sign up",
+    token: token,
+  });
 };
 const signAbout = async (req, res) => {
   const { teacherId } = req.params;
@@ -203,7 +215,7 @@ const signAdditionalInfo = async (req, res) => {
     haveExperience,
     experienceYears,
     favStdGender,
-    favHours
+    favHours,
   });
   const curriculumTeacher = await CurriculumTeacher.destroy({
     where: {
@@ -244,7 +256,6 @@ const signAdditionalInfo = async (req, res) => {
     msg: "successful sign Additional Information! ",
   });
 };
-
 
 module.exports = {
   signUp,
