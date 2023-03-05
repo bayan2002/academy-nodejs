@@ -42,9 +42,9 @@ const signUp = async (req, res) => {
   const { id } = newAdmin;
   const token = await generateToken({ userId: id, name, role: "admin" });
   console.log(token);
-  res.cookie("token", token);
+  // res.cookie("token", token);
 
-  res.send({ status: 201, data: newAdmin, msg: "successful sign up" });
+  res.send({ status: 201, data: newAdmin, msg: "successful sign up", token: token });
 };
 
 const login = async (req, res) => {
@@ -61,9 +61,9 @@ const login = async (req, res) => {
   const { id, name } = admin;
 
   const token = await generateToken({ userId: id, name, role: "admin" });
-  res.cookie("token", token);
+  // res.cookie("token", token);
 
-  res.send({ status: 201, data: admin, msg: "successful log in" });
+  res.send({ status: 201, data: admin, msg: "successful log in" , token: token});
 };
 
 const createSubjectCategory = async (req, res) => {

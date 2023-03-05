@@ -74,6 +74,7 @@ const Teacher = Sequelize.define('Teacher', {
   },
   isRegistered: {
     type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
