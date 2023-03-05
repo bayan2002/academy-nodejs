@@ -114,7 +114,7 @@ const students = [
     LevelId: 1,
     ClassId: 1,
     CurriculumId: 1,
-    ParentId: 1
+    ParentId: 1,
     // 1
   },
   {
@@ -298,16 +298,48 @@ const curriculumLevels = [
 
 const languages = [
   {
-    title: "english",
+    titleAR: "العربية",
+    titleEN: "Arabic",
   },
   {
-    title: "arabic",
+    titleAR: "الإنجليزية",
+    titleEN: "English",
   },
   {
-    title: "french",
+    titleAR: "التركية",
+    titleEN: "Turkish",
   },
   {
-    title: "italian",
+    titleAR: "الفرنسية",
+    titleEN: "French",
+  },
+  {
+    titleAR: "الألمانية",
+    titleEN: "German",
+  },
+  {
+    titleAR: "الإسبانية",
+    titleEN: "Spanish",
+  },
+  {
+    titleAR: "الإيطالية",
+    titleEN: "Italian",
+  },
+  {
+    titleAR: "الصينية",
+    titleEN: "Chinese",
+  },
+  {
+    titleAR: "اليابانية",
+    titleEN: "Japanese",
+  },
+  {
+    titleAR: "الكورية",
+    titleEN: "Korean",
+  },
+  {
+    titleAR: "الروسية",
+    titleEN: "Russian",
   },
 ];
 
@@ -378,6 +410,48 @@ const parents = [
     // 1
   },
 ];
+const LangTeachStds = [
+  {
+    level: "beginner",
+    LanguageId: "1",
+    TeacherId: "1",
+  },
+  {
+    level: "native",
+    LanguageId: "2",
+    TeacherId: "1",
+  },
+  {
+    level: "intermediate",
+    LanguageId: "3",
+    TeacherId: "1",
+  },
+  {
+    level: "native",
+    LanguageId: "4",
+    TeacherId: "1",
+  },
+  {
+    level: "beginner",
+    LanguageId: "1",
+    TeacherId: "2",
+  },
+  {
+    level: "native",
+    LanguageId: "2",
+    TeacherId: "2",
+  },
+  {
+    level: "intermediate",
+    LanguageId: "3",
+    TeacherId: "2",
+  },
+  {
+    level: "native",
+    LanguageId: "4",
+    TeacherId: "2",
+  },
+];
 
 module.exports = {
   admin,
@@ -394,4 +468,5 @@ module.exports = {
   educationDegree,
   certificates,
   curriculumLevels,
+  LangTeachStds,
 };

@@ -22,7 +22,7 @@ const Teacher = Sequelize.define('Teacher', {
     type: DataTypes.STRING,
   },
   phone: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
   },
   gender: {
     type: DataTypes.STRING,
@@ -37,6 +37,9 @@ const Teacher = Sequelize.define('Teacher', {
     type: DataTypes.STRING,
   },
   city: {
+    type: DataTypes.STRING,
+  },
+  country:{
     type: DataTypes.STRING,
   },
   experience: {

@@ -8,7 +8,11 @@ const Language = Sequelize.define("Language", {
     allowNull: false,
     primaryKey: true,
   },
-  title: {
+  titleAR: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  titleEN: {
     type: DataTypes.STRING,
     allowNull: false,
   },
