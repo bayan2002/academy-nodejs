@@ -117,7 +117,7 @@ const signPassword = async (req, res) => {
   });
 
   if (!teacher) throw serverErrs.BAD_REQUEST("email not found");
-  if (teacher.isRegister) throw serverErrs.BAD_REQUEST("email is already used");
+  if (!teacher.isRegistered) throw serverErrs.BAD_REQUEST("verify your code please");
   if (student) throw serverErrs.BAD_REQUEST("email is already used");
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
 
