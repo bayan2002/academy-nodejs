@@ -48,7 +48,12 @@ const signUp = async (req, res) => {
 
   // res.cookie("token", token);
 
-  res.send({ status: 201, data: newParent, msg: "successful sign up", token: token });
+  res.send({
+    status: 201,
+    data: newParent,
+    msg: "successful sign up",
+    token: token,
+  });
 };
 
 const getSingleParent = async (req, res) => {
@@ -66,7 +71,7 @@ const getSingleParent = async (req, res) => {
 
 const addStudentToParent = async (req, res) => {
   const { ParentId, StudentId } = req.body;
-  console.log( ParentId, StudentId );
+  console.log(ParentId, StudentId);
   const parent = await Parent.findOne({
     where: { id: ParentId },
     include: { all: true },
@@ -86,10 +91,7 @@ const addStudentToParent = async (req, res) => {
     include: { all: true },
   });
 
-  if (
-    oldParentStudent &&
-    (oldParentStudent.status === 0 || oldParentStudent.status === 1)
-  )
+  if (oldParentStudent)
     throw serverErrs.BAD_REQUEST("student request is already exist");
 
   const newParentStudent = await ParentStudent.create({
