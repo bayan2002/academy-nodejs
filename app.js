@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const { clientError, serverError } = require("./middlewares/error");
 const cors = require("cors");
 const multer = require("multer");
+const path = require("path");
 
 dotenv.config();
 const app = express();
@@ -43,6 +44,8 @@ app.use(multer({ storage: fileStorage }).single("image"));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use('/images', express.static(path.join(__dirname,'images')));
 
 app.use("/api/v1", router);
 
