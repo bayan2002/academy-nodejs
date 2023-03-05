@@ -1,4 +1,4 @@
-const { Teacher, Student, Parent, LangTeachStd } = require("../models");
+const { Teacher, Student, Parent, LangTeachStd, TeacherLevel, CurriculumTeacher } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
@@ -173,7 +173,67 @@ const signAbout = async (req, res) => {
     msg: "successful sign about data",
   });
 };
+const signAdditionalInfo = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
+  const {
+    haveCertificates,
+    haveExperience,
+    experienceYears,
+    favStdGender,
+    favHours,
+    levels,
+    curriculums,
+  } = req.body;
+
+  await teacher.update({
+    haveCertificates,
+    haveExperience,
+    experienceYears,
+    favStdGender,
+    favHours
+  });
+  const curriculumTeacher = await CurriculumTeacher.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  const teacherLevel = await TeacherLevel.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await TeacherLevel.bulkCreate(levels).then(() =>
+    console.log("LangTeachStd data have been created")
+  );
+  await CurriculumTeacher.bulkCreate(curriculums).then(() =>
+    console.log("LangTeachStd data have been created")
+  );
+
+  const teacherLevels = await TeacherLevel.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  const curriculumTeachers = await CurriculumTeacher.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: { teacher, teacherLevels, curriculumTeachers },
+    msg: "successful sign Additional Information! ",
+  });
+};
 
 
 module.exports = {
@@ -181,4 +241,5 @@ module.exports = {
   verifyCode,
   signPassword,
   signAbout,
+  signAdditionalInfo,
 };

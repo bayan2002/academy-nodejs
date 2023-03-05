@@ -42,7 +42,7 @@ const Teacher = Sequelize.define('Teacher', {
   country:{
     type: DataTypes.STRING,
   },
-  experience: {
+  haveExperience: {
     type: DataTypes.BOOLEAN,
   },
   experienceYears: {
