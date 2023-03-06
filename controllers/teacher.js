@@ -9,7 +9,7 @@ const {
   Experience,
   EducationDegree,
   TeacherDay,
-  Time
+  Time,
   RemoteSession,
   F2FSessionStd,
   F2FSessionTeacher,
