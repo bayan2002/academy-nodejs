@@ -12,6 +12,8 @@ const generateRandomCode = require("../middlewares/generateCode");
 const sendEmail = require("../middlewares/sendEmail");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
+const path = require("path");
+const fs = require("fs");
 
 const signUp = async (req, res) => {
   const { email } = req.body;
@@ -271,6 +273,30 @@ const getSingleTeacher = async (req, res) => {
   });
 };
 
+const uploadImage = async (req, res) => {
+  const { teacherId } = req.params;
+
+  if (!req.file) throw serverErrs.BAD_REQUEST("Image not exist ");
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", `images/${filePath}`);
+    fs.unlink(filePath, (err) => {
+     if(err) throw serverErrs.BAD_REQUEST("Image not found");
+    });
+  };
+  
+  if (teacher.image) {
+    clearImage(teacher.image);
+  }
+  await teacher.update({ image: req.file.filename });
+  res.send({ status: 201, data: teacher, msg: "uploaded image successfully" });
+};
+
+const addSubjects = async (req, res) => {};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -278,4 +304,6 @@ module.exports = {
   signAbout,
   signAdditionalInfo,
   getSingleTeacher,
+  uploadImage,
+  addSubjects,
 };
