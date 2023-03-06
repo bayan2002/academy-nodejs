@@ -6,6 +6,7 @@ const parentRouter = require("./parent");
 const LanguageRouter = require("./language");
 const login = require("../middlewares/login");
 const logout = require("../middlewares/logout");
+const errorCatcher = require("../middlewares/errorCatcher");
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.use("/teacher", teacherRouter);
 router.use('/student',studentRouter)
 router.use("/parent", parentRouter);
 router.use("/language", LanguageRouter);
-router.post('/login', login);
+router.post('/login', errorCatcher(login));
 router.get('/logout', logout)
 
 
