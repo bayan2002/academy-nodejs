@@ -12,7 +12,7 @@ const verifyToken = (req, res, next) => {
     if (!token) {
       next(serverErrs.UNAUTHORIZED("unauthorized"));
     } else {
-      const decoded = jwt.verify(token, 'secret');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
       console.log(decoded);
       next();
