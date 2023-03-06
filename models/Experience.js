@@ -17,11 +17,11 @@ const Experience = Sequelize.define("Experience", {
     allowNull: false
   },
   from: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     allowNull: false
   },
   to:{
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     allowNull: false
   }
 })
