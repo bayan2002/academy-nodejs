@@ -57,6 +57,9 @@ const Teacher = Sequelize.define('Teacher', {
   favHours: {
     type: DataTypes.STRING,
   },
+  timeZone: {
+    type: DataTypes.STRING,
+  },
   shortHeadlineAr: {
     type: DataTypes.STRING,
   },
