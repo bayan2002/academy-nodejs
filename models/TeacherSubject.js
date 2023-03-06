@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/config/connection");
 
-const TeacherSubjectCategory = sequelize.define("TeacherSubjectCategory", {
+const TeacherSubject = sequelize.define("TeacherSubject", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -10,4 +10,4 @@ const TeacherSubjectCategory = sequelize.define("TeacherSubjectCategory", {
   },
 });
 
-module.exports = TeacherSubjectCategory;
+module.exports = TeacherSubject;

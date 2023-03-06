@@ -8,6 +8,8 @@ const {
   signAbout,
   signAdditionalInfo,
   getSingleTeacher,
+  addSubjects,
+  uploadImage,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -18,6 +20,8 @@ teacherRouter.post("/signup/code", errorCatcher(verifyCode));
 teacherRouter.post("/signup/pass", errorCatcher(signPassword));
 teacherRouter.post("/about/:teacherId",  verifyToken ,checkUserAuth("teacher"), errorCatcher(signAbout));
 teacherRouter.post("/additionalInfo/:teacherId",verifyToken ,checkUserAuth("teacher"), errorCatcher(signAdditionalInfo));
+teacherRouter.post("/image/:teacherId",verifyToken ,checkUserAuth("teacher"), errorCatcher(uploadImage));
+teacherRouter.post("/subjects/:teacherId",verifyToken ,checkUserAuth("teacher"), errorCatcher(addSubjects));
 
 teacherRouter.get("/getSingleTeacher/:teacherId", errorCatcher(getSingleTeacher));
 
