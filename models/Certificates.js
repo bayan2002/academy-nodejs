@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const Sequelize = require("../db/config/connection");
 
-const certificates = Sequelize.define("certificates", {
+const Certificates = Sequelize.define("Certificates", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -27,4 +27,4 @@ const certificates = Sequelize.define("certificates", {
   
 });
 
-module.exports = certificates;
+module.exports = Certificates;
