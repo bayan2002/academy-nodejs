@@ -259,9 +259,9 @@ const signAdditionalInfo = async (req, res) => {
 };
 
 const getSingleTeacher = async (req, res) => {
-  const { TeacherId } = req.params;
+  const { teacherId } = req.params;
   const teacher = await Teacher.findOne({
-    where: { id: TeacherId },
+    where: { id: teacherId },
     include: { all: true },
   });
   res.send({
