@@ -15,6 +15,7 @@ const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
+const { Op } = require("sequelize");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -44,7 +45,12 @@ const signUp = async (req, res) => {
   console.log(token);
   // res.cookie("token", token);
 
-  res.send({ status: 201, data: newAdmin, msg: "successful sign up", token: token });
+  res.send({
+    status: 201,
+    data: newAdmin,
+    msg: "successful sign up",
+    token: token,
+  });
 };
 
 const login = async (req, res) => {
@@ -63,7 +69,12 @@ const login = async (req, res) => {
   const token = await generateToken({ userId: id, name, role: "admin" });
   // res.cookie("token", token);
 
-  res.send({ status: 201, data: admin, msg: "successful log in" , token: token});
+  res.send({
+    status: 201,
+    data: admin,
+    msg: "successful log in",
+    token: token,
+  });
 };
 
 const createSubjectCategory = async (req, res) => {
@@ -308,7 +319,7 @@ const acceptStudent = async (req, res) => {
     where: { id: parentStudent.StudentId },
     include: { all: true },
   });
-  await student.update({ ParentId: parentStudent.ParentId })
+  await student.update({ ParentId: parentStudent.ParentId });
   res.send({
     status: 201,
     msg: "Student has been accepted",
@@ -327,6 +338,32 @@ const rejectStudent = async (req, res) => {
   res.send({
     status: 201,
     msg: "Student has been rejected",
+  });
+};
+
+const getParentStudentWaiting = async (req, res) => {
+  const parentStudents = await ParentStudent.findAll({
+    where: { status: 0 },
+    include: { all: true },
+  });
+
+  res.send({
+    status: 201,
+    data: parentStudents,
+    msg: "successful get all Students are waiting",
+  });
+};
+
+const getParentStudentAccOrRej = async (req, res) => {
+  const parentStudents = await ParentStudent.findAll({
+    where: { status: { [Op.or]: [1, -1] } },
+    include: { all: true },
+  });
+
+  res.send({
+    status: 201,
+    data: parentStudents,
+    msg: "successful get all Students are accepted",
   });
 };
 
@@ -351,4 +388,6 @@ module.exports = {
   linkedCurriculumLevel,
   acceptStudent,
   rejectStudent,
+  getParentStudentWaiting,
+  getParentStudentAccOrRej,
 };
