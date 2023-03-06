@@ -9,6 +9,7 @@ const {
   getSingleStudent,
   getLastTenStudent,
   verifyCode,
+  editPersonalInformation,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -18,6 +19,12 @@ studentRouter.post("/signup", errorCatcher(signUp));
 studentRouter.post("/signup/code", errorCatcher(verifyCode));
 studentRouter.post("/signup/pass", errorCatcher(signPassword));
 studentRouter.post("/signup/data", errorCatcher(signData));
+studentRouter.post(
+  "/editAbout/:StudentId",
+  verifyToken,
+  checkUserAuth("student"),
+  errorCatcher(editPersonalInformation)
+);
 studentRouter.get("/all", errorCatcher(getStudents));
 studentRouter.get("/get/:studentId", errorCatcher(getSingleStudent));
 studentRouter.get(

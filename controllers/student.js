@@ -1,10 +1,12 @@
-const { Teacher, Student, Parent } = require("../models");
+const { Teacher, Student, Parent, LangTeachStd } = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
 const sendEmail = require("../middlewares/sendEmail");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
+const path = require("path");
+const fs = require("fs");
 
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
@@ -194,6 +196,69 @@ const getLastTenStudent = async (req, res) => {
   });
 };
 
+const editPersonalInformation = async (req, res) => {
+  const { StudentId } = req.params;
+  const student = await Student.findOne({ where: { id: StudentId } });
+  if (!student) throw serverErrs.BAD_REQUEST("Student not found");
+
+  const {
+    name,
+    gender,
+    dateOfBirth,
+    phoneNumber,
+    city,
+    nationality,
+    location,
+    regionTime,
+    languages,
+    LevelId,
+    ClassId,
+    CurriculumId,
+  } = req.body;
+
+  if (!req.file) throw serverErrs.BAD_REQUEST("Image not exist ");
+
+  const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", `images/${filePath}`);
+    fs.unlink(filePath, (err) => {
+      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+    });
+  };
+
+  if (student.image) {
+    clearImage(student.image);
+  }
+
+  await student.update({
+    name,
+    gender,
+    dateOfBirth,
+    phoneNumber,
+    city,
+    nationality,
+    location,
+    regionTime,
+    LevelId,
+    ClassId,
+    CurriculumId,
+    image: req.file.filename,
+  });
+  await LangTeachStd.destroy({
+    where: {
+      StudentId: student.id,
+    },
+  });
+
+  await LangTeachStd.bulkCreate(languages).then(() =>
+    console.log("LangTeachStd data have been created")
+  );
+
+  res.send({
+    status: 201,
+    msg: "successful edit personal information data",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -202,4 +267,5 @@ module.exports = {
   getStudents,
   getSingleStudent,
   getLastTenStudent,
+  editPersonalInformation,
 };
