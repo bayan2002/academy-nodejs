@@ -6,7 +6,7 @@ const Wallet = require("./Wallet");
 const Class = require("./Class");
 const Subject = require("./Subject");
 const SubjectCategory = require("./SubjectCategory");
-const TeacherSubjectCategory = require("./TeacherSubjectCategory");
+const TeacherSubject = require("./TeacherSubject");
 const Message = require("./Message");
 const Conversation = require("./Conversation");
 const Days = require("./Days");
@@ -89,10 +89,10 @@ Curriculum.hasMany(Student);
 Student.belongsTo(Curriculum);
 SubjectCategory.hasMany(Subject);
 Subject.belongsTo(SubjectCategory);
-SubjectCategory.hasMany(TeacherSubjectCategory);
-TeacherSubjectCategory.belongsTo(SubjectCategory);
-Teacher.hasMany(TeacherSubjectCategory);
-TeacherSubjectCategory.belongsTo(Teacher);
+Subject.hasMany(TeacherSubject)
+TeacherSubject.belongsTo(Subject)
+Teacher.hasMany(TeacherSubject);
+TeacherSubject.belongsTo(Teacher);
 Teacher.hasOne(Wallet);
 Wallet.belongsTo(Teacher);
 Student.belongsTo(Parent);
@@ -107,7 +107,6 @@ module.exports = {
   Class,
   Subject,
   SubjectCategory,
-  TeacherSubjectCategory,
   Message,
   Conversation,
   Days,

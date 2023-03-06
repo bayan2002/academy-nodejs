@@ -118,7 +118,12 @@ const signPassword = async (req, res) => {
   });
 
   // res.cookie("token", token);
-  res.send({ status: 201, data: student, msg: "successful sign password", token: token });
+  res.send({
+    status: 201,
+    data: student,
+    msg: "successful sign password",
+    token: token,
+  });
 };
 
 const signData = async (req, res) => {
@@ -176,4 +181,25 @@ const getSingleStudent = async (req, res) => {
   });
 };
 
-module.exports = { signUp, verifyCode, signPassword, signData, getStudents, getSingleStudent};
+const getLastTenStudent = async (req, res) => {
+  const students = await Student.findAll({
+    limit: 10,
+    order: [["id", "DESC"]],
+    include: { all: true },
+  });
+  res.send({
+    status: 201,
+    data: students,
+    msg: "successful get last ten students",
+  });
+};
+
+module.exports = {
+  signUp,
+  verifyCode,
+  signPassword,
+  signData,
+  getStudents,
+  getSingleStudent,
+  getLastTenStudent,
+};

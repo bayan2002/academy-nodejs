@@ -22,6 +22,8 @@ const {
   linkedCurriculumLevel,
   acceptStudent,
   rejectStudent,
+  getParentStudentWaiting,
+  getParentStudentAccOrRej,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -97,4 +99,16 @@ adminRouter.get("/level/:levelId", errorCatcher(getSingleLevel));
 adminRouter.get("/Curriculums", getCurriculums);
 adminRouter.get("/Curriculum/:curriculumId", errorCatcher(getSingleCurriculum));
 
+adminRouter.get(
+  "/getStudentsWaiting",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getParentStudentWaiting)
+);
+adminRouter.get(
+  "/getStudentsAccOrRej",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getParentStudentAccOrRej)
+);
 module.exports = adminRouter;
