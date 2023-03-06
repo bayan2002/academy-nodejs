@@ -8,6 +8,8 @@ const {
   signAbout,
   signAdditionalInfo,
   getSingleTeacher,
+  signResume,
+  signAvailability,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -16,9 +18,29 @@ const checkUserAuth = require("../middlewares/checkUserAuth");
 teacherRouter.post("/signup", errorCatcher(signUp));
 teacherRouter.post("/signup/code", errorCatcher(verifyCode));
 teacherRouter.post("/signup/pass", errorCatcher(signPassword));
-teacherRouter.post("/about/:teacherId",  verifyToken ,checkUserAuth("teacher"), errorCatcher(signAbout));
-teacherRouter.post("/additionalInfo/:teacherId",verifyToken ,checkUserAuth("teacher"), errorCatcher(signAdditionalInfo));
+teacherRouter.post(
+  "/about/:teacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(signAbout)
+);
+teacherRouter.post(
+  "/additionalInfo/:teacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(signAdditionalInfo)
+);
 
-teacherRouter.get("/getSingleTeacher/:teacherId", errorCatcher(getSingleTeacher));
+teacherRouter.post(
+  "/resume/:teacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(signResume)
+);
+
+teacherRouter.get(
+  "/getSingleTeacher/:teacherId",
+  errorCatcher(getSingleTeacher)
+);
 
 module.exports = teacherRouter;
