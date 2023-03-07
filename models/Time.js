@@ -9,11 +9,11 @@ const Time = Sequelize.define("Time", {
     primaryKey: true,
   },
   from: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   to: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     allowNull: false,
   },
 });

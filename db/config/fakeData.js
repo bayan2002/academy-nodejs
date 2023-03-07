@@ -452,6 +452,43 @@ const LangTeachStds = [
     TeacherId: "2",
   },
 ];
+const days = [
+  {
+    titleEN: "Saturday",
+    titleAR: "السبت",
+    id: 1,
+  },
+  {
+    titleEN: "Sunday",
+    titleAR: "الأحد",
+    id: 2,
+  },
+  {
+    titleEN: "Monday",
+    titleAR: "الإثنين",
+    id: 3,
+  },
+  {
+    titleEN: "Tuesday",
+    titleAR: "الثلاثاء",
+    id: 4,
+  },
+  {
+    titleEN: "Wednesday",
+    titleAR: "الأربعاء",
+    id: 5,
+  },
+  {
+    titleEN: "Thursday",
+    titleAR: "الخمس",
+    id: 6,
+  },
+  {
+    titleEN: "Friday",
+    titleAR: "الجمعة",
+    id: 7,
+  },
+];
 
 module.exports = {
   admin,
@@ -469,4 +506,5 @@ module.exports = {
   certificates,
   curriculumLevels,
   LangTeachStds,
+  days,
 };

@@ -8,7 +8,6 @@ const login = require("../middlewares/login");
 const logout = require("../middlewares/logout");
 const errorCatcher = require("../middlewares/errorCatcher");
 
-
 const router = express.Router();
 
 router.use("/admin", adminRouter);
