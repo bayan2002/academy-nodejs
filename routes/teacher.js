@@ -13,6 +13,7 @@ const {
   addSubjects,
   uploadImage,
   signVideoLink,
+  addDescription,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -65,6 +66,13 @@ teacherRouter.post(
   checkUserAuth("teacher"),
   errorCatcher(signVideoLink)
 );
+teacherRouter.post(
+  "/description/:teacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(addDescription)
+);
+
 teacherRouter.get(
   "/getSingleTeacher/:teacherId",
   errorCatcher(getSingleTeacher)
