@@ -8,6 +8,10 @@ const {
   RemoteSession,
   F2FSessionStd,
   F2FSessionTeacher,
+  TeacherDay,
+  Certificates,
+  Experience,
+  EducationDegree,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -402,9 +406,6 @@ const signAvailability = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
-const addDescription = async (req, res) => {
-  const { teacherId } = req.params;
-
   if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
 
   const { timeZone, teacherDayes } = req.body;
@@ -433,31 +434,36 @@ const addDescription = async (req, res) => {
   res.send({
     status: 201,
     data: { teacher, dayesTeacher },
-    msg: "successful sign Resume Information! ",
+    msg: "successful sign availability!",
   });
 };
+
+const addDescription = async (req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+const {shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn} = req.body
+
+const updatedTeacher = await teacher.update({
+  shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn
+})
+res.send({
+  status: 201,
+  data: updatedTeacher,
+  msg: "added description successfully",
+});
+}
+
 const signResume = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
   if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
-
-  const { shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn } =
-    req.body;
-
-  const updatedTeacher = await teacher.update({
-    shortHeadlineAr,
-    shortHeadlineEn,
-    descriptionAr,
-    descriptionEn,
-  });
-  res.send({
-    status: 201,
-    data: updatedTeacher,
-    msg: "added description successfully",
-  });
-};
 
   const { certificates, experiences, educationDegrees } = req.body;
 
