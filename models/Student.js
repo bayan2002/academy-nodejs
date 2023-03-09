@@ -43,7 +43,7 @@ const Student = sequelize.define("Student", {
     type: DataTypes.STRING,
   },
   regionTime: {
-    type: DataTypes.STRING,
+    type: DataTypes.JSON,
   },
   registerCode: {
     type: DataTypes.INTEGER,
