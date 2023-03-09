@@ -398,6 +398,30 @@ const addSubjects = async (req, res) => {
   });
 };
 
+const addDescription = async (req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const { shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn } =
+    req.body;
+
+  const updatedTeacher = await teacher.update({
+    shortHeadlineAr,
+    shortHeadlineEn,
+    descriptionAr,
+    descriptionEn,
+  });
+  res.send({
+    status: 201,
+    data: updatedTeacher,
+    msg: "added description successfully",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -407,4 +431,5 @@ module.exports = {
   getSingleTeacher,
   uploadImage,
   addSubjects,
+  addDescription,
 };
