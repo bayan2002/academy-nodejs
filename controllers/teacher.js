@@ -497,6 +497,26 @@ const signResume = async (req, res) => {
     msg: "successful sign Resume Information! ",
   });
 };
+const signVideoLink = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const { videoLink } = req.body;
+
+  await teacher.update({
+    videoLink,
+  });
+
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "successful sign VideoLink Information! ",
+  });
+};
 module.exports = {
   signUp,
   verifyCode,
@@ -508,4 +528,5 @@ module.exports = {
   addSubjects,
   signResume,
   signAvailability,
+  signVideoLink,
 };
