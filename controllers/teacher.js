@@ -343,13 +343,13 @@ const addSubjects = async (req, res) => {
    await TeacherSubject.bulkCreate(subjects).then(() =>
    console.log("Teacher Subjects data have been created")
    );
-  await RemoteSession.bulkCreate(remote).then(() =>
+  await RemoteSession.create(remote).then(() =>
     console.log("Teacher remote session has been saved")
   );
-  await F2FSessionStd.bulkCreate(f2fStudent).then(() =>
+  await F2FSessionStd.create(f2fStudent).then(() =>
     console.log("teacher session at home student has been saved")
   );
-  await F2FSessionTeacher.bulkCreate(f2fTeacher).then(() =>
+  await F2FSessionTeacher.create(f2fTeacher).then(() =>
     console.log("Teacher session at teacher home has been saved")
   );
 
