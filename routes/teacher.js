@@ -28,16 +28,16 @@ teacherRouter.post(
   errorCatcher(signAbout)
 );
 teacherRouter.post(
-  "/additionalInfo/:teacherId",
-  verifyToken,
-  checkUserAuth("teacher"),
-  errorCatcher(signAdditionalInfo)
-);
-teacherRouter.post(
   "/image/:teacherId",
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(uploadImage)
+);
+teacherRouter.post(
+  "/additionalInfo/:teacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(signAdditionalInfo)
 );
 teacherRouter.post(
   "/subjects/:teacherId",
@@ -51,6 +51,12 @@ teacherRouter.post(
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(signResume)
+);
+teacherRouter.post(
+  "/availability/:teacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(signAvailability)
 );
 
 teacherRouter.get(
