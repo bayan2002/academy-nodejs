@@ -337,8 +337,6 @@ const addSubjects = async (req, res) => {
       TeacherId: teacher.id,
     },
   });
-
-   console.log(subjects)
    
    await TeacherSubject.bulkCreate(subjects).then(() =>
    console.log("Teacher Subjects data have been created")

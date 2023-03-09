@@ -8,6 +8,14 @@ const TeacherDay = sequelize.define("TeacherDay", {
     allowNull: false,
     primaryKey: true,
   },
+  from: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  to: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
 
 module.exports = TeacherDay;

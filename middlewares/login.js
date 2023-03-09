@@ -14,8 +14,10 @@ const login = async (req, res) => {
 
   const student = await Student.findOne({ where: { email } });
 
-  const teacher = await Teacher.findOne({ where: { email } });
-  
+  const teacher = await Teacher.findOne({
+    where: { email, isRegistered: true },
+  });
+
   const found = parent || student || teacher;
   if (!found) throw serverErrs.BAD_REQUEST("Email not found");
 
@@ -30,7 +32,13 @@ const login = async (req, res) => {
   const token = await generateToken({ userId: data.id, name: data.name, role });
 
   // res.cookie("token", token);
-  res.send({ status: 201, data: data, msg: "successful log in", token: token, role: role});
+  res.send({
+    status: 201,
+    data: data,
+    msg: "successful log in",
+    token: token,
+    role: role,
+  });
 };
 
 module.exports = login;

@@ -49,8 +49,8 @@ Teacher.hasMany(TeacherDay);
 TeacherDay.belongsTo(Teacher);
 Days.hasMany(TeacherDay);
 TeacherDay.belongsTo(Days);
-Time.hasMany(TeacherDay);
-TeacherDay.belongsTo(Time);
+// TeacherDay.hasMany(Time);
+// Time.belongsTo(TeacherDay);
 Teacher.hasMany(Conversation);
 Conversation.belongsTo(Teacher);
 Student.hasMany(Conversation);
@@ -89,8 +89,8 @@ Curriculum.hasMany(Student);
 Student.belongsTo(Curriculum);
 SubjectCategory.hasMany(Subject);
 Subject.belongsTo(SubjectCategory);
-Subject.hasMany(TeacherSubject)
-TeacherSubject.belongsTo(Subject)
+Subject.hasMany(TeacherSubject);
+TeacherSubject.belongsTo(Subject);
 Teacher.hasMany(TeacherSubject);
 TeacherSubject.belongsTo(Teacher);
 Teacher.hasOne(Wallet);

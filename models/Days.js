@@ -8,6 +8,14 @@ const Days = sequelize.define("Days", {
     allowNull: false,
     primaryKey: true,
   },
+  titleAR: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  titleEN: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 });
 
 module.exports = Days;
