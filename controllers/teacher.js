@@ -397,10 +397,47 @@ const addSubjects = async (req, res) => {
     msg: "added subjects and session type successfully",
   });
 };
+const signAvailability = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
 const addDescription = async (req, res) => {
   const { teacherId } = req.params;
 
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const { timeZone, teacherDayes } = req.body;
+
+  await teacher.update({
+    timeZone,
+  });
+  const teacherDay = await TeacherDay.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await TeacherDay.bulkCreate(teacherDayes).then(() =>
+    console.log("TeacherDay data have been created")
+  );
+
+  const dayesTeacher = await TeacherDay.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: { teacher, dayesTeacher },
+    msg: "successful sign Resume Information! ",
+  });
+};
+const signResume = async (req, res) => {
+  const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
@@ -422,6 +459,63 @@ const addDescription = async (req, res) => {
   });
 };
 
+  const { certificates, experiences, educationDegrees } = req.body;
+
+  const teacherCertificate = await Certificates.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  const teacherExperience = await Experience.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  const teacherEducationDegree = await EducationDegree.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await Certificates.bulkCreate(certificates).then(() =>
+    console.log("Certificates data have been created")
+  );
+  await Experience.bulkCreate(experiences).then(() =>
+    console.log("Experience data have been created")
+  );
+  await EducationDegree.bulkCreate(educationDegrees).then(() =>
+    console.log("EducationDegree data have been created")
+  );
+
+  const teacherCertificates = await Certificates.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  const teacherExperiences = await Experience.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  const teacherEducationDegrees = await EducationDegree.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: { teacherCertificates, teacherExperiences, teacherEducationDegrees },
+    msg: "successful sign Resume Information! ",
+  });
+};
 module.exports = {
   signUp,
   verifyCode,
@@ -432,4 +526,6 @@ module.exports = {
   uploadImage,
   addSubjects,
   addDescription,
+  signResume,
+  signAvailability,
 };
