@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const Sequelize = require("../db/config/connection");
 
-const Teacher = Sequelize.define('Teacher', {
+const Teacher = Sequelize.define("Teacher", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -39,14 +39,14 @@ const Teacher = Sequelize.define('Teacher', {
   city: {
     type: DataTypes.STRING,
   },
-  country:{
+  country: {
     type: DataTypes.STRING,
   },
   haveExperience: {
     type: DataTypes.BOOLEAN,
   },
   experienceYears: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
   },
   favStdGender: {
     type: DataTypes.STRING,
@@ -59,6 +59,9 @@ const Teacher = Sequelize.define('Teacher', {
   },
   timeZone: {
     type: DataTypes.JSON,
+  },
+  articleExperience: {
+    type: DataTypes.BOOLEAN,
   },
   shortHeadlineAr: {
     type: DataTypes.STRING,
@@ -77,15 +80,14 @@ const Teacher = Sequelize.define('Teacher', {
   },
   isRegistered: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
+    defaultValue: false,
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
   },
   registerCode: {
     type: DataTypes.INTEGER,
-  }
-
-})
+  },
+});
 
 module.exports = Teacher;
