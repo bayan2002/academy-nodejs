@@ -18,7 +18,7 @@ const SubjectCategory = sequelize.define("SubjectCategory", {
   },
   image: {
     type: DataTypes.STRING,
-    default: "",
+    defaultValue: "",
   },
 });
 
