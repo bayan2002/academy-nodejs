@@ -201,6 +201,7 @@ const linkedCurriculumLevel = async (req, res) => {
     msg: "successful linked curriculum with level",
   });
 };
+
 const getSubjects = async (req, res) => {
   const subjects = await Subject.findAll({ include: { all: true } });
   res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });
@@ -394,6 +395,34 @@ const getAcceptedTeachers = async (req, res) => {
   });
 };
 
+const rejectTeacher = async(req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  await Teacher.destroy({where: {
+    id: teacherId
+  }});
+
+  res.send({
+    status: 201,
+    msg: "Rejected teacher successfully",
+  });
+}
+
+const getWaitingTeacher = async (req,res) => {
+const teachers = await Teacher.findAll({
+  where: {
+    isVerified: false
+  }
+})
+res.send({
+  status: 201,
+  data: teachers,
+  msg: "successful get all waiting teachers",
+});
+}
+
 module.exports = {
   signUp,
   login,
@@ -419,4 +448,6 @@ module.exports = {
   getParentStudentAccOrRej,
   acceptTeacher,
   getAcceptedTeachers,
+  rejectTeacher,
+  getWaitingTeacher,
 };

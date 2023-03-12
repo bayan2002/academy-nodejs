@@ -12,6 +12,11 @@ const {
   Certificates,
   Experience,
   EducationDegree,
+  Language,
+  Days,
+  Level,
+  Curriculum,
+  Subject,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -158,6 +163,7 @@ const signPassword = async (req, res) => {
     token: token,
   });
 };
+
 const signAbout = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
@@ -202,12 +208,16 @@ const signAbout = async (req, res) => {
     include: { all: true },
   });
   await teacher.save();
+  const firstNames = teacher.firstName;
+  const lastNames = teacher.lastName;
+
   res.send({
     status: 201,
-    data: { teacher, langTeachers },
+    data: { firstName: firstNames, lastName: lastNames },
     msg: "successful sign about data",
   });
 };
+
 const signAdditionalInfo = async (req, res) => {
   const { teacherId } = req.params;
   console.log("teacherId: ", teacherId);
@@ -278,10 +288,26 @@ const signAdditionalInfo = async (req, res) => {
 
 const getSingleTeacher = async (req, res) => {
   const { teacherId } = req.params;
+
   const teacher = await Teacher.findOne({
     where: { id: teacherId },
-    include: { all: true },
+    include: [
+      { model: LangTeachStd, include: [Language] },
+      { model: Experience },
+      { model: EducationDegree },
+      { model: Certificates },
+      { model: TeacherDay, include: [Days] },
+      { model: TeacherLevel, include: [Level] },
+      { model: CurriculumTeacher, include: [Curriculum] },
+      { model: TeacherSubject, include: [Subject] },
+      { model: RemoteSession },
+      { model: F2FSessionStd },
+      { model: F2FSessionTeacher },
+    ],
   });
+
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
   res.send({
     status: 201,
     data: teacher,
@@ -310,7 +336,11 @@ const uploadImage = async (req, res) => {
     clearImage(teacher.image);
   }
   await teacher.update({ image: req.file.filename });
-  res.send({ status: 201, data: teacher, msg: "uploaded image successfully" });
+  res.send({
+    status: 201,
+    data: req.file.filename,
+    msg: "uploaded image successfully",
+  });
 };
 
 const addSubjects = async (req, res) => {
@@ -405,6 +435,7 @@ const addSubjects = async (req, res) => {
     msg: "added subjects and session type successfully",
   });
 };
+
 const signAvailability = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
@@ -530,6 +561,7 @@ const signResume = async (req, res) => {
     msg: "successful sign Resume Information! ",
   });
 };
+
 const signVideoLink = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
