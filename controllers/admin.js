@@ -8,6 +8,7 @@ const {
   CurriculumLevel,
   ParentStudent,
   Student,
+  Teacher,
 } = require("../models");
 const dotenv = require("dotenv");
 
@@ -246,7 +247,7 @@ const getSingleSubjectCategory = async (req, res) => {
 };
 
 const getClasses = async (req, res) => {
-  const classes = await Class.findAll({ include: { all: true } });
+  const classes = await Class.findAll({ include: Level });
   res.send({ status: 201, data: classes, msg: "successful get all classes" });
 };
 
@@ -265,7 +266,7 @@ const getSingleClass = async (req, res) => {
 };
 
 const getLevels = async (req, res) => {
-  const levels = await Level.findAll({ include: { all: true } });
+  const levels = await Level.findAll();
   res.send({ status: 201, data: levels, msg: "successful get all levels" });
 };
 
@@ -273,7 +274,7 @@ const getSingleLevel = async (req, res) => {
   const { levelId } = req.params;
   const level = await Level.findOne({
     where: { id: levelId },
-    include: { all: true },
+    include: [{ model: Class }, { model: CurriculumLevel }],
   });
   if (!level) throw serverErrs.BAD_REQUEST("Invalid levelId! ");
   res.send({
@@ -284,7 +285,7 @@ const getSingleLevel = async (req, res) => {
 };
 
 const getCurriculums = async (req, res) => {
-  const curriculums = await Curriculum.findAll({ include: { all: true } });
+  const curriculums = await Curriculum.findAll({ include: Class });
   res.send({
     status: 201,
     data: curriculums,
@@ -366,6 +367,32 @@ const getParentStudentAccOrRej = async (req, res) => {
     msg: "successful get all Students are accepted",
   });
 };
+const acceptTeacher = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await ParentStudent.findOne({
+    where: { id: teacherId },
+  });
+  if (!teacher) throw serverErrs.BAD_REQUEST("invalid teacherId!");
+
+  await teacher.update({ isVerified: true });
+
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "teacher has been accepted",
+  });
+};
+const getAcceptedTeachers = async (req, res) => {
+  const acceptedTeachers = await Teacher.findAll({
+    where: { isVerified: true },
+  });
+
+  res.send({
+    status: 201,
+    data: acceptedTeachers,
+    msg: "successful get all acceptedTeachers",
+  });
+};
 
 module.exports = {
   signUp,
@@ -390,4 +417,6 @@ module.exports = {
   rejectStudent,
   getParentStudentWaiting,
   getParentStudentAccOrRej,
+  acceptTeacher,
+  getAcceptedTeachers,
 };

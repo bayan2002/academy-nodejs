@@ -24,6 +24,8 @@ const {
   rejectStudent,
   getParentStudentWaiting,
   getParentStudentAccOrRej,
+  acceptTeacher,
+  getAcceptedTeachers,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -110,5 +112,18 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getParentStudentAccOrRej)
+);
+
+adminRouter.post(
+  "/accept/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(acceptTeacher)
+);
+adminRouter.get(
+  "/acceptedTeachers",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAcceptedTeachers)
 );
 module.exports = adminRouter;
