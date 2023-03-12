@@ -370,7 +370,7 @@ const getParentStudentAccOrRej = async (req, res) => {
 };
 const acceptTeacher = async (req, res) => {
   const { teacherId } = req.params;
-  const teacher = await ParentStudent.findOne({
+  const teacher = await Teacher.findOne({
     where: { id: teacherId },
   });
   if (!teacher) throw serverErrs.BAD_REQUEST("invalid teacherId!");
