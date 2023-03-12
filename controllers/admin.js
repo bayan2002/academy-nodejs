@@ -9,6 +9,7 @@ const {
   ParentStudent,
   Student,
   Teacher,
+  LanguageLevel,
 } = require("../models");
 const dotenv = require("dotenv");
 
@@ -423,6 +424,10 @@ res.send({
 });
 }
 
+const getLanguageLevel = async(req, res) => {
+  const languageLevels = await LanguageLevel.findAll();
+  res.send({ status: 201, data: languageLevels, msg: "successful get all language level" });
+}
 module.exports = {
   signUp,
   login,
@@ -450,4 +455,5 @@ module.exports = {
   getAcceptedTeachers,
   rejectTeacher,
   getWaitingTeacher,
+  getLanguageLevel
 };

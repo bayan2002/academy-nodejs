@@ -28,6 +28,7 @@ const {
   getAcceptedTeachers,
   rejectTeacher,
   getWaitingTeacher,
+  getLanguageLevel,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -109,6 +110,7 @@ adminRouter.get("/levels", getLevels);
 adminRouter.get("/level/:levelId", errorCatcher(getSingleLevel));
 adminRouter.get("/Curriculums", getCurriculums);
 adminRouter.get("/Curriculum/:curriculumId", errorCatcher(getSingleCurriculum));
+adminRouter.get("/languageLevel", errorCatcher(getLanguageLevel));
 
 adminRouter.get(
   "/getStudentsWaiting",
