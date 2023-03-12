@@ -220,7 +220,9 @@ const signAbout = async (req, res) => {
 
 const signAdditionalInfo = async (req, res) => {
   const { teacherId } = req.params;
+  console.log("teacherId: ", teacherId);
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  console.log("teacher: ", teacher);
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
   if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
@@ -231,6 +233,7 @@ const signAdditionalInfo = async (req, res) => {
     experienceYears,
     favStdGender,
     favHours,
+    articleExperience,
     levels,
     curriculums,
   } = req.body;
@@ -241,6 +244,7 @@ const signAdditionalInfo = async (req, res) => {
     experienceYears,
     favStdGender,
     favHours,
+    articleExperience,
   });
   const curriculumTeacher = await CurriculumTeacher.destroy({
     where: {
@@ -558,6 +562,26 @@ const signResume = async (req, res) => {
   });
 };
 
+const signVideoLink = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const { videoLink } = req.body;
+
+  await teacher.update({
+    videoLink,
+  });
+
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "successful sign VideoLink Information! ",
+  });
+};
 module.exports = {
   signUp,
   verifyCode,
@@ -570,4 +594,5 @@ module.exports = {
   addDescription,
   signResume,
   signAvailability,
+  signVideoLink,
 };
