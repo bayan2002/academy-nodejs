@@ -54,7 +54,7 @@ const Student = sequelize.define("Student", {
   },
   registerCode: {
     type: DataTypes.INTEGER,
-    defaultValue: false,
+    defaultValue: 0,
   },
   isRegistered: {
     type: DataTypes.BOOLEAN,

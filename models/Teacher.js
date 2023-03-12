@@ -66,7 +66,7 @@ const Teacher = Sequelize.define("Teacher", {
   },
   haveCertificates: {
     type: DataTypes.BOOLEAN,
-    defaultValue: "",
+    defaultValue: false,
   },
   favHours: {
     type: DataTypes.STRING,
