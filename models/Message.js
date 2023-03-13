@@ -8,8 +8,8 @@ const Message = sequelize.define("Message", {
     allowNull: false,
     primaryKey: true,
   },
-  senderId: {
-    type: DataTypes.INTEGER,
+  content: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
 });

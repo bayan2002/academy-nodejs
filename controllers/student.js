@@ -216,8 +216,6 @@ const editPersonalInformation = async (req, res) => {
     CurriculumId,
   } = req.body;
 
-  if (!req.file) throw serverErrs.BAD_REQUEST("Image not exist ");
-
   const clearImage = (filePath) => {
     filePath = path.join(__dirname, "..", `images/${filePath}`);
     fs.unlink(filePath, (err) => {
@@ -225,10 +223,10 @@ const editPersonalInformation = async (req, res) => {
     });
   };
 
-  if (student.image) {
+  if (student.image && req.file) {
     clearImage(student.image);
   }
-
+  if (req.file) await student.update({ image: req.file.filename });
   await student.update({
     name,
     gender,
@@ -241,8 +239,8 @@ const editPersonalInformation = async (req, res) => {
     LevelId,
     ClassId,
     CurriculumId,
-    image: req.file.filename,
   });
+
   await LangTeachStd.destroy({
     where: {
       StudentId: student.id,

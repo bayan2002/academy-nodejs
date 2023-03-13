@@ -10,11 +10,11 @@ const Wallet = sequelize.define("Wallet", {
   },
   money: {
     type: DataTypes.INTEGER,
-    default: 0,
+    defaultValue: 0,
   },
   status: {
     type: DataTypes.BOOLEAN,
-    default: false,
+    defaultValue: false,
   },
 });
 

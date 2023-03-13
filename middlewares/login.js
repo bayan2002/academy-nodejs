@@ -12,7 +12,7 @@ const login = async (req, res) => {
 
   const parent = await Parent.findOne({ where: { email } });
 
-  const student = await Student.findOne({ where: { email } });
+  const student = await Student.findOne({ where: { email, isRegistered: true  } });
 
   const teacher = await Teacher.findOne({
     where: { email, isRegistered: true },

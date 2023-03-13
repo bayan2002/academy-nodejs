@@ -18,22 +18,27 @@ const Student = sequelize.define("Student", {
   },
   password: {
     type: DataTypes.STRING,
+    defaultValue: "",
   },
   gender: {
     type: DataTypes.STRING,
+    defaultValue: "",
   },
   image: {
     type: DataTypes.STRING,
-    default: "",
+    defaultValue: "",
   },
   city: {
     type: DataTypes.STRING,
+    defaultValue: "",
   },
   dateOfBirth: {
     type: DataTypes.STRING,
+    defaultValue: "",
   },
   nationality: {
     type: DataTypes.STRING,
+    defaultValue: "",
   },
   location: {
     type: DataTypes.STRING,
@@ -41,16 +46,19 @@ const Student = sequelize.define("Student", {
   },
   phoneNumber: {
     type: DataTypes.STRING,
+    defaultValue: "",
   },
   regionTime: {
     type: DataTypes.JSON,
+    defaultValue: false,
   },
   registerCode: {
     type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
   isRegistered: {
     type: DataTypes.BOOLEAN,
-    default: false,
+    defaultValue: false,
   },
 });
 

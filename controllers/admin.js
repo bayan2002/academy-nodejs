@@ -8,6 +8,8 @@ const {
   CurriculumLevel,
   ParentStudent,
   Student,
+  Teacher,
+  LanguageLevel,
 } = require("../models");
 const dotenv = require("dotenv");
 
@@ -200,6 +202,7 @@ const linkedCurriculumLevel = async (req, res) => {
     msg: "successful linked curriculum with level",
   });
 };
+
 const getSubjects = async (req, res) => {
   const subjects = await Subject.findAll({ include: { all: true } });
   res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });
@@ -246,7 +249,7 @@ const getSingleSubjectCategory = async (req, res) => {
 };
 
 const getClasses = async (req, res) => {
-  const classes = await Class.findAll({ include: { all: true } });
+  const classes = await Class.findAll({ include: Level });
   res.send({ status: 201, data: classes, msg: "successful get all classes" });
 };
 
@@ -265,7 +268,7 @@ const getSingleClass = async (req, res) => {
 };
 
 const getLevels = async (req, res) => {
-  const levels = await Level.findAll({ include: { all: true } });
+  const levels = await Level.findAll();
   res.send({ status: 201, data: levels, msg: "successful get all levels" });
 };
 
@@ -273,7 +276,7 @@ const getSingleLevel = async (req, res) => {
   const { levelId } = req.params;
   const level = await Level.findOne({
     where: { id: levelId },
-    include: { all: true },
+    include: [{ model: Class }, { model: CurriculumLevel }],
   });
   if (!level) throw serverErrs.BAD_REQUEST("Invalid levelId! ");
   res.send({
@@ -284,7 +287,7 @@ const getSingleLevel = async (req, res) => {
 };
 
 const getCurriculums = async (req, res) => {
-  const curriculums = await Curriculum.findAll({ include: { all: true } });
+  const curriculums = await Curriculum.findAll({ include: Class });
   res.send({
     status: 201,
     data: curriculums,
@@ -366,7 +369,65 @@ const getParentStudentAccOrRej = async (req, res) => {
     msg: "successful get all Students are accepted",
   });
 };
+const acceptTeacher = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+  });
+  if (!teacher) throw serverErrs.BAD_REQUEST("invalid teacherId!");
 
+  await teacher.update({ isVerified: true });
+
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "teacher has been accepted",
+  });
+};
+const getAcceptedTeachers = async (req, res) => {
+  const acceptedTeachers = await Teacher.findAll({
+    where: { isVerified: true },
+  });
+
+  res.send({
+    status: 201,
+    data: acceptedTeachers,
+    msg: "successful get all acceptedTeachers",
+  });
+};
+
+const rejectTeacher = async(req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  await Teacher.destroy({where: {
+    id: teacherId
+  }});
+
+  res.send({
+    status: 201,
+    msg: "Rejected teacher successfully",
+  });
+}
+
+const getWaitingTeacher = async (req,res) => {
+const teachers = await Teacher.findAll({
+  where: {
+    isVerified: false
+  }
+})
+res.send({
+  status: 201,
+  data: teachers,
+  msg: "successful get all waiting teachers",
+});
+}
+
+const getLanguageLevel = async(req, res) => {
+  const languageLevels = await LanguageLevel.findAll();
+  res.send({ status: 201, data: languageLevels, msg: "successful get all language level" });
+}
 module.exports = {
   signUp,
   login,
@@ -390,4 +451,9 @@ module.exports = {
   rejectStudent,
   getParentStudentWaiting,
   getParentStudentAccOrRej,
+  acceptTeacher,
+  getAcceptedTeachers,
+  rejectTeacher,
+  getWaitingTeacher,
+  getLanguageLevel
 };

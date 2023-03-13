@@ -232,18 +232,25 @@ const classes = [
   {
     titleAR: "سنة أولى",
     titleEN: "first year",
+    LevelId : "1",
   }, //1
   {
     titleAR: "سنة ثانية",
     titleEN: "second year",
+    LevelId : "1",
+
   }, //2
   {
     titleAR: "سنة ثالثة",
     titleEN: "third year",
+    LevelId : "1",
+
   }, //3
   {
     titleAR: "سنة رابعة",
     titleEN: "fourth year",
+    LevelId : "1",
+
   }, //4
 ];
 

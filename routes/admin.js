@@ -24,6 +24,11 @@ const {
   rejectStudent,
   getParentStudentWaiting,
   getParentStudentAccOrRej,
+  acceptTeacher,
+  getAcceptedTeachers,
+  rejectTeacher,
+  getWaitingTeacher,
+  getLanguageLevel,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -85,6 +90,13 @@ adminRouter.post(
   errorCatcher(rejectStudent)
 );
 
+adminRouter.post(
+  "/reject/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(rejectTeacher)
+);
+
 adminRouter.get("/subCategories", getSubjectCategories);
 adminRouter.get(
   "/subCategory/:subjectCategoryId",
@@ -98,6 +110,7 @@ adminRouter.get("/levels", getLevels);
 adminRouter.get("/level/:levelId", errorCatcher(getSingleLevel));
 adminRouter.get("/Curriculums", getCurriculums);
 adminRouter.get("/Curriculum/:curriculumId", errorCatcher(getSingleCurriculum));
+adminRouter.get("/languageLevel", errorCatcher(getLanguageLevel));
 
 adminRouter.get(
   "/getStudentsWaiting",
@@ -111,4 +124,24 @@ adminRouter.get(
   checkUserAuth("admin"),
   errorCatcher(getParentStudentAccOrRej)
 );
+
+adminRouter.post(
+  "/accept/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(acceptTeacher)
+);
+adminRouter.get(
+  "/acceptedTeachers",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAcceptedTeachers)
+);
+adminRouter.get(
+  "/waitingTeachers",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getWaitingTeacher)
+);
+
 module.exports = adminRouter;

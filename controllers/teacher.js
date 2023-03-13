@@ -5,14 +5,18 @@ const {
   LangTeachStd,
   TeacherLevel,
   CurriculumTeacher,
-  Certificates,
-  Experience,
-  EducationDegree,
-  TeacherDay,
-  Time,
   RemoteSession,
   F2FSessionStd,
   F2FSessionTeacher,
+  TeacherDay,
+  Certificates,
+  Experience,
+  EducationDegree,
+  Language,
+  Days,
+  Level,
+  Curriculum,
+  Subject,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -159,12 +163,13 @@ const signPassword = async (req, res) => {
     token: token,
   });
 };
+
 const signAbout = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
-  if(teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
 
   const {
     firstName,
@@ -203,18 +208,24 @@ const signAbout = async (req, res) => {
     include: { all: true },
   });
   await teacher.save();
+  const firstNames = teacher.firstName;
+  const lastNames = teacher.lastName;
+
   res.send({
     status: 201,
-    data: { teacher, langTeachers },
+    data: { firstName: firstNames, lastName: lastNames },
     msg: "successful sign about data",
   });
 };
+
 const signAdditionalInfo = async (req, res) => {
   const { teacherId } = req.params;
+  console.log("teacherId: ", teacherId);
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  console.log("teacher: ", teacher);
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
-  if(teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
 
   const {
     haveCertificates,
@@ -222,6 +233,7 @@ const signAdditionalInfo = async (req, res) => {
     experienceYears,
     favStdGender,
     favHours,
+    articleExperience,
     levels,
     curriculums,
   } = req.body;
@@ -232,6 +244,7 @@ const signAdditionalInfo = async (req, res) => {
     experienceYears,
     favStdGender,
     favHours,
+    articleExperience,
   });
   const curriculumTeacher = await CurriculumTeacher.destroy({
     where: {
@@ -275,10 +288,26 @@ const signAdditionalInfo = async (req, res) => {
 
 const getSingleTeacher = async (req, res) => {
   const { teacherId } = req.params;
+
   const teacher = await Teacher.findOne({
     where: { id: teacherId },
-    include: { all: true },
+    include: [
+      { model: LangTeachStd, include: [Language] },
+      { model: Experience },
+      { model: EducationDegree },
+      { model: Certificates },
+      { model: TeacherDay, include: [Days] },
+      { model: TeacherLevel, include: [Level] },
+      { model: CurriculumTeacher, include: [Curriculum] },
+      { model: TeacherSubject, include: [Subject] },
+      { model: RemoteSession },
+      { model: F2FSessionStd },
+      { model: F2FSessionTeacher },
+    ],
   });
+
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
   res.send({
     status: 201,
     data: teacher,
@@ -286,10 +315,194 @@ const getSingleTeacher = async (req, res) => {
   });
 };
 
+const uploadImage = async (req, res) => {
+  const { teacherId } = req.params;
+
+  if (!req.file) throw serverErrs.BAD_REQUEST("Image not exist ");
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", `images/${filePath}`);
+    fs.unlink(filePath, (err) => {
+      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+    });
+  };
+
+  if (teacher.image) {
+    clearImage(teacher.image);
+  }
+  await teacher.update({ image: req.file.filename });
+  res.send({
+    status: 201,
+    data: req.file.filename,
+    msg: "uploaded image successfully",
+  });
+};
+
+const addSubjects = async (req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const { subjects, remote, f2fStudent, f2fTeacher } = req.body;
+
+  await TeacherSubject.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await RemoteSession.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await F2FSessionStd.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+  await F2FSessionTeacher.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await TeacherSubject.bulkCreate(subjects).then(() =>
+    console.log("Teacher Subjects data have been created")
+  );
+  await RemoteSession.create(remote).then(() =>
+    console.log("Teacher remote session has been saved")
+  );
+  await F2FSessionStd.create(f2fStudent).then(() =>
+    console.log("teacher session at home student has been saved")
+  );
+  await F2FSessionTeacher.create(f2fTeacher).then(() =>
+    console.log("Teacher session at teacher home has been saved")
+  );
+
+  const teacherSubjects = await TeacherSubject.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+
+  const remoteSession = await RemoteSession.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+
+  const f2fStudentSession = await F2FSessionStd.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+
+  const f2fTeacherSession = await F2FSessionTeacher.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+  res.send({
+    status: 201,
+    data: {
+      teacherSubjects,
+      remoteSession,
+      f2fStudentSession,
+      f2fTeacherSession,
+    },
+    msg: "added subjects and session type successfully",
+  });
+};
+
+const signAvailability = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const { timeZone, teacherDayes } = req.body;
+
+  await teacher.update({
+    timeZone,
+  });
+  const teacherDay = await TeacherDay.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await TeacherDay.bulkCreate(teacherDayes).then(() =>
+    console.log("TeacherDay data have been created")
+  );
+
+  const dayesTeacher = await TeacherDay.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: { teacher, dayesTeacher },
+    msg: "successful sign availability!",
+  });
+};
+
+const addDescription = async (req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+
+  const { shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn } =
+    req.body;
+
+  const updatedTeacher = await teacher.update({
+    shortHeadlineAr,
+    shortHeadlineEn,
+    descriptionAr,
+    descriptionEn,
+  });
+  res.send({
+    status: 201,
+    data: updatedTeacher,
+    msg: "added description successfully",
+  });
+};
+
 const signResume = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
 
   const { certificates, experiences, educationDegrees } = req.body;
 
@@ -349,116 +562,26 @@ const signResume = async (req, res) => {
   });
 };
 
-const uploadImage = async (req, res) => {
+const signVideoLink = async (req, res) => {
   const { teacherId } = req.params;
-
-  if (!req.file) throw serverErrs.BAD_REQUEST("Image not exist ");
-
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
-  if(teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
 
-  const clearImage = (filePath) => {
-    filePath = path.join(__dirname, "..", `images/${filePath}`);
-    fs.unlink(filePath, (err) => {
-     if(err) throw serverErrs.BAD_REQUEST("Image not found");
-    });
-  };
+  const { videoLink } = req.body;
 
-  if (teacher.image) {
-    clearImage(teacher.image);
-  }
-  await teacher.update({ image: req.file.filename });
-  res.send({ status: 201, data: teacher, msg: "uploaded image successfully" });
+  await teacher.update({
+    videoLink,
+  });
+
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "successful sign VideoLink Information! ",
+  });
 };
-
-const addSubjects = async (req, res) => {
-  const { teacherId } = req.params;
-  
-  const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
-
-  if(teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
-
-  const {subjects, remote, f2fStudent, f2fTeacher} = req.body;
-
-  await TeacherSubject.destroy({
-    where: {
-      TeacherId: teacher.id,
-    },
-  });
-
-  await RemoteSession.destroy({
-    where: {
-      TeacherId: teacher.id,
-    },
-  });
-
-   await F2FSessionStd.destroy({
-    where: {
-      TeacherId: teacher.id,
-    },
-  });
-  await F2FSessionTeacher.destroy({
-    where: {
-      TeacherId: teacher.id,
-    },
-  });
-
-   console.log(subjects)
-   
-   await TeacherSubject.bulkCreate(subjects).then(() =>
-   console.log("Teacher Subjects data have been created")
-   );
-  await RemoteSession.bulkCreate(remote).then(() =>
-    console.log("Teacher remote session has been saved")
-  );
-  await F2FSessionStd.bulkCreate(f2fStudent).then(() =>
-    console.log("teacher session at home student has been saved")
-  );
-  await F2FSessionTeacher.bulkCreate(f2fTeacher).then(() =>
-    console.log("Teacher session at teacher home has been saved")
-  );
-
-  const teacherSubjects = await TeacherSubject.findAll({
-    where: {
-      TeacherId : teacherId
-    },
-    include: {
-      all: true
-    }
-  })
-
-  const remoteSession = await RemoteSession.findAll({
-    where: {
-      TeacherId : teacherId
-    },
-    include: {
-      all: true
-    }
-  })
-
-  const f2fStudentSession = await F2FSessionStd.findAll({
-    where: {
-      TeacherId : teacherId
-    },
-    include: {
-      all: true
-    }
-  })
-
-  const f2fTeacherSession = await F2FSessionTeacher.findAll({
-    where: {
-      TeacherId : teacherId
-    },
-    include: {
-      all: true
-    }
-  })
-res.send({status: 201, data: {teacherSubjects, remoteSession, f2fStudentSession, f2fTeacherSession }, msg: "added subjects successfully"})
-};
-
 module.exports = {
   signUp,
   verifyCode,
@@ -466,7 +589,10 @@ module.exports = {
   signAbout,
   signAdditionalInfo,
   getSingleTeacher,
-  signResume,
   uploadImage,
   addSubjects,
+  addDescription,
+  signResume,
+  signAvailability,
+  signVideoLink,
 };
