@@ -287,7 +287,7 @@ const getSingleLevel = async (req, res) => {
 };
 
 const getCurriculums = async (req, res) => {
-  const curriculums = await Curriculum.findAll({ include: Class });
+  const curriculums = await Curriculum.findAll({ include: CurriculumLevel });
   res.send({
     status: 201,
     data: curriculums,
