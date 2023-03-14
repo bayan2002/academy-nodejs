@@ -14,6 +14,8 @@ const {
   uploadImage,
   signVideoLink,
   addDescription,
+  searchTeacherFilterSide,
+  searchTeacherFilterTop,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -22,6 +24,9 @@ const checkUserAuth = require("../middlewares/checkUserAuth");
 teacherRouter.post("/signup", errorCatcher(signUp));
 teacherRouter.post("/signup/code", errorCatcher(verifyCode));
 teacherRouter.post("/signup/pass", errorCatcher(signPassword));
+
+teacherRouter.post("/search/side", errorCatcher(searchTeacherFilterSide));
+teacherRouter.post("/search/top", errorCatcher(searchTeacherFilterTop));
 
 teacherRouter.post(
   "/about/:teacherId",

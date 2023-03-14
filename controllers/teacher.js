@@ -27,6 +27,7 @@ const generateToken = require("../middlewares/generateToken");
 const path = require("path");
 const fs = require("fs");
 const TeacherSubject = require("../models/TeacherSubject");
+const { Op } = require("sequelize");
 
 const signUp = async (req, res) => {
   const { email } = req.body;
@@ -588,6 +589,72 @@ const signVideoLink = async (req, res) => {
     msg: "successful sign VideoLink Information! ",
   });
 };
+
+const searchTeacherFilterSide = async (req, res) => {
+  const { videoLink, gender, LanguageId, CurriculumId } = req.body;
+  let whereTeacher = { isVerified: 1 };
+  let whereInclude = [];
+  if (videoLink) {
+    whereTeacher["videoLink"] = { [Op.not]: "" };
+  }
+  if (gender == "male" || gender == "female") {
+    whereTeacher["gender"] = gender;
+  }
+  if (LanguageId) {
+    whereInclude.push({
+      model: LangTeachStd,
+      where: { LanguageId: 1 },
+    });
+  }
+  if (CurriculumId !== "all") {
+    whereInclude.push({
+      model: CurriculumTeacher,
+      where: { CurriculumId: +CurriculumId },
+    });
+  }
+  const teachers = await Teacher.findAll({
+    where: whereTeacher,
+    include: whereInclude,
+  });
+
+  res.send({
+    status: 201,
+    data: teachers,
+    msg: "successful search ",
+  });
+};
+
+const searchTeacherFilterTop = async (req, res) => {
+  const { LevelId, subjects } = req.body;
+  let whereInclude = [];
+  if (LevelId !== "all") {
+    whereInclude.push({
+      model: TeacherLevel,
+      where: { LevelId: +LevelId },
+    });
+  }
+  if (subjects.length > 0) {
+    whereInclude.push({
+      model: TeacherSubject,
+      where: {
+        SubjectId: {
+          [Op.or]: subjects,
+        },
+      },
+    });
+  }
+  const teachers = await Teacher.findAll({
+    where: { isVerified: 1 },
+    include: whereInclude,
+  });
+
+  res.send({
+    status: 201,
+    data: teachers,
+    msg: "successful search",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -601,4 +668,6 @@ module.exports = {
   signResume,
   signAvailability,
   signVideoLink,
+  searchTeacherFilterSide,
+  searchTeacherFilterTop,
 };
