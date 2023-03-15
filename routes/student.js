@@ -10,6 +10,7 @@ const {
   getLastTenStudent,
   verifyCode,
   editPersonalInformation,
+  editImageStudent,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -24,6 +25,12 @@ studentRouter.post(
   verifyToken,
   checkUserAuth("student"),
   errorCatcher(editPersonalInformation)
+);
+studentRouter.post(
+  "/editImage/:StudentId",
+  verifyToken,
+  checkUserAuth("student"),
+  errorCatcher(editImageStudent)
 );
 studentRouter.get("/all", errorCatcher(getStudents));
 studentRouter.get("/get/:studentId", errorCatcher(getSingleStudent));

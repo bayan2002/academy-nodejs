@@ -216,17 +216,6 @@ const editPersonalInformation = async (req, res) => {
     CurriculumId,
   } = req.body;
 
-  const clearImage = (filePath) => {
-    filePath = path.join(__dirname, "..", `images/${filePath}`);
-    fs.unlink(filePath, (err) => {
-      if (err) throw serverErrs.BAD_REQUEST("Image not found");
-    });
-  };
-
-  if (student.image && req.file) {
-    clearImage(student.image);
-  }
-  if (req.file) await student.update({ image: req.file.filename });
   await student.update({
     name,
     gender,
@@ -257,6 +246,31 @@ const editPersonalInformation = async (req, res) => {
   });
 };
 
+const editImageStudent = async (req, res) => {
+  const { StudentId } = req.params;
+  const student = await Student.findOne({ where: { id: StudentId } });
+  if (!student) throw serverErrs.BAD_REQUEST("Student not found");
+  const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", `images/${filePath}`);
+    fs.unlink(filePath, (err) => {
+      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+    });
+  };
+  if (!req.file) {
+    throw serverErrs.BAD_REQUEST("Image not found");
+  }
+
+  if (student.image) {
+    clearImage(student.image);
+  }
+  await student.update({ image: req.file.filename });
+  res.send({
+    status: 201,
+    student,
+    msg: "successful edit student image",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -266,4 +280,5 @@ module.exports = {
   getSingleStudent,
   getLastTenStudent,
   editPersonalInformation,
+  editImageStudent,
 };
