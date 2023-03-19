@@ -11,6 +11,7 @@ const {
   verifyCode,
   editPersonalInformation,
   editImageStudent,
+  resetPassword,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -39,6 +40,13 @@ studentRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getLastTenStudent)
+);
+
+studentRouter.put(
+  "/resetPassword/:StudentId",
+  verifyToken,
+  checkUserAuth("student"),
+  errorCatcher(resetPassword)
 );
 
 module.exports = studentRouter;

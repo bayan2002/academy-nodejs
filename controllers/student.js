@@ -185,6 +185,7 @@ const getSingleStudent = async (req, res) => {
 
 const getLastTenStudent = async (req, res) => {
   const students = await Student.findAll({
+    where: { isRegistered: 1 },
     limit: 10,
     order: [["id", "DESC"]],
     include: { all: true },
@@ -271,6 +272,25 @@ const editImageStudent = async (req, res) => {
   });
 };
 
+const resetPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const { StudentId } = req.params;
+  const student = await Student.findOne({
+    where: { id: StudentId },
+    include: { all: true },
+  });
+  if (!student) throw serverErrs.BAD_REQUEST("student not found");
+  const result = await compare(oldPassword, student?.password);
+  if (!result) throw serverErrs.BAD_REQUEST("Old password is wrong");
+  const hashedPassword = await hash(newPassword, 12);
+  await student.update({ password: hashedPassword });
+  res.send({
+    status: 201,
+    data: student,
+    msg: "successful update student password",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -281,4 +301,5 @@ module.exports = {
   getLastTenStudent,
   editPersonalInformation,
   editImageStudent,
+  resetPassword,
 };
