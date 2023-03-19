@@ -1,4 +1,12 @@
-const { Teacher, Student, Parent, LangTeachStd } = require("../models");
+const {
+  Teacher,
+  Student,
+  Parent,
+  LangTeachStd,
+  RemoteSession,
+  F2FSessionStd,
+  F2FSessionTeacher,
+} = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
@@ -7,6 +15,7 @@ const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
 const path = require("path");
 const fs = require("fs");
+const CC = require("currency-converter-lt");
 
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
@@ -291,6 +300,55 @@ const resetPassword = async (req, res) => {
   });
 };
 
+const getSingleTeacher = async (req, res) => {
+  const { teacherId } = req.params;
+  const { currency } = req.query;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  const remote = await RemoteSession.findOne({
+    where: { TeacherId: teacherId },
+  });
+  const f2fStudent = await F2FSessionStd.findOne({
+    where: { TeacherId: teacherId },
+  });
+  const f2fTeacher = await F2FSessionTeacher.findOne({
+    where: { TeacherId: teacherId },
+  });
+
+  const newPriceF2FTeacher = "";
+  const newPriceF2FStudent = "";
+  const newPriceRemote = "";
+  let currencyConverter = new CC();
+
+  if (remote) {
+    newPriceRemote = await currencyConverter
+      .from(remote.currency)
+      .to(currency)
+      .amount(remote.price)
+      .convert();
+  }
+  if (f2fStudent) {
+    newPriceF2FStudent = await currencyConverter
+      .from(f2fStudent.currency)
+      .to(currency)
+      .amount(f2fStudent.price)
+      .convert();
+  }
+  if (f2fTeacher) {
+    newPriceF2FTeacher = await currencyConverter
+      .from(f2fTeacher.currency)
+      .to(currency)
+      .amount(f2fTeacher.price)
+      .convert();
+  }
+
+  res.send({
+    status: 201,
+    data: { teacher, newPriceRemote, newPriceF2FStudent, newPriceF2FTeacher },
+    msg: "successful convert price",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -302,4 +360,5 @@ module.exports = {
   editPersonalInformation,
   editImageStudent,
   resetPassword,
+  getSingleTeacher,
 };
