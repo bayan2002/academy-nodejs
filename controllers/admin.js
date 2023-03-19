@@ -396,38 +396,114 @@ const getAcceptedTeachers = async (req, res) => {
   });
 };
 
-const rejectTeacher = async(req, res) => {
+const rejectTeacher = async (req, res) => {
   const { teacherId } = req.params;
 
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
-  await Teacher.destroy({where: {
-    id: teacherId
-  }});
+  await Teacher.destroy({
+    where: {
+      id: teacherId,
+    },
+  });
 
   res.send({
     status: 201,
     msg: "Rejected teacher successfully",
   });
-}
+};
 
-const getWaitingTeacher = async (req,res) => {
-const teachers = await Teacher.findAll({
-  where: {
-    isVerified: false
-  }
-})
-res.send({
-  status: 201,
-  data: teachers,
-  msg: "successful get all waiting teachers",
-});
-}
+const getWaitingTeacher = async (req, res) => {
+  const teachers = await Teacher.findAll({
+    where: {
+      isVerified: false,
+    },
+  });
+  res.send({
+    status: 201,
+    data: teachers,
+    msg: "successful get all waiting teachers",
+  });
+};
 
-const getLanguageLevel = async(req, res) => {
+const getLanguageLevel = async (req, res) => {
   const languageLevels = await LanguageLevel.findAll();
-  res.send({ status: 201, data: languageLevels, msg: "successful get all language level" });
-}
+  res.send({
+    status: 201,
+    data: languageLevels,
+    msg: "successful get all language level",
+  });
+};
+
+const updateLevel = async (req, res) => {
+  const { titleAR, titleEN } = req.body;
+  const { LevelId } = req.params;
+  const level = await Level.findOne({
+    where: { id: LevelId },
+    include: { all: true },
+  });
+  if (!level) throw serverErrs.BAD_REQUEST("level not found");
+  await level.update({ titleAR, titleEN });
+  res.send({ status: 201, data: level, msg: "successful update level" });
+};
+
+const updateSubCategories = async (req, res) => {
+  const { titleAR, titleEN, image } = req.body;
+  const { SubjectCategoryId } = req.params;
+  const subjectCategory = await SubjectCategory.findOne({
+    where: { id: SubjectCategoryId },
+    include: { all: true },
+  });
+  if (!subjectCategory)
+    throw serverErrs.BAD_REQUEST("subjectCategory not found");
+  await subjectCategory.update({ titleAR, titleEN, image });
+  res.send({
+    status: 201,
+    data: subjectCategory,
+    msg: "successful update subjectCategory",
+  });
+};
+
+const updateSubject = async (req, res) => {
+  const { titleAR, titleEN } = req.body;
+  const { SubjectId } = req.params;
+  const subject = await Subject.findOne({
+    where: { id: SubjectId },
+    include: { all: true },
+  });
+  if (!subject) throw serverErrs.BAD_REQUEST("Subject not found");
+  await subject.update({ titleAR, titleEN });
+  res.send({ status: 201, data: subject, msg: "successful update subject" });
+};
+
+const updateClass = async (req, res) => {
+  const { titleAR, titleEN } = req.body;
+  const { ClassId } = req.params;
+  const classes = await Class.findOne({
+    where: { id: ClassId },
+    include: { all: true },
+  });
+  if (!classes) throw serverErrs.BAD_REQUEST("Class not found");
+  await classes.update({ titleAR, titleEN });
+  res.send({ status: 201, data: classes, msg: "successful update Class" });
+};
+
+const updateCurriculum = async (req, res) => {
+  const { titleAR, titleEN } = req.body;
+  const { CurriculumId } = req.params;
+  const curriculum = await Curriculum.findOne({
+    where: { id: CurriculumId },
+    include: { all: true },
+  });
+  if (!curriculum) throw serverErrs.BAD_REQUEST("Curriculum not found");
+  await curriculum.update({ titleAR, titleEN });
+  res.send({
+    status: 201,
+    data: curriculum,
+    msg: "successful update curriculum",
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -455,5 +531,10 @@ module.exports = {
   getAcceptedTeachers,
   rejectTeacher,
   getWaitingTeacher,
-  getLanguageLevel
+  getLanguageLevel,
+  updateLevel,
+  updateSubCategories,
+  updateSubject,
+  updateClass,
+  updateCurriculum,
 };
