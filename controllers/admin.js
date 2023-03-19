@@ -448,7 +448,7 @@ const updateLevel = async (req, res) => {
 };
 
 const updateSubCategories = async (req, res) => {
-  const { titleAR, titleEN, image } = req.body;
+  const { titleAR, titleEN } = req.body;
   const { SubjectCategoryId } = req.params;
   const subjectCategory = await SubjectCategory.findOne({
     where: { id: SubjectCategoryId },
@@ -456,7 +456,19 @@ const updateSubCategories = async (req, res) => {
   });
   if (!subjectCategory)
     throw serverErrs.BAD_REQUEST("subjectCategory not found");
-  await subjectCategory.update({ titleAR, titleEN, image });
+  const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", `images/${filePath}`);
+    fs.unlink(filePath, (err) => {
+      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+    });
+  };
+  if (req.file && subjectCategory.image) {
+    clearImage(subjectCategory.image);
+  }
+  if (req.file) {
+    await subjectCategory.update({ image: req.file.filename });
+  }
+  await subjectCategory.update({ titleAR, titleEN });
   res.send({
     status: 201,
     data: subjectCategory,
