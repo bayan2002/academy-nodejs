@@ -29,6 +29,11 @@ const {
   rejectTeacher,
   getWaitingTeacher,
   getLanguageLevel,
+  updateLevel,
+  updateSubCategories,
+  updateSubject,
+  updateClass,
+  updateCurriculum,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -142,6 +147,41 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getWaitingTeacher)
+);
+
+adminRouter.put(
+  "/updateLevel/:LevelId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(updateLevel)
+);
+
+adminRouter.put(
+  "/updateSubCategories/:SubjectCategoryId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(updateSubCategories)
+);
+
+adminRouter.put(
+  "/updateSubject/:SubjectId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(updateSubject)
+);
+
+adminRouter.put(
+  "/updateClass/:ClassId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(updateClass)
+);
+
+adminRouter.put(
+  "/updateCurriculum/:CurriculumId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(updateCurriculum)
 );
 
 module.exports = adminRouter;

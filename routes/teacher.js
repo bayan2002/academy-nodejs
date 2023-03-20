@@ -16,6 +16,7 @@ const {
   addDescription,
   searchTeacherFilterSide,
   searchTeacherFilterTop,
+  resetPassword,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -81,6 +82,13 @@ teacherRouter.post(
 teacherRouter.get(
   "/getSingleTeacher/:teacherId",
   errorCatcher(getSingleTeacher)
+);
+
+teacherRouter.put(
+  "/resetPassword/:TeacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(resetPassword)
 );
 
 module.exports = teacherRouter;

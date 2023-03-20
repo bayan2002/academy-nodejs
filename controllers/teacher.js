@@ -605,6 +605,10 @@ const searchTeacherFilterSide = async (req, res) => {
       model: LangTeachStd,
       where: { LanguageId: 1 },
     });
+  } else {
+    whereInclude.push({
+      model: LangTeachStd,
+    });
   }
   if (CurriculumId !== "all") {
     whereInclude.push({
@@ -655,6 +659,25 @@ const searchTeacherFilterTop = async (req, res) => {
   });
 };
 
+const resetPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const { TeacherId } = req.params;
+  const teacher = await Teacher.findOne({
+    where: { id: TeacherId },
+    include: { all: true },
+  });
+  if (!teacher) throw serverErrs.BAD_REQUEST("teacher not found");
+  const result = await compare(oldPassword, teacher?.password);
+  if (!result) throw serverErrs.BAD_REQUEST("Old password is wrong");
+  const hashedPassword = await hash(newPassword, 12);
+  await teacher.update({ password: hashedPassword });
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: "successful update teacher password",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -670,4 +693,5 @@ module.exports = {
   signVideoLink,
   searchTeacherFilterSide,
   searchTeacherFilterTop,
+  resetPassword,
 };

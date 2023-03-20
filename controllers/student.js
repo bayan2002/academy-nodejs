@@ -1,4 +1,15 @@
-const { Teacher, Student, Parent, LangTeachStd } = require("../models");
+const {
+  Teacher,
+  Student,
+  Parent,
+  LangTeachStd,
+  RemoteSession,
+  F2FSessionStd,
+  F2FSessionTeacher,
+  Level,
+  Curriculum,
+  Class,
+} = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
@@ -7,6 +18,7 @@ const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
 const path = require("path");
 const fs = require("fs");
+const CC = require("currency-converter-lt");
 
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
@@ -174,7 +186,12 @@ const getSingleStudent = async (req, res) => {
   const { studentId } = req.params;
   const student = await Student.findOne({
     where: { id: studentId },
-    include: { all: true },
+    include: [
+      { model: Level },
+      { model: Curriculum },
+      { model: Class },
+      { model: LangTeachStd },
+    ],
   });
   res.send({
     status: 201,
@@ -185,6 +202,7 @@ const getSingleStudent = async (req, res) => {
 
 const getLastTenStudent = async (req, res) => {
   const students = await Student.findAll({
+    where: { isRegistered: 1 },
     limit: 10,
     order: [["id", "DESC"]],
     include: { all: true },
@@ -216,17 +234,6 @@ const editPersonalInformation = async (req, res) => {
     CurriculumId,
   } = req.body;
 
-  const clearImage = (filePath) => {
-    filePath = path.join(__dirname, "..", `images/${filePath}`);
-    fs.unlink(filePath, (err) => {
-      if (err) throw serverErrs.BAD_REQUEST("Image not found");
-    });
-  };
-
-  if (student.image && req.file) {
-    clearImage(student.image);
-  }
-  if (req.file) await student.update({ image: req.file.filename });
   await student.update({
     name,
     gender,
@@ -257,6 +264,99 @@ const editPersonalInformation = async (req, res) => {
   });
 };
 
+const editImageStudent = async (req, res) => {
+  const { StudentId } = req.params;
+  const student = await Student.findOne({ where: { id: StudentId } });
+  if (!student) throw serverErrs.BAD_REQUEST("Student not found");
+  const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", `images/${filePath}`);
+    fs.unlink(filePath, (err) => {
+      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+    });
+  };
+  if (!req.file) {
+    throw serverErrs.BAD_REQUEST("Image not found");
+  }
+
+  if (student.image) {
+    clearImage(student.image);
+  }
+  await student.update({ image: req.file.filename });
+  res.send({
+    status: 201,
+    student,
+    msg: "successful edit student image",
+  });
+};
+
+const resetPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const { StudentId } = req.params;
+  const student = await Student.findOne({
+    where: { id: StudentId },
+    include: { all: true },
+  });
+  if (!student) throw serverErrs.BAD_REQUEST("student not found");
+  const result = await compare(oldPassword, student?.password);
+  if (!result) throw serverErrs.BAD_REQUEST("Old password is wrong");
+  const hashedPassword = await hash(newPassword, 12);
+  await student.update({ password: hashedPassword });
+  res.send({
+    status: 201,
+    data: student,
+    msg: "successful update student password",
+  });
+};
+
+const getSingleTeacher = async (req, res) => {
+  const { teacherId } = req.params;
+  const { currency } = req.query;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  const remote = await RemoteSession.findOne({
+    where: { TeacherId: teacherId },
+  });
+  const f2fStudent = await F2FSessionStd.findOne({
+    where: { TeacherId: teacherId },
+  });
+  const f2fTeacher = await F2FSessionTeacher.findOne({
+    where: { TeacherId: teacherId },
+  });
+
+  const newPriceF2FTeacher = "";
+  const newPriceF2FStudent = "";
+  const newPriceRemote = "";
+  let currencyConverter = new CC();
+
+  if (remote) {
+    newPriceRemote = await currencyConverter
+      .from(remote.currency)
+      .to(currency)
+      .amount(remote.price)
+      .convert();
+  }
+  if (f2fStudent) {
+    newPriceF2FStudent = await currencyConverter
+      .from(f2fStudent.currency)
+      .to(currency)
+      .amount(f2fStudent.price)
+      .convert();
+  }
+  if (f2fTeacher) {
+    newPriceF2FTeacher = await currencyConverter
+      .from(f2fTeacher.currency)
+      .to(currency)
+      .amount(f2fTeacher.price)
+      .convert();
+  }
+
+  res.send({
+    status: 201,
+    data: { teacher, newPriceRemote, newPriceF2FStudent, newPriceF2FTeacher },
+    msg: "successful convert price",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -266,4 +366,7 @@ module.exports = {
   getSingleStudent,
   getLastTenStudent,
   editPersonalInformation,
+  editImageStudent,
+  resetPassword,
+  getSingleTeacher,
 };
