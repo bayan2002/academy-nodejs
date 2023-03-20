@@ -4,11 +4,13 @@ const sequelize = require("./db/config/connection");
 
 const port = app.get("port");
 
+const server = require("./socket");
+
 sequelize
   .sync()
   // .sync({ force: true })
   .then(() => {
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`The Server is running on http://localhost:${port}`);
     });
   })
