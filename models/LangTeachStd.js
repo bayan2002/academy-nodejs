@@ -8,10 +8,6 @@ const LangTeachStd = Sequelize.define("LangTeachStd", {
     allowNull: false,
     primaryKey: true,
   },
-  level: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
 });
 
 module.exports = LangTeachStd;
