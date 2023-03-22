@@ -303,48 +303,47 @@ const resetPassword = async (req, res) => {
 const getSingleTeacher = async (req, res) => {
   const { teacherId } = req.params;
   const { currency } = req.query;
-  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  console.log(currency, 'queryy')
+  const teacher = await Teacher.findOne({ where: { id: teacherId }, include: [
+    { model: RemoteSession},
+    { model: F2FSessionStd },
+    { model: F2FSessionTeacher },
+  ] });
+  console.log(teacher, 'teachhhhhh')
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
-  const remote = await RemoteSession.findOne({
-    where: { TeacherId: teacherId },
-  });
-  const f2fStudent = await F2FSessionStd.findOne({
-    where: { TeacherId: teacherId },
-  });
-  const f2fTeacher = await F2FSessionTeacher.findOne({
-    where: { TeacherId: teacherId },
-  });
 
-  const newPriceF2FTeacher = "";
-  const newPriceF2FStudent = "";
-  const newPriceRemote = "";
   let currencyConverter = new CC();
 
-  if (remote) {
-    newPriceRemote = await currencyConverter
-      .from(remote.currency)
+  if (teacher.RemoteSession) {
+    console.log(teacher.RemoteSession.currency,'dddddd')
+   const newPriceRemote = await currencyConverter
+      .from(teacher.RemoteSession.currency)
       .to(currency)
-      .amount(remote.price)
+      .amount(+teacher.RemoteSession.price)
       .convert();
+      teacher.RemoteSession.price = newPriceRemote;
   }
-  if (f2fStudent) {
-    newPriceF2FStudent = await currencyConverter
-      .from(f2fStudent.currency)
+  if (teacher.F2FSessionStd) {
+   const newPriceF2FStudent = await currencyConverter
+      .from(teacher.F2FSessionStd.currency)
       .to(currency)
-      .amount(f2fStudent.price)
+      .amount(+teacher.F2FSessionStd.price)
       .convert();
+      teacher.F2FSessionStd.price = newPriceF2FStudent;
   }
-  if (f2fTeacher) {
-    newPriceF2FTeacher = await currencyConverter
-      .from(f2fTeacher.currency)
+  if (teacher.F2FSessionTeacher) {
+   const newPriceF2FTeacher = await currencyConverter
+      .from(teacher.F2FSessionTeacher.currency)
       .to(currency)
-      .amount(f2fTeacher.price)
+      .amount(+teacher.F2FSessionTeacher.price)
       .convert();
+      teacher.F2FSessionTeacher.price = newPriceF2FTeacher;
+
   }
 
   res.send({
     status: 201,
-    data: { teacher, newPriceRemote, newPriceF2FStudent, newPriceF2FTeacher },
+    data: teacher,
     msg: "successful convert price",
   });
 };

@@ -15,7 +15,10 @@ const {
   certificates,
   curriculumLevels,
   LangTeachStds,
-  days
+  days,
+  remoteSession,
+  f2fStudent,
+  f2fTeacher
 } = require("./fakeData");
 const {
   Admin,
@@ -33,7 +36,10 @@ const {
   Certificates,
   CurriculumLevel,
   LangTeachStd,
-  Days
+  Days,
+  RemoteSession,
+  F2FSessionStd,
+  F2FSessionTeacher
 } = require("../../models");
 
 const insertDB = async () => {
@@ -54,6 +60,9 @@ const insertDB = async () => {
   await Certificates.bulkCreate(certificates).then(() => console.log("Certificates data have been saved"));
   await LangTeachStd.bulkCreate(LangTeachStds).then(() => console.log("LangTeachStd data have been saved"));
   await Days.bulkCreate(days).then(() => console.log("Dyas data have been saved"));
+  await RemoteSession.bulkCreate(remoteSession).then(() => console.log("remote session data have been saved"));
+  await F2FSessionStd.bulkCreate(f2fStudent).then(() => console.log("f2f student data have been saved"));
+  await F2FSessionTeacher.bulkCreate(f2fTeacher).then(() => console.log("f2f teacher data have been saved"));
 };
 if (process.env.SEED) {
   insertDB();

@@ -459,6 +459,31 @@ const LangTeachStds = [
     TeacherId: "2",
   },
 ];
+
+const remoteSession = [
+  {
+    price : "34",
+    currency : "USD",
+    TeacherId: 1
+  }
+]
+
+const f2fStudent = [
+  {
+    price : "300",
+    currency : "USD",
+    TeacherId: 1
+  }
+]
+
+const f2fTeacher = [
+  {
+    price : "498",
+    currency : "USD",
+    TeacherId: 1
+  }
+]
+
 const days = [
   {
     titleEN: "Saturday",
@@ -514,4 +539,7 @@ module.exports = {
   curriculumLevels,
   LangTeachStds,
   days,
+  remoteSession,
+  f2fStudent,
+  f2fTeacher
 };

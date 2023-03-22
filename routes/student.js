@@ -50,6 +50,4 @@ studentRouter.put(
   errorCatcher(resetPassword)
 );
 
-studentRouter.get("/teacherDetails/:teacherId", errorCatcher(getSingleTeacher));
-
 module.exports = studentRouter;
