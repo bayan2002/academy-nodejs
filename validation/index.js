@@ -26,10 +26,7 @@ const loginValidation = yup.object().shape({
   email: yup.string().required().email(),
   password: yup.string().required().length(4),
 });
-const validateMessage = Joi.object({
-  receiverId: Joi.number().min(1).required(),
-  message: Joi.string().required(),
-});
+
 
 module.exports = {
   validateTeacher,
@@ -37,5 +34,4 @@ module.exports = {
   loginValidation,
   validateParentSignUp,
   validateStudent,
-  validateMessage,
 };
