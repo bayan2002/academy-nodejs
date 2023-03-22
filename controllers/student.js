@@ -9,6 +9,15 @@ const {
   Level,
   Curriculum,
   Class,
+  Experience,
+  EducationDegree,
+  Certificates,
+  TeacherDay,
+  TeacherLevel,
+  CurriculumTeacher,
+  Days,
+  Language,
+  Subject,
 } = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -19,6 +28,7 @@ const generateToken = require("../middlewares/generateToken");
 const path = require("path");
 const fs = require("fs");
 const CC = require("currency-converter-lt");
+const TeacherSubject = require("../models/TeacherSubject");
 
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
@@ -311,22 +321,27 @@ const resetPassword = async (req, res) => {
 const getSingleTeacher = async (req, res) => {
   const { teacherId } = req.params;
   const { currency } = req.query;
-  console.log(currency, "queryy");
   const teacher = await Teacher.findOne({
     where: { id: teacherId },
     include: [
       { model: RemoteSession },
       { model: F2FSessionStd },
       { model: F2FSessionTeacher },
+      { model: LangTeachStd, include: [Language] },
+      { model: Experience },
+      { model: EducationDegree },
+      { model: Certificates },
+      { model: TeacherDay, include: [Days] },
+      { model: TeacherLevel, include: [Level] },
+      { model: CurriculumTeacher, include: [Curriculum] },
+      { model: TeacherSubject, include: [Subject] },
     ],
   });
-  console.log(teacher, "teachhhhhh");
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
   let currencyConverter = new CC();
 
   if (teacher.RemoteSession) {
-    console.log(teacher.RemoteSession.currency, "dddddd");
     const newPriceRemote = await currencyConverter
       .from(teacher.RemoteSession.currency)
       .to(currency)
