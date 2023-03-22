@@ -27,6 +27,7 @@ const loginValidation = yup.object().shape({
   password: yup.string().required().length(4),
 });
 
+
 module.exports = {
   validateTeacher,
   validateAdminSignUp,

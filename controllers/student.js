@@ -6,6 +6,9 @@ const {
   RemoteSession,
   F2FSessionStd,
   F2FSessionTeacher,
+  Level,
+  Curriculum,
+  Class,
 } = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -183,7 +186,12 @@ const getSingleStudent = async (req, res) => {
   const { studentId } = req.params;
   const student = await Student.findOne({
     where: { id: studentId },
-    include: { all: true },
+    include: [
+      { model: Level },
+      { model: Curriculum },
+      { model: Class },
+      { model: LangTeachStd },
+    ],
   });
   res.send({
     status: 201,
