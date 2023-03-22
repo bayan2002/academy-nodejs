@@ -303,42 +303,44 @@ const resetPassword = async (req, res) => {
 const getSingleTeacher = async (req, res) => {
   const { teacherId } = req.params;
   const { currency } = req.query;
-  console.log(currency, 'queryy')
-  const teacher = await Teacher.findOne({ where: { id: teacherId }, include: [
-    { model: RemoteSession},
-    { model: F2FSessionStd },
-    { model: F2FSessionTeacher },
-  ] });
-  console.log(teacher, 'teachhhhhh')
+  console.log(currency, "queryy");
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+    include: [
+      { model: RemoteSession },
+      { model: F2FSessionStd },
+      { model: F2FSessionTeacher },
+    ],
+  });
+  console.log(teacher, "teachhhhhh");
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
 
   let currencyConverter = new CC();
 
   if (teacher.RemoteSession) {
-    console.log(teacher.RemoteSession.currency,'dddddd')
-   const newPriceRemote = await currencyConverter
+    console.log(teacher.RemoteSession.currency, "dddddd");
+    const newPriceRemote = await currencyConverter
       .from(teacher.RemoteSession.currency)
       .to(currency)
       .amount(+teacher.RemoteSession.price)
       .convert();
-      teacher.RemoteSession.price = newPriceRemote;
+    teacher.RemoteSession.price = newPriceRemote;
   }
   if (teacher.F2FSessionStd) {
-   const newPriceF2FStudent = await currencyConverter
+    const newPriceF2FStudent = await currencyConverter
       .from(teacher.F2FSessionStd.currency)
       .to(currency)
       .amount(+teacher.F2FSessionStd.price)
       .convert();
-      teacher.F2FSessionStd.price = newPriceF2FStudent;
+    teacher.F2FSessionStd.price = newPriceF2FStudent;
   }
   if (teacher.F2FSessionTeacher) {
-   const newPriceF2FTeacher = await currencyConverter
+    const newPriceF2FTeacher = await currencyConverter
       .from(teacher.F2FSessionTeacher.currency)
       .to(currency)
       .amount(+teacher.F2FSessionTeacher.price)
       .convert();
-      teacher.F2FSessionTeacher.price = newPriceF2FTeacher;
-
+    teacher.F2FSessionTeacher.price = newPriceF2FTeacher;
   }
 
   res.send({
