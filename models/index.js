@@ -7,8 +7,6 @@ const Class = require("./Class");
 const Subject = require("./Subject");
 const SubjectCategory = require("./SubjectCategory");
 const TeacherSubject = require("./TeacherSubject");
-const Message = require("./Message");
-const Conversation = require("./Conversation");
 const Days = require("./Days");
 const TeacherDay = require("./TeacherDay");
 const ParentStudent = require("./ParentStudent");
@@ -113,8 +111,6 @@ module.exports = {
   Class,
   Subject,
   SubjectCategory,
-  Message,
-  Conversation,
   Days,
   TeacherDay,
   ParentStudent,
