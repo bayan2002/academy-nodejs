@@ -7,8 +7,6 @@ const Class = require("./Class");
 const Subject = require("./Subject");
 const SubjectCategory = require("./SubjectCategory");
 const TeacherSubject = require("./TeacherSubject");
-const Message = require("./Message");
-const Conversation = require("./Conversation");
 const Days = require("./Days");
 const TeacherDay = require("./TeacherDay");
 const ParentStudent = require("./ParentStudent");
@@ -53,16 +51,16 @@ Days.hasMany(TeacherDay);
 TeacherDay.belongsTo(Days);
 // TeacherDay.hasMany(Time);
 // Time.belongsTo(TeacherDay);
-Teacher.hasMany(Conversation);
-Conversation.belongsTo(Teacher);
-Student.hasMany(Conversation);
-Conversation.belongsTo(Student);
-Conversation.hasMany(Message);
-Message.belongsTo(Conversation);
-Teacher.hasMany(Message);
-Message.belongsTo(Teacher);
-Student.hasMany(Message);
-Message.belongsTo(Student);
+// Teacher.hasMany(Conversation);
+// Conversation.belongsTo(Teacher);
+// Student.hasMany(Conversation);
+// Conversation.belongsTo(Student);
+// Conversation.hasMany(Message);
+// Message.belongsTo(Conversation);
+// Teacher.hasMany(Message);
+// Message.belongsTo(Teacher);
+// Student.hasMany(Message);
+// Message.belongsTo(Student);
 Teacher.hasOne(F2FSessionStd);
 F2FSessionStd.belongsTo(Teacher);
 Teacher.hasOne(RemoteSession);
@@ -113,8 +111,6 @@ module.exports = {
   Class,
   Subject,
   SubjectCategory,
-  Message,
-  Conversation,
   Days,
   TeacherDay,
   ParentStudent,
