@@ -12,10 +12,19 @@ const Wallet = sequelize.define("Wallet", {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  status: {
+  type: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  isPaid: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  sessionId: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  }
+
 });
 
 module.exports = Wallet;

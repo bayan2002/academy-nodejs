@@ -24,6 +24,22 @@ const Session = Sequelize.define("Session", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  currency: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  price: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  totalPrice: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  isPaid: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = Session;
