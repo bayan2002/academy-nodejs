@@ -3,6 +3,6 @@ const charge = require("../controllers/payment");
 
 const paymentRouter = express.Router();
 
-paymentRouter.post("charge", charge);
+paymentRouter.post("/charge", charge);
 
 module.exports = paymentRouter;
