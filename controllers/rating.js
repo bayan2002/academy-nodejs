@@ -23,8 +23,13 @@ const rates = await Rate.findAll({
   }
 })
 
+res.send({
+  status: 201,
+  data: rates,
+  msg: "successful get teacher rate",
+});
 
 }
 
 
-module.exports = rateTeacher;
+module.exports = {rateTeacher, getTeacherRate};
