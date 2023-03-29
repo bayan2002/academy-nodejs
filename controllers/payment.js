@@ -1,5 +1,5 @@
 const CC = require("currency-converter-lt");
-const fetch = require("node-fetch");
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { serverErrs } = require("../middlewares/customError");
 const { Wallet, Student, Session } = require("../models");
 
