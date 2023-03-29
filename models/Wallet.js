@@ -12,8 +12,12 @@ const Wallet = sequelize.define("Wallet", {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  type: {
-    type: DataTypes.BOOLEAN,
+  typeAr: {
+    type: DataTypes.STRING,
+    defaultValue: false,
+  },
+  typeEn: {
+    type: DataTypes.STRING,
     defaultValue: false,
   },
   isPaid: {

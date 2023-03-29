@@ -1,7 +1,7 @@
 const CC = require("currency-converter-lt");
 const fetch = require("node-fetch");
 const { serverErrs } = require("../middlewares/customError");
-const { Wallet } = require("../models");
+const { Wallet, Student } = require("../models");
 
 const charge = async () => {
   const { studentId, price, currency } = req.body;
@@ -35,7 +35,9 @@ const charge = async () => {
       price,
       currency,
       isPaid: false,
-      type: "deposit",
+      typeAr: "إيداع",
+      typeEn: "deposit",
+      sessionId: global.session_id ,
     });
   } else {
     throw serverErrs.BAD_REQUEST("charge didn't succeed");
@@ -44,8 +46,40 @@ const charge = async () => {
   res.send({
     status: 201,
     data: `https://uatcheckout.thawani.om/pay/${data.data.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
-    msg: "successful charging",
+    msg: "charged",
   })
 };
 
-module.exports = charge;
+const checkoutSuccess = async()=> {
+const {studentId} = req.body;
+
+const wallet = await Wallet.findOne({
+  where:{
+    sessionId : global.session_id
+  }
+})
+
+wallet.isPaid = true;
+wallet.save();
+
+global.session_id = null;
+const {price} = wallet;
+
+const student = await Student.findOne({
+  where: {
+    id: studentId
+  }
+})
+
+student.price += +price;
+student.save();
+
+res.send({
+  status: 201,
+  data: student,
+  msg: "successful charging",
+})
+}
+
+
+module.exports = {charge, checkoutSuccess};

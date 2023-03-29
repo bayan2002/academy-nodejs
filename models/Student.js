@@ -60,6 +60,10 @@ const Student = sequelize.define("Student", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  wallet: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  }
 });
 
 module.exports = Student;
