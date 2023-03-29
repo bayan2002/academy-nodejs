@@ -1,3 +1,4 @@
+const { Teacher } = require("../models");
 const Rate = require("../models/Rates");
 
 const rateTeacher = async(req,res)=> {
@@ -5,6 +6,12 @@ const {studentId, TeacherId, rating, comment} = req.body;
 
 const rate = await Rate.create({
   studentId, TeacherId, rating, comment
+})
+
+const teacherRate = await Teacher.findOne({
+  where: {
+    id: TeacherId
+  }
 })
 
 res.send({
@@ -16,10 +23,10 @@ res.send({
 }
 
 const getTeacherRate = async(req,res) => {
-  const {teacherId} = req.body
+  const {TeacherId} = req.body
 const rates = await Rate.findAll({
   where:{
-    TeacherId : teacherId
+    TeacherId
   }
 })
 
