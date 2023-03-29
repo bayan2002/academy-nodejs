@@ -3,7 +3,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const { serverErrs } = require("../middlewares/customError");
 const { Wallet, Student, Session } = require("../models");
 
-const charge = async () => {
+const charge = async (req,res) => {
   const { studentId, price, currency } = req.body;
   let currencyConverter = new CC();
 
@@ -23,7 +23,7 @@ const charge = async () => {
       "Content-Type": "application/json",
       "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
     },
-    body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
+    body: `{"client_reference_id":"123412","mode":"test","products":[{"name":"product 1","quantity":1,"unit_amount":${
       newPrice * 1000
     }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
   };
@@ -52,7 +52,7 @@ const charge = async () => {
   });
 };
 
-const checkoutSuccess = async () => {
+const checkoutSuccess = async (req,res) => {
   const { studentId } = req.body;
 
   let options = {
@@ -100,7 +100,7 @@ const checkoutSuccess = async () => {
   });
 };
 
-const booking = async () => {
+const booking = async (req,res) => {
   const {
     title,
     studentId,
@@ -131,7 +131,7 @@ const booking = async () => {
         "Content-Type": "application/json",
         "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
       },
-      body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
+      body: `{"client_reference_id":"123412","mode":"test","products":[{"name":"product 1","quantity":1,"unit_amount":${
         newPrice * 1000
       }}],"success_url":"https://acacdemy.vercel.app/success-payment","cancel_url":"https://acacdemy.vercel.app/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
     };
@@ -176,7 +176,7 @@ const booking = async () => {
     });
   }
 
-  const createSession = async () => {
+  const createSession = async (req,res) => {
     const session = await Session.create({
       title,
       studentId,
@@ -191,7 +191,7 @@ const booking = async () => {
     });
     return session;
   };
-  const createWallet = async () => {
+  const createWallet = async (req,res) => {
     await Wallet.create({
       studentId,
       price: totalPrice,
@@ -203,7 +203,7 @@ const booking = async () => {
   };
 };
 
-const bookingSuccess = async () => {
+const bookingSuccess = async (req,res) => {
   const { studentId } = req.body;
 
   let options = {
