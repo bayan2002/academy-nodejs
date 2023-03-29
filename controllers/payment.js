@@ -13,6 +13,8 @@ const charge = async () => {
     .amount(+price)
     .convert();
 
+ global.newPrice = newPrice;
+
   let url = "https://uatcheckout.thawani.om/api/v1/checkout/session";
 
   let options = {
@@ -87,7 +89,7 @@ const checkoutSuccess = async () => {
     },
   });
 
-  student.price += +price;
+  student.price += +global.newPrice;
   student.save();
 
   res.send({
