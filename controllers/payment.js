@@ -26,7 +26,7 @@ const charge = async () => {
     body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
       newPrice * 1000
     }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
-    mode: "no_cors",
+    mode: "no-cors",
   };
 
   const response = await fetch(url, options);
@@ -62,14 +62,14 @@ const checkoutSuccess = async () => {
       "Content-Type": "application/json",
       "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
     },
-    mode: "no_cors",
+    mode: "no-cors",
   };
 
   let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
 
   const data = await fetch(url, options);
 
-  if (data.data.payment_status != "pay") {
+  if (data.data.payment_status != "payed") {
     throw serverErrs.BAD_REQUEST("charge didn't pay");
   }
 
@@ -135,8 +135,8 @@ const booking = async () => {
       },
       body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
         newPrice * 1000
-      }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
-      mode: "no_cors",
+      }}],"success_url":"https://acacdemy.vercel.app/success-payment","cancel_url":"https://acacdemy.vercel.app/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
+      mode: "no-cors",
     };
     const response = await fetch(url, options);
     const data = await response.json();
@@ -215,15 +215,15 @@ const bookingSuccess = async () => {
       "Content-Type": "application/json",
       "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
     },
-    mode: "no_cors",
+    mode: "no-cors",
   };
 
   let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
 
   const data = await fetch(url, options);
 
-  if (data.data.payment_status != "pay") {
-    throw serverErrs.BAD_REQUEST("charge didn't pay");
+  if (data.data.payment_status != "payed") {
+    throw serverErrs.BAD_REQUEST("payment didn't succeed");
   }
 
   const session = await Session.findOne({
