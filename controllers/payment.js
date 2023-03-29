@@ -118,7 +118,7 @@ const booking = async () => {
     const newPrice = await currencyConverter
       .from(currency)
       .to("OMR")
-      .amount(+price)
+      .amount(+totalPrice)
       .convert();
 
     global.newPrice = newPrice;
@@ -149,7 +149,19 @@ const booking = async () => {
       msg: "charged with thawani",
     });
   } else if (typeOfPayment == "wallet") {
-    const session =createSession();
+    const student = await Student.findOne({
+      where: {
+        id: studentId,
+      },
+    });
+    if(+student.wallet < +newPrice){
+      throw serverErrs.BAD_REQUEST("your current wallet is less than the required price");
+    }
+    const session = createSession();
+    session.isPaid= true;
+    session.save();
+    student.wallet -= +newPrice;
+    student.save();
     res.send({
       status: 201,
       data: session,
