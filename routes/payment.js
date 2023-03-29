@@ -1,10 +1,11 @@
 const express = require("express");
-const {charge, checkoutSuccess, booking} = require("../controllers/payment");
+const {charge, checkoutSuccess, booking, bookingSuccess} = require("../controllers/payment");
 
 const paymentRouter = express.Router();
 
-paymentRouter.post("/charge", charge);
-paymentRouter.post("/successCheckout", checkoutSuccess);
-paymentRouter.post("/booking", booking);
+paymentRouter.post("/charge", errorCatcher(charge));
+paymentRouter.post("/successCheckout", errorCatcher(checkoutSuccess));
+paymentRouter.post("/booking", errorCatcher(booking));
+paymentRouter.post("/bookingSuccess", errorCatcher(bookingSuccess));
 
 module.exports = paymentRouter;
