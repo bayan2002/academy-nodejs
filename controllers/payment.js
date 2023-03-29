@@ -140,12 +140,15 @@ const booking = async () => {
     global.session_id = data.data.session_id;
     if (data.success && data.code === 2004) {
       createSession();
+      const wallet = createWallet();
+      wallet.sessionId = global.session_id;
+      wallet.save();
     } else {
       throw serverErrs.BAD_REQUEST("charge didn't succeed");
     }
     res.send({
       status: 201,
-      data: `https://uatcheckout.thawani.om/pay/${data.data.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
+      data: `https://uatcheckout.thawani.om/pay/${global.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
       msg: "charged with thawani",
     });
   } else if (typeOfPayment == "wallet") {
@@ -154,12 +157,17 @@ const booking = async () => {
         id: studentId,
       },
     });
-    if(+student.wallet < +newPrice){
-      throw serverErrs.BAD_REQUEST("your current wallet is less than the required price");
+    if (+student.wallet < +newPrice) {
+      throw serverErrs.BAD_REQUEST(
+        "your current wallet is less than the required price"
+      );
     }
     const session = createSession();
-    session.isPaid= true;
+    session.isPaid = true;
     session.save();
+    const wallet = createWallet();
+    wallet.isPaid = true;
+    wallet.save();
     student.wallet -= +newPrice;
     student.save();
     res.send({
@@ -184,6 +192,53 @@ const booking = async () => {
     });
     return session;
   };
+  const createWallet = async () => {
+    await Wallet.create({
+      studentId,
+      price: totalPrice,
+      currency,
+      typeAr: "إيداع",
+      typeEn: "deposit",
+    });
+    return wallet;
+  };
 };
 
-module.exports = { charge, checkoutSuccess, booking };
+const bookingSuccess = async () => {
+  const { studentId } = req.body;
+
+  let options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
+    },
+  };
+
+  let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
+
+  const data = await fetch(url, options);
+
+  if (data.data.payment_status != "pay") {
+    throw serverErrs.BAD_REQUEST("charge didn't pay");
+  }
+
+  const wallet = await Wallet.findOne({
+    where: {
+      sessionId: global.session_id,
+    },
+  });
+
+  wallet.isPaid = true;
+  wallet.save();
+
+  global.session_id = null;
+
+  res.send({
+    status: 201,
+    data: student,
+    msg: "successful booking",
+  });
+};
+
+module.exports = { charge, checkoutSuccess, booking, bookingSuccess };
