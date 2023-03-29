@@ -112,6 +112,10 @@ const Teacher = Sequelize.define("Teacher", {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  rate: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  }
 });
 
 module.exports = Teacher;
