@@ -25,7 +25,7 @@ const Wallet = sequelize.define("Wallet", {
     defaultValue: false,
   },
   sessionId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     defaultValue: 0,
   },
   currency: {
