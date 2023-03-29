@@ -1,7 +1,7 @@
 const CC = require("currency-converter-lt");
 const fetch = require("node-fetch");
 const { serverErrs } = require("../middlewares/customError");
-const { Wallet, Student } = require("../models");
+const { Wallet, Student, Session } = require("../models");
 
 const charge = async () => {
   const { studentId, price, currency } = req.body;
@@ -13,7 +13,7 @@ const charge = async () => {
     .amount(+price)
     .convert();
 
- global.newPrice = newPrice;
+  global.newPrice = newPrice;
 
   let url = "https://uatcheckout.thawani.om/api/v1/checkout/session";
 
@@ -91,6 +91,7 @@ const checkoutSuccess = async () => {
 
   student.price += +global.newPrice;
   student.save();
+  global.newPrice = null;
 
   res.send({
     status: 201,
@@ -99,4 +100,78 @@ const checkoutSuccess = async () => {
   });
 };
 
-module.exports = { charge, checkoutSuccess };
+const booking = async () => {
+  const {
+    title,
+    studentId,
+    teacherId,
+    price,
+    currency,
+    typeOfPayment,
+    type,
+    date,
+    period,
+  } = req.body;
+  const totalPrice = +price * period;
+
+  if (typeOfPayment == "thawani") {
+    const newPrice = await currencyConverter
+      .from(currency)
+      .to("OMR")
+      .amount(+price)
+      .convert();
+
+    global.newPrice = newPrice;
+
+    let url = "https://uatcheckout.thawani.om/api/v1/checkout/session";
+
+    let options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
+      },
+      body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
+        newPrice * 1000
+      }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
+    };
+    const response = await fetch(url, options);
+    const data = await response.json();
+    global.session_id = data.data.session_id;
+    if (data.success && data.code === 2004) {
+      createSession();
+    } else {
+      throw serverErrs.BAD_REQUEST("charge didn't succeed");
+    }
+    res.send({
+      status: 201,
+      data: `https://uatcheckout.thawani.om/pay/${data.data.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
+      msg: "charged with thawani",
+    });
+  } else if (typeOfPayment == "wallet") {
+    const session =createSession();
+    res.send({
+      status: 201,
+      data: session,
+      msg: "charged with wallet",
+    });
+  }
+
+  const createSession = async () => {
+    const session = await Session.create({
+      title,
+      studentId,
+      teacherId,
+      price,
+      currency,
+      typeOfPayment,
+      type,
+      date,
+      period,
+      totalPrice,
+    });
+    return session;
+  };
+};
+
+module.exports = { charge, checkoutSuccess, booking };

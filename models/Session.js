@@ -24,6 +24,10 @@ const Session = Sequelize.define("Session", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  typeOfPayment: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   currency: {
     type: DataTypes.STRING,
     allowNull: false,
