@@ -23,8 +23,11 @@ const Wallet = sequelize.define("Wallet", {
   sessionId: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
+  },
+  currency: {
+    type: DataTypes.STRING,
+    allowNull: false,
   }
-
 });
 
 module.exports = Wallet;

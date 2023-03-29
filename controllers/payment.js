@@ -9,7 +9,7 @@ const charge = async () => {
 
   const newPrice = await currencyConverter
     .from(currency)
-    .to("ORM")
+    .to("OMR")
     .amount(+price)
     .convert();
 
@@ -26,7 +26,8 @@ const charge = async () => {
     }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
   };
 
-  const data = await fetch(url, options);
+  const response = await fetch(url, options);
+  const data = await response.json();
   global.session_id = data.data.session_id;
   if (data.success && data.code === 2004) {
     const charging = await Wallet.create({
@@ -34,6 +35,7 @@ const charge = async () => {
       price,
       currency,
       isPaid: false,
+      type: "deposit",
     });
   } else {
     throw serverErrs.BAD_REQUEST("charge didn't succeed");
