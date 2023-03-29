@@ -37,7 +37,7 @@ const charge = async () => {
       isPaid: false,
       typeAr: "إيداع",
       typeEn: "deposit",
-      sessionId: global.session_id ,
+      sessionId: global.session_id,
     });
   } else {
     throw serverErrs.BAD_REQUEST("charge didn't succeed");
@@ -47,39 +47,54 @@ const charge = async () => {
     status: 201,
     data: `https://uatcheckout.thawani.om/pay/${data.data.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
     msg: "charged",
-  })
+  });
 };
 
-const checkoutSuccess = async()=> {
-const {studentId} = req.body;
+const checkoutSuccess = async () => {
+  const { studentId } = req.body;
 
-const wallet = await Wallet.findOne({
-  where:{
-    sessionId : global.session_id
+  let options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
+    },
+  };
+
+  let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
+
+  const data = await fetch(url, options);
+
+  if (data.data.payment_status != "pay") {
+    throw serverErrs.BAD_REQUEST("charge didn't pay");
   }
-})
 
-wallet.isPaid = true;
-wallet.save();
+  const wallet = await Wallet.findOne({
+    where: {
+      sessionId: global.session_id,
+    },
+  });
 
-global.session_id = null;
-const {price} = wallet;
+  wallet.isPaid = true;
+  wallet.save();
 
-const student = await Student.findOne({
-  where: {
-    id: studentId
-  }
-})
+  global.session_id = null;
+  const { price } = wallet;
 
-student.price += +price;
-student.save();
+  const student = await Student.findOne({
+    where: {
+      id: studentId,
+    },
+  });
 
-res.send({
-  status: 201,
-  data: student,
-  msg: "successful charging",
-})
-}
+  student.price += +price;
+  student.save();
 
+  res.send({
+    status: 201,
+    data: student,
+    msg: "successful charging",
+  });
+};
 
-module.exports = {charge, checkoutSuccess};
+module.exports = { charge, checkoutSuccess };
