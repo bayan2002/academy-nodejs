@@ -69,7 +69,7 @@ const checkoutSuccess = async () => {
 
   const data = await fetch(url, options);
 
-  if (data.data.payment_status != "payed") {
+  if (data.data.payment_status != "paid") {
     throw serverErrs.BAD_REQUEST("charge didn't pay");
   }
 
@@ -222,7 +222,7 @@ const bookingSuccess = async () => {
 
   const data = await fetch(url, options);
 
-  if (data.data.payment_status != "payed") {
+  if (data.data.payment_status != "paid") {
     throw serverErrs.BAD_REQUEST("payment didn't succeed");
   }
 
