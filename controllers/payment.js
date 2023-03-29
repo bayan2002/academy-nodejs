@@ -30,8 +30,8 @@ const charge = async () => {
 
   const response = await fetch(url, options);
   const data = await response.json();
-  global.session_id = data.data.session_id;
   if (data.success && data.code === 2004) {
+    global.session_id = data.data.session_id;
     const charging = await Wallet.create({
       studentId,
       price,
@@ -137,12 +137,11 @@ const booking = async () => {
     };
     const response = await fetch(url, options);
     const data = await response.json();
-    global.session_id = data.data.session_id;
     if (data.success && data.code === 2004) {
-      createSession();
-      const wallet = createWallet();
-      wallet.sessionId = global.session_id;
-      wallet.save();
+      global.session_id = data.data.session_id;
+      const session=createSession();
+      session.sessionId = global.session_id;
+      session.save();
     } else {
       throw serverErrs.BAD_REQUEST("charge didn't succeed");
     }
@@ -223,20 +222,20 @@ const bookingSuccess = async () => {
     throw serverErrs.BAD_REQUEST("charge didn't pay");
   }
 
-  const wallet = await Wallet.findOne({
-    where: {
+  const session = await Session.findOne({
+    where:{
       sessionId: global.session_id,
-    },
-  });
+    }
+  })
 
-  wallet.isPaid = true;
-  wallet.save();
+  session.isPaid = true;
+  session.save();
 
   global.session_id = null;
 
   res.send({
     status: 201,
-    data: student,
+    data: session,
     msg: "successful booking",
   });
 };
