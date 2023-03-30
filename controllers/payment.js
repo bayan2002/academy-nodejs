@@ -4,7 +4,7 @@ const { serverErrs } = require("../middlewares/customError");
 const { Wallet, Student, Session } = require("../models");
 
 const charge = async (req,res) => {
-  const { studentId, price, currency } = req.body;
+  const { StudentId, price, currency } = req.body;
   let currencyConverter = new CC();
 
   const newPrice = await currencyConverter
