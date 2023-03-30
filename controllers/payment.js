@@ -33,7 +33,7 @@ const charge = async (req,res) => {
   if (data.success && data.code === 2004) {
     global.session_id = data.data.session_id;
     const charging = await Wallet.create({
-      studentId,
+      StudentId,
       price,
       currency,
       isPaid: false,
@@ -75,7 +75,7 @@ const checkoutSuccess = async (req,res) => {
       sessionId: global.session_id,
     },
   });
-  const { studentId } = wallet;
+  const { StudentId } = wallet;
 
   wallet.isPaid = true;
   await wallet.save();
@@ -84,7 +84,7 @@ const checkoutSuccess = async (req,res) => {
 
   const student = await Student.findOne({
     where: {
-      id: studentId,
+      id: StudentId,
     },
   });
 
@@ -103,8 +103,8 @@ const booking = async (req,res) => {
   const createSession = async () => {
     const session = await Session.create({
       title,
-      studentId,
-      teacherId,
+      StudentId,
+      TeacherId,
       price,
       currency,
       typeOfPayment,
@@ -117,7 +117,7 @@ const booking = async (req,res) => {
   };
   const createWallet = async () => {
     const wallet = await Wallet.create({
-      studentId,
+      StudentId,
       price: totalPrice,
       currency,
       typeAr: "سحب",
@@ -127,8 +127,8 @@ const booking = async (req,res) => {
   };
   const {
     title,
-    studentId,
-    teacherId,
+    StudentId,
+    TeacherId,
     price,
     currency,
     typeOfPayment,
@@ -177,7 +177,7 @@ const booking = async (req,res) => {
   } else if (typeOfPayment == "wallet") {
     const student = await Student.findOne({
       where: {
-        id: studentId,
+        id: StudentId,
       },
     });
     if (+student.wallet < +newPrice) {
@@ -224,7 +224,7 @@ const bookingSuccess = async (req,res) => {
       sessionId: global.session_id,
     },
   });
-  const { studentId } = session;
+  const { StudentId } = session;
 
   session.isPaid = true;
   await session.save();
