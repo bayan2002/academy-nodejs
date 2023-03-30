@@ -27,7 +27,7 @@ const signUp = async (req, res) => {
       email,
     },
   });
-  if (admin) throw serverErrs.BAD_REQUEST("email is already used");
+  if (admin) throw serverErrs.BAD_REQUEST({arabic: "الإيميل مستخدم سابقا", english: "email is already used"});
 
   const hashedPassword = await hash(password, 12);
 
@@ -50,7 +50,7 @@ const signUp = async (req, res) => {
   res.send({
     status: 201,
     data: newAdmin,
-    msg: "successful sign up",
+    msg: {arabic: "تم التسجيل بنجاح" , english: "successful sign up"},
     token: token,
   });
 };
@@ -61,10 +61,10 @@ const login = async (req, res) => {
   await loginValidation.validate({ email, password });
 
   const admin = await Admin.findOne({ where: { email } });
-  if (!admin) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
+  if (!admin) throw serverErrs.BAD_REQUEST({arabic: "خطأ في الإيميل أو كلمة السر", english: "Wrong Email Or Password"});
 
   const result = await compare(password, admin.password);
-  if (!result) throw serverErrs.BAD_REQUEST("Wrong Email Or Password");
+  if (!result) throw serverErrs.BAD_REQUEST({arabic: "خطأ في الإيميل أو كلمة السر", english: "Wrong Email Or Password"});
 
   const { id, name } = admin;
 
@@ -74,7 +74,7 @@ const login = async (req, res) => {
   res.send({
     status: 201,
     data: admin,
-    msg: "successful log in",
+    msg: {arabic: "تم تسجيل الدخول بنجاح", english: "successful log in"},
     token: token,
   });
 };
@@ -96,7 +96,7 @@ const createSubjectCategory = async (req, res) => {
   res.send({
     status: 201,
     data: newSubjectCategory,
-    msg: "successful create new SubjectCategory",
+    msg: {arabic: "تم إنشاء المادة العامة بنجاح", english: "successful create new SubjectCategory"},
   });
 };
 
@@ -116,7 +116,7 @@ const createSubject = async (req, res) => {
   res.send({
     status: 201,
     data: newSubject,
-    msg: "successful create new Subject",
+    msg: {arabic: "تم إنشاء المادة الفرعية بنجاح", english: "successful create new Subject"},
   });
 };
 
@@ -132,7 +132,7 @@ const createLevel = async (req, res) => {
     }
   );
   await newLevel.save();
-  res.send({ status: 201, data: newLevel, msg: "successful create new level" });
+  res.send({ status: 201, data: newLevel, msg: {arabic: "تم إنشاء المستوى بنجاح", english: "successful create new level"} });
 };
 
 const createClass = async (req, res) => {
@@ -151,7 +151,7 @@ const createClass = async (req, res) => {
   res.send({
     status: 201,
     data: newClassCreated,
-    msg: "successful create new class",
+    msg: {arabic: "تم إنشاء الفصل بنجاح", english: "successful create new class"},
   });
 };
 
@@ -170,7 +170,7 @@ const createCurriculum = async (req, res) => {
   res.send({
     status: 201,
     data: newCurriculum,
-    msg: "successful create new curriculum",
+    msg: {arabic: "تم إنشاء المنهج بنجاح", english: "successful create new curriculum"},
   });
 };
 
@@ -184,7 +184,7 @@ const linkedCurriculumLevel = async (req, res) => {
   });
 
   if (curriculumLevel)
-    throw serverErrs.BAD_REQUEST("already linked curriculum with level");
+    throw serverErrs.BAD_REQUEST({arabic: "تم ربط المنهج بالمستوى سابقا", english: "already linked curriculum with level"});
 
   const newCurriculumLevel = await CurriculumLevel.create(
     {
@@ -199,13 +199,13 @@ const linkedCurriculumLevel = async (req, res) => {
   res.send({
     status: 201,
     data: newCurriculumLevel,
-    msg: "successful linked curriculum with level",
+    msg: {arabic: "تم ربط المنهج بالمستوى بنجاح", english: "successful linked curriculum with level"},
   });
 };
 
 const getSubjects = async (req, res) => {
   const subjects = await Subject.findAll({ include: { all: true } });
-  res.send({ status: 201, data: subjects, msg: "successful get all Subjects" });
+  res.send({ status: 201, data: subjects, msg: {arabic: "تم ارجاع جميع المواد بنجاح", english: "successful get all Subjects" }});
 };
 
 const getSingleSubject = async (req, res) => {
@@ -214,11 +214,11 @@ const getSingleSubject = async (req, res) => {
     where: { id: subjectId },
     include: { all: true },
   });
-  if (!subject) throw serverErrs.BAD_REQUEST("Invalid subjectId! ");
+  if (!subject) throw serverErrs.BAD_REQUEST({arabic: "المادة غير موجودة", english: "Invalid subjectId! " });
   res.send({
     status: 201,
     data: subject,
-    msg: "successful get single subject",
+    msg: {arabic: "تم ارجاع المادة بنجاح", english: "successful get single subject" },
   });
 };
 
@@ -229,7 +229,7 @@ const getSubjectCategories = async (req, res) => {
   res.send({
     status: 201,
     data: subjectCategories,
-    msg: "successful get all subjectCategories",
+    msg: {arabic: "تم ارجاع المادة العامة بنجاح", english: "successful get all subjectCategories" },
   });
 };
 
@@ -240,17 +240,17 @@ const getSingleSubjectCategory = async (req, res) => {
     include: { all: true },
   });
   if (!subjectCategory)
-    throw serverErrs.BAD_REQUEST("Invalid subjectCategoryId! ");
+    throw serverErrs.BAD_REQUEST({arabic: "المادة غير موجودة", english: "Invalid subjectCategoryId! " });
   res.send({
     status: 201,
     data: subjectCategory,
-    msg: "successful get single subjectCategory",
+    msg: {arabic: "تم ارجاع المادة بنجاح", english: "successful get single subjectCategory" },
   });
 };
 
 const getClasses = async (req, res) => {
   const classes = await Class.findAll({ include: Level });
-  res.send({ status: 201, data: classes, msg: "successful get all classes" });
+  res.send({ status: 201, data: classes, msg: {arabic: "تم ارجاع جميع الفصول بنجاح", english: "successful get all classes" } });
 };
 
 const getSingleClass = async (req, res) => {
@@ -259,17 +259,17 @@ const getSingleClass = async (req, res) => {
     where: { id: classId },
     include: { all: true },
   });
-  if (!singleClass) throw serverErrs.BAD_REQUEST("Invalid classId! ");
+  if (!singleClass) throw serverErrs.BAD_REQUEST({arabic: "الفصل غير موجود", english: "Invalid classId! "});
   res.send({
     status: 201,
     data: singleClass,
-    msg: "successful get single singleClass",
+    msg: {arabic: "تم ارجاع الفصل بنجاح", english: "successful get single singleClass" },
   });
 };
 
 const getLevels = async (req, res) => {
   const levels = await Level.findAll();
-  res.send({ status: 201, data: levels, msg: "successful get all levels" });
+  res.send({ status: 201, data: levels, msg: {arabic: "تم ارجاع جميع المستويات بنجاح", english: "successful get all levels" } });
 };
 
 const getSingleLevel = async (req, res) => {
@@ -278,11 +278,11 @@ const getSingleLevel = async (req, res) => {
     where: { id: levelId },
     include: [{ model: Class }, { model: CurriculumLevel }],
   });
-  if (!level) throw serverErrs.BAD_REQUEST("Invalid levelId! ");
+  if (!level) throw serverErrs.BAD_REQUEST({arabic: "المستوى غير موجود", english: "Invalid levelId! " });
   res.send({
     status: 201,
     data: level,
-    msg: "successful get single level",
+    msg: {arabic: "تم ارجاع المستوى بنجاح", english: "successful get single level" },
   });
 };
 
@@ -291,7 +291,7 @@ const getCurriculums = async (req, res) => {
   res.send({
     status: 201,
     data: curriculums,
-    msg: "successful get all Curriculums",
+    msg: {arabic: "تم ارجاع جميع المناهج بنجاح", english: "successful get all Curriculums" },
   });
 };
 
@@ -301,11 +301,11 @@ const getSingleCurriculum = async (req, res) => {
     where: { id: curriculumId },
     include: { all: true },
   });
-  if (!curriculum) throw serverErrs.BAD_REQUEST("Invalid curriculumId! ");
+  if (!curriculum) throw serverErrs.BAD_REQUEST({arabic: "المنهج غير موجود", english: "Invalid curriculumId! " });
   res.send({
     status: 201,
     data: curriculum,
-    msg: "successful get single curriculum",
+    msg: {arabic: "تم ارجاع المنهج بنجاح", english: "successful get single curriculum" },
   });
 };
 
@@ -315,7 +315,7 @@ const acceptStudent = async (req, res) => {
     where: { id: ParentStudentId },
     include: { all: true },
   });
-  if (!parentStudent) throw serverErrs.BAD_REQUEST("parent student not found");
+  if (!parentStudent) throw serverErrs.BAD_REQUEST({arabic: "الأب غير موجود", english: "parent student not found" });
 
   await parentStudent.update({ status: 1 });
   const student = await Student.findOne({
@@ -325,7 +325,7 @@ const acceptStudent = async (req, res) => {
   await student.update({ ParentId: parentStudent.ParentId });
   res.send({
     status: 201,
-    msg: "Student has been accepted",
+    msg: {arabic: "تم قبول الطالب بنجاح", english: "Student has been accepted" },
   });
 };
 
@@ -335,12 +335,12 @@ const rejectStudent = async (req, res) => {
     where: { id: ParentStudentId },
     include: { all: true },
   });
-  if (!parentStudent) throw serverErrs.BAD_REQUEST("parent student not found");
+  if (!parentStudent) throw serverErrs.BAD_REQUEST({arabic: "الأب غير موجود", english: "parent student not found" });
 
   await parentStudent.update({ status: -1 });
   res.send({
     status: 201,
-    msg: "Student has been rejected",
+    msg: {arabic: "تم رفض الطالب بنجاح", english: "Student has been rejected" },
   });
 };
 
@@ -353,7 +353,7 @@ const getParentStudentWaiting = async (req, res) => {
   res.send({
     status: 201,
     data: parentStudents,
-    msg: "successful get all Students are waiting",
+    msg: {arabic: "تم ارجاع جميع طلبات الأب بنجاح", english: "successful get all Students are waiting" },
   });
 };
 
@@ -366,7 +366,7 @@ const getParentStudentAccOrRej = async (req, res) => {
   res.send({
     status: 201,
     data: parentStudents,
-    msg: "successful get all Students are accepted",
+    msg: {arabic: "تم ارجاع جميع طلبات الأب المقبولة", english: "successful get all Students are accepted" },
   });
 };
 const acceptTeacher = async (req, res) => {
@@ -374,14 +374,14 @@ const acceptTeacher = async (req, res) => {
   const teacher = await Teacher.findOne({
     where: { id: teacherId },
   });
-  if (!teacher) throw serverErrs.BAD_REQUEST("invalid teacherId!");
+  if (!teacher) throw serverErrs.BAD_REQUEST({arabic: "المعلم غير موجود", english: "invalid teacherId!" });
 
   await teacher.update({ isVerified: true });
 
   res.send({
     status: 201,
     data: teacher,
-    msg: "teacher has been accepted",
+    msg: {arabic: "تم قبول المعلم بنجاح", english: "teacher has been accepted" },
   });
 };
 const getAcceptedTeachers = async (req, res) => {
@@ -392,7 +392,7 @@ const getAcceptedTeachers = async (req, res) => {
   res.send({
     status: 201,
     data: acceptedTeachers,
-    msg: "successful get all acceptedTeachers",
+    msg: {arabic: "تم ارجاع جميع المعلمين المقبولين", english: "successful get all acceptedTeachers" },
   });
 };
 
@@ -400,7 +400,7 @@ const rejectTeacher = async (req, res) => {
   const { teacherId } = req.params;
 
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher) throw serverErrs.BAD_REQUEST({arabic: "المعلم غير موجود", english: "Invalid teacherId! "});
   await Teacher.destroy({
     where: {
       id: teacherId,
@@ -409,7 +409,7 @@ const rejectTeacher = async (req, res) => {
 
   res.send({
     status: 201,
-    msg: "Rejected teacher successfully",
+    msg: {arabic: "تم رفض المعلم", english: "Rejected teacher successfully" },
   });
 };
 
@@ -422,7 +422,7 @@ const getWaitingTeacher = async (req, res) => {
   res.send({
     status: 201,
     data: teachers,
-    msg: "successful get all waiting teachers",
+    msg: {arabic: "تم ارجاع جميع المعلمين غير المقبولين بعد", english: "successful get all waiting teachers"},
   });
 };
 
@@ -431,7 +431,7 @@ const getLanguageLevel = async (req, res) => {
   res.send({
     status: 201,
     data: languageLevels,
-    msg: "successful get all language level",
+    msg: {arabic: "تم ارجاع جميع مستويات اللغة", english: "successful get all language level"},
   });
 };
 
@@ -442,9 +442,9 @@ const updateLevel = async (req, res) => {
     where: { id: LevelId },
     include: { all: true },
   });
-  if (!level) throw serverErrs.BAD_REQUEST("level not found");
+  if (!level) throw serverErrs.BAD_REQUEST({arabic: "المستوى غير موجود", english: "level not found"});
   await level.update({ titleAR, titleEN });
-  res.send({ status: 201, data: level, msg: "successful update level" });
+  res.send({ status: 201, data: level, msg: {arabic: "تم تعديل المستوى بنجاح", english: "successful update level"} });
 };
 
 const updateSubCategories = async (req, res) => {
@@ -455,11 +455,11 @@ const updateSubCategories = async (req, res) => {
     include: { all: true },
   });
   if (!subjectCategory)
-    throw serverErrs.BAD_REQUEST("subjectCategory not found");
+    throw serverErrs.BAD_REQUEST({arabic: "المادة العامة غير موجودة", english: "subjectCategory not found"});
   const clearImage = (filePath) => {
     filePath = path.join(__dirname, "..", `images/${filePath}`);
     fs.unlink(filePath, (err) => {
-      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+      if (err) throw serverErrs.BAD_REQUEST({arabic: "الصورة غير موجودة", english: "Image not found"});
     });
   };
   if (req.file && subjectCategory.image) {
@@ -472,7 +472,7 @@ const updateSubCategories = async (req, res) => {
   res.send({
     status: 201,
     data: subjectCategory,
-    msg: "successful update subjectCategory",
+    msg: {arabic: "تم تعديل المادة العامة بنجاح", english: "successful update subjectCategory"},
   });
 };
 
@@ -483,9 +483,9 @@ const updateSubject = async (req, res) => {
     where: { id: SubjectId },
     include: { all: true },
   });
-  if (!subject) throw serverErrs.BAD_REQUEST("Subject not found");
+  if (!subject) throw serverErrs.BAD_REQUEST({arabic: "المادة غير موجودة", english: "Subject not found"});
   await subject.update({ titleAR, titleEN });
-  res.send({ status: 201, data: subject, msg: "successful update subject" });
+  res.send({ status: 201, data: subject, msg: {arabic: "تم تعديل المادة الفرعية بنجاح", english: "successful update subject" }});
 };
 
 const updateClass = async (req, res) => {
@@ -495,9 +495,9 @@ const updateClass = async (req, res) => {
     where: { id: ClassId },
     include: { all: true },
   });
-  if (!classes) throw serverErrs.BAD_REQUEST("Class not found");
+  if (!classes) throw serverErrs.BAD_REQUEST({arabic: "الفصل غير موجود", english: "Class not found"});
   await classes.update({ titleAR, titleEN });
-  res.send({ status: 201, data: classes, msg: "successful update Class" });
+  res.send({ status: 201, data: classes, msg: {arabic: "تم تعديل الفصل بنجاح", english: "successful update Class"} });
 };
 
 const updateCurriculum = async (req, res) => {
@@ -507,12 +507,12 @@ const updateCurriculum = async (req, res) => {
     where: { id: CurriculumId },
     include: { all: true },
   });
-  if (!curriculum) throw serverErrs.BAD_REQUEST("Curriculum not found");
+  if (!curriculum) throw serverErrs.BAD_REQUEST({arabic: "المنهج غير موجود", english:"Curriculum not found"});
   await curriculum.update({ titleAR, titleEN });
   res.send({
     status: 201,
     data: curriculum,
-    msg: "successful update curriculum",
+    msg: {arabic: "تم تعديل المنهج بنجاح", english: "successful update curriculum"},
   });
 };
 

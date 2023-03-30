@@ -6,7 +6,7 @@ const getAllLanguages = async (req, res) => {
   res.send({
     status: 201,
     data: languages,
-    msg: "successful get all languages",
+    msg: {arabic: "تم ارجاع جميع اللغات", english: "successful get all languages"},
   });
 };
 
@@ -36,7 +36,7 @@ const addLanguageLevel = async (req, res) => {
   await LanguageLevel.bulkCreate(LanguageLevelData);
   res.send({
     status: 201,
-    msg: "Language Level data have been saved",
+    msg: {arabic: "ادخال مستويات اللغة بنجاح", english: "Language Level data have been saved"},
   });
 };
 
