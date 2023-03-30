@@ -25,7 +25,7 @@ const charge = async (req,res) => {
     },
     body: `{"client_reference_id":"123412","mode":"test","products":[{"name":"product 1","quantity":1,"unit_amount":${
       newPrice * 1000
-    }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
+    }}],"success_url":"http://localhost:3000/success-charge","cancel_url":"http://localhost:3000/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
   };
 
   const response = await fetch(url, options);
@@ -133,7 +133,7 @@ const booking = async (req,res) => {
       },
       body: `{"client_reference_id":"123412","mode":"test","products":[{"name":"product 1","quantity":1,"unit_amount":${
         newPrice * 1000
-      }}],"success_url":"https://acacdemy.vercel.app/success-payment","cancel_url":"https://acacdemy.vercel.app/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
+      }}],"success_url":"http://localhost:3000/success-payment","cancel_url":"http://localhost:3000/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
     };
     const response = await fetch(url, options);
     const data = await response.json();
