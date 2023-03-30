@@ -88,7 +88,7 @@ const checkoutSuccess = async (req,res) => {
     },
   });
 
-  student.price += +global.newPrice;
+  student.wallet += +global.newPrice;
   await student.save();
   global.newPrice = null;
 
