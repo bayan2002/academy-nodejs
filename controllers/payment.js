@@ -163,7 +163,7 @@ const booking = async (req,res) => {
     const data = await response.json();
     if (data.success && data.code === 2004) {
       global.session_id = data.data.session_id;
-      const session = createSession();
+      const session = await createSession();
       session.sessionId = global.session_id;
       await session.save();
     } else {
@@ -185,10 +185,10 @@ const booking = async (req,res) => {
         "your current wallet is less than the required price"
       );
     }
-    const session = createSession();
+    const session = await createSession();
     session.isPaid = true;
     await session.save();
-    const wallet = createWallet();
+    const wallet = await createWallet();
     wallet.isPaid = true;
     await wallet.save();
     student.wallet -= +newPrice;
