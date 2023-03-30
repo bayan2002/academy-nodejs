@@ -54,8 +54,6 @@ const charge = async () => {
 };
 
 const checkoutSuccess = async () => {
-  const { studentId } = req.body;
-
   let options = {
     method: "GET",
     headers: {
@@ -67,7 +65,8 @@ const checkoutSuccess = async () => {
 
   let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
 
-  const data = await fetch(url, options);
+  const response = await fetch(url, options);
+  const data = await response.json();
 
   if (data.data.payment_status != "payed") {
     throw serverErrs.BAD_REQUEST("charge didn't pay");
@@ -78,12 +77,12 @@ const checkoutSuccess = async () => {
       sessionId: global.session_id,
     },
   });
+  const { studentId } = wallet;
 
   wallet.isPaid = true;
-  wallet.save();
+  await wallet.save();
 
   global.session_id = null;
-  const { price } = wallet;
 
   const student = await Student.findOne({
     where: {
@@ -92,7 +91,7 @@ const checkoutSuccess = async () => {
   });
 
   student.price += +global.newPrice;
-  student.save();
+  await student.save();
   global.newPrice = null;
 
   res.send({
@@ -103,6 +102,31 @@ const checkoutSuccess = async () => {
 };
 
 const booking = async () => {
+  const createSession = async () => {
+    const session = await Session.create({
+      title,
+      studentId,
+      teacherId,
+      price,
+      currency,
+      typeOfPayment,
+      type,
+      date,
+      period,
+      totalPrice,
+    });
+    return session;
+  };
+  const createWallet = async () => {
+    const wallet = await Wallet.create({
+      studentId,
+      price: totalPrice,
+      currency,
+      typeAr: "سحب",
+      typeEn: "withdraw",
+    });
+    return wallet;
+  };
   const {
     title,
     studentId,
@@ -115,16 +139,16 @@ const booking = async () => {
     period,
   } = req.body;
   const totalPrice = +price * period;
+  let currencyConverter = new CC();
 
+  const newPrice = await currencyConverter
+    .from(currency)
+    .to("OMR")
+    .amount(+totalPrice)
+    .convert();
+
+  global.newPrice = newPrice;
   if (typeOfPayment == "thawani") {
-    const newPrice = await currencyConverter
-      .from(currency)
-      .to("OMR")
-      .amount(+totalPrice)
-      .convert();
-
-    global.newPrice = newPrice;
-
     let url = "https://uatcheckout.thawani.om/api/v1/checkout/session";
 
     let options = {
@@ -144,7 +168,7 @@ const booking = async () => {
       global.session_id = data.data.session_id;
       const session = createSession();
       session.sessionId = global.session_id;
-      session.save();
+      await session.save();
     } else {
       throw serverErrs.BAD_REQUEST("charge didn't succeed");
     }
@@ -166,49 +190,21 @@ const booking = async () => {
     }
     const session = createSession();
     session.isPaid = true;
-    session.save();
+    await session.save();
     const wallet = createWallet();
     wallet.isPaid = true;
-    wallet.save();
+    await wallet.save();
     student.wallet -= +newPrice;
-    student.save();
+    await student.save();
     res.send({
       status: 201,
       data: session,
       msg: "charged with wallet",
     });
   }
-
-  const createSession = async () => {
-    const session = await Session.create({
-      title,
-      studentId,
-      teacherId,
-      price,
-      currency,
-      typeOfPayment,
-      type,
-      date,
-      period,
-      totalPrice,
-    });
-    return session;
-  };
-  const createWallet = async () => {
-    await Wallet.create({
-      studentId,
-      price: totalPrice,
-      currency,
-      typeAr: "إيداع",
-      typeEn: "deposit",
-    });
-    return wallet;
-  };
 };
 
 const bookingSuccess = async () => {
-  const { studentId } = req.body;
-
   let options = {
     method: "GET",
     headers: {
@@ -220,7 +216,8 @@ const bookingSuccess = async () => {
 
   let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
 
-  const data = await fetch(url, options);
+  const response = await fetch(url, options);
+  const data = await response.json();
 
   if (data.data.payment_status != "payed") {
     throw serverErrs.BAD_REQUEST("payment didn't succeed");
@@ -231,9 +228,10 @@ const bookingSuccess = async () => {
       sessionId: global.session_id,
     },
   });
+  const { studentId } = session;
 
   session.isPaid = true;
-  session.save();
+  await session.save();
 
   global.session_id = null;
 

@@ -44,6 +44,10 @@ const Session = Sequelize.define("Session", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  sessionId: {
+    type: DataTypes.STRING,
+    defaultValue: "",
+  },
 });
 
 module.exports = Session;

@@ -8,7 +8,7 @@ const Wallet = sequelize.define("Wallet", {
     allowNull: false,
     primaryKey: true,
   },
-  money: {
+  price: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
@@ -26,12 +26,12 @@ const Wallet = sequelize.define("Wallet", {
   },
   sessionId: {
     type: DataTypes.INTEGER,
-    defaultValue: 0,
+    defaultValue: "",
   },
   currency: {
     type: DataTypes.STRING,
     allowNull: false,
-  }
+  },
 });
 
 module.exports = Wallet;
