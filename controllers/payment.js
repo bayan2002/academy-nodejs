@@ -52,7 +52,7 @@ const charge = async (req,res) => {
   });
 };
 
-const checkoutSuccess = async () => {
+const checkoutSuccess = async (req,res) => {
   let options = {
     method: "GET",
     headers: {
@@ -99,7 +99,7 @@ const checkoutSuccess = async () => {
   });
 };
 
-const booking = async () => {
+const booking = async (req,res) => {
   const createSession = async () => {
     const session = await Session.create({
       title,
@@ -201,7 +201,7 @@ const booking = async () => {
   }
 };
 
-const bookingSuccess = async () => {
+const bookingSuccess = async (req,res) => {
   let options = {
     method: "GET",
     headers: {
