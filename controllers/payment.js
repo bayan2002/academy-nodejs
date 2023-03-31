@@ -139,11 +139,13 @@ const booking = async (req,res) => {
   const totalPrice = +price * period;
   let currencyConverter = new CC();
 
-  const newPrice = await currencyConverter
+  const converterPrice = await currencyConverter
     .from(currency)
     .to("OMR")
     .amount(+totalPrice)
     .convert();
+  
+  const newPrice = converterPrice.toFixed(2)
 
   global.newPrice = newPrice;
   if (typeOfPayment == "thawani") {
