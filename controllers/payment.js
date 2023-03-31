@@ -159,8 +159,6 @@ const booking = async (req,res) => {
         newPrice * 1000
       }}],"success_url":"http://localhost:3000/success-payment","cancel_url":"http://localhost:3000/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
     };
-    if(newPrice)
-    {
     const response = await fetch(url, options);
     const data = await response.json();
     if (data.success && data.code === 2004) {
@@ -171,7 +169,6 @@ const booking = async (req,res) => {
     } else {
       throw serverErrs.BAD_REQUEST("charge didn't succeed");
     }
-     }
     res.send({
       status: 201,
       data: `https://uatcheckout.thawani.om/pay/${global.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
