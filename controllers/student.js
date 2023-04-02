@@ -18,6 +18,8 @@ const {
   Days,
   Language,
   Subject,
+  Wallet,
+  Session,
 } = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -375,6 +377,83 @@ const getSingleTeacher = async (req, res) => {
   });
 };
 
+const getStudentCredit = async (req, res) => {
+  const { studentId } = req.params;
+  const student = await Student.findOne({
+    where: { id: studentId, isPaid: true },
+    attributes: ["wallet"],
+  });
+  if (!student) throw serverErrs.BAD_REQUEST("Invalid studentId! ");
+
+  res.send({
+    status: 201,
+    data: student,
+    msg: "successful send student wallet",
+  });
+};
+
+const getWalletHistory = async (req, res) => {
+  const { studentId } = req.params;
+  const walletHistory = await Wallet.findAll({
+    where: { studentId, isPaid: true },
+  });
+
+  res.send({
+    status: 201,
+    data: walletHistory,
+    msg: "successful send Wallet History",
+  });
+};
+
+const getAllLessons = async (req, res) => {
+  const { studentId } = req.params;
+  const lessons = await Session.findAll({
+    where: { studentId, isPaid: true },
+    include: [{ model: Teacher }],
+  });
+
+  res.send({
+    status: 201,
+    data: lessons,
+    msg: "successful send  all lessons",
+  });
+};
+
+const getComingLessons = async (req, res) => {
+  const { studentId } = req.params;
+  const comingLessons = await Session.findAll({
+    where: {
+      studentId,
+      isPaid: true,
+      date: { [Op.gte]: new Date() }
+    },
+    include: [{ model: Teacher }],
+  });
+
+  res.send({
+    status: 201,
+    data: comingLessons,
+    msg: "successful send  all Coming Lessons",
+  });
+};
+
+const getPreviousLessons = async (req, res) => {
+  const { studentId } = req.params;
+  const previousLessons = await Session.findAll({
+    where: {
+      studentId,
+      isPaid: true,
+      date: { [Op.lt]: new Date() }
+    },
+    include: [{ model: Teacher }],
+  });
+
+  res.send({
+    status: 201,
+    data: previousLessons,
+    msg: "successful send  all Previous Lessons",
+  });
+};
 module.exports = {
   signUp,
   verifyCode,
@@ -387,4 +466,9 @@ module.exports = {
   editImageStudent,
   resetPassword,
   getSingleTeacher,
+  getStudentCredit,
+  getWalletHistory,
+  getAllLessons,
+  getComingLessons,
+  getPreviousLessons,
 };
