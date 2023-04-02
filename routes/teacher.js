@@ -19,6 +19,7 @@ const {
   resetPassword,
   getAllLessons,
   getCredit,
+  getTeacherFinancial,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -109,6 +110,13 @@ teacherRouter.get(
   "/credit",
   checkUserAuth("teacher"),
   getCredit
+);
+
+teacherRouter.get(
+  "/financialTeacher",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(getTeacherFinancial)
 );
 
 module.exports = teacherRouter;

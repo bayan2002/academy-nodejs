@@ -543,7 +543,7 @@ res.send({
 });
 }
 
-const getAllLessons = async(req, res) => {
+const getAllSessions = async(req, res) => {
 
 const lessons = await Session.findAll({
   where: {
@@ -594,6 +594,56 @@ const getStudentWallets = async(req, res) => {
 
 }
 
+const getThawaniSession = async(req, res) => {
+
+  const {StudentId} = req.body;
+
+  const sessions = await Session.findAll({
+    where: {
+      StudentId,
+      typeOfPayment : "thawani"
+    }
+  })
+
+  res.send({
+    status: 201,
+    data: sessions,
+    msg: "successful get all thawani session",
+  });
+}
+
+const getAllTeachers = async(req, res) =>{
+
+  const teachers = await Teacher.findAll({
+    where: {
+      isVerified: true,
+      isRegistered: true
+    }
+  });
+
+  res.send({
+    status: 201,
+    data: teachers,
+    msg: "successful get all teachers",
+  });
+}
+
+const getTeacherFinancial = async(req, res) => {
+const {TeacherId} = req.body;
+
+const records = await FinancialRecord.findAll({
+  where:{
+    TeacherId
+  }
+})
+
+res.send({
+  status: 201,
+  data: records,
+  msg: "successful get all financial records for teacher",
+});
+}
+
 module.exports = {
   signUp,
   login,
@@ -628,7 +678,10 @@ module.exports = {
   updateClass,
   updateCurriculum,
   payDues,
-  getAllLessons,
+  getAllSessions,
   getAllWallets,
-  getStudentWallets
+  getStudentWallets,
+  getThawaniSession,
+  getAllTeachers,
+  getTeacherFinancial
 };
