@@ -16,6 +16,7 @@ const rateTeacher = async (req, res) => {
     where: {
       TeacherId,
       StudentId,
+      isPaid: true,
     },
   });
 
