@@ -29,6 +29,7 @@ const path = require("path");
 const fs = require("fs");
 const CC = require("currency-converter-lt");
 const TeacherSubject = require("../models/TeacherSubject");
+const Rate = require("../models/Rates");
 
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
@@ -335,6 +336,7 @@ const getSingleTeacher = async (req, res) => {
       { model: TeacherLevel, include: [Level] },
       { model: CurriculumTeacher, include: [Curriculum] },
       { model: TeacherSubject, include: [Subject] },
+      { model: Rate, include: [Student] },
     ],
   });
   if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");

@@ -18,7 +18,7 @@ const rateTeacher = async (req, res) => {
     },
   });
 
-  if (session)
+  if (!session)
     throw serverErrs.BAD_REQUEST("You don't have any session with the teacher");
 
   const rateData = await Rate.findOne({
