@@ -1,42 +1,75 @@
-const { Teacher } = require("../models");
+const { serverErrs } = require("../middlewares/customError");
+const { Teacher, Session } = require("../models");
 const Rate = require("../models/Rates");
 
-const rateTeacher = async(req,res)=> {
-const {studentId, TeacherId, rating, comment} = req.body;
+const rateTeacher = async (req, res) => {
+  const { StudentId, TeacherId, rating, comment } = req.body;
 
-const rate = await Rate.create({
-  studentId, TeacherId, rating, comment
-})
+  const teacher = await Teacher.findOne({
+    where: {
+      id: TeacherId,
+    },
+  });
 
-const teacherRate = await Teacher.findOne({
-  where: {
-    id: TeacherId
-  }
-})
+  const session = await Session.findOne({
+    where: {
+      TeacherId,
+      StudentId,
+    },
+  });
 
-res.send({
-  status: 201,
-  data: rate,
-  msg: "successful rate teacher",
-});
+  if (session)
+    throw serverErrs.BAD_REQUEST("You don't have any session with the teacher");
 
-}
+  const rateData = await Rate.findOne({
+    where: {
+      TeacherId,
+      StudentId,
+    },
+  });
 
-const getTeacherRate = async(req,res) => {
-  const {TeacherId} = req.body
-const rates = await Rate.findAll({
-  where:{
-    TeacherId
-  }
-})
+  if (rateData) throw serverErrs.BAD_REQUEST("You already Rated the teacher ");
 
-res.send({
-  status: 201,
-  data: rates,
-  msg: "successful get teacher rate",
-});
+  const rate = await Rate.create({
+    StudentId,
+    TeacherId,
+    rating,
+    comment,
+  });
 
-}
+  const rates = await Rate.findAll({
+    where: {
+      TeacherId,
+    },
+  });
+  const teacherRates = 0;
+  rates.forEach((ele) => {
+    teacherRates += +ele.rating;
+  });
 
+  teacher.rate = teacherRates / rates.length;
+  await teacher.save();
 
-module.exports = {rateTeacher, getTeacherRate};
+  res.send({
+    status: 201,
+    data: rate,
+    msg: "successful rate teacher",
+  });
+};
+
+const getTeacherRate = async (req, res) => {
+  const { TeacherId } = req.body;
+  const rates = await Rate.findAll({
+    where: {
+      TeacherId,
+    },
+  });
+
+  res.send({
+    status: 201,
+    data: rates,
+    msg: "successful get teacher rate",
+  });
+};
+
+module.exports = { rateTeacher, getTeacherRate };
