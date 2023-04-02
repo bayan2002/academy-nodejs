@@ -1,10 +1,12 @@
 const CC = require("currency-converter-lt");
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const { serverErrs } = require("../middlewares/customError");
-const { Wallet, Student, Session } = require("../models");
+const { Wallet, Student, Session, Teacher } = require("../models");
+const FinancialRecord = require("../models/financialRecord");
 
-const charge = async (req,res) => {
-  const { studentId, price, currency } = req.body;
+const charge = async (req, res) => {
+  const { StudentId, price, currency } = req.body;
   let currencyConverter = new CC();
 
   const newPrice = await currencyConverter
@@ -33,7 +35,7 @@ const charge = async (req,res) => {
   if (data.success && data.code === 2004) {
     global.session_id = data.data.session_id;
     const charging = await Wallet.create({
-      studentId,
+      StudentId,
       price,
       currency,
       isPaid: false,
@@ -52,7 +54,7 @@ const charge = async (req,res) => {
   });
 };
 
-const checkoutSuccess = async () => {
+const checkoutSuccess = async (req, res) => {
   let options = {
     method: "GET",
     headers: {
@@ -75,7 +77,7 @@ const checkoutSuccess = async () => {
       sessionId: global.session_id,
     },
   });
-  const { studentId } = wallet;
+  const { StudentId } = wallet;
 
   wallet.isPaid = true;
   await wallet.save();
@@ -84,11 +86,11 @@ const checkoutSuccess = async () => {
 
   const student = await Student.findOne({
     where: {
-      id: studentId,
+      id: StudentId,
     },
   });
 
-  student.price += +global.newPrice;
+  student.wallet += +global.newPrice;
   await student.save();
   global.newPrice = null;
 
@@ -99,12 +101,12 @@ const checkoutSuccess = async () => {
   });
 };
 
-const booking = async () => {
+const booking = async (req, res) => {
   const createSession = async () => {
     const session = await Session.create({
       title,
-      studentId,
-      teacherId,
+      StudentId,
+      TeacherId,
       price,
       currency,
       typeOfPayment,
@@ -117,7 +119,7 @@ const booking = async () => {
   };
   const createWallet = async () => {
     const wallet = await Wallet.create({
-      studentId,
+      StudentId,
       price: totalPrice,
       currency,
       typeAr: "سحب",
@@ -127,8 +129,8 @@ const booking = async () => {
   };
   const {
     title,
-    studentId,
-    teacherId,
+    StudentId,
+    TeacherId,
     price,
     currency,
     typeOfPayment,
@@ -139,11 +141,13 @@ const booking = async () => {
   const totalPrice = +price * period;
   let currencyConverter = new CC();
 
-  const newPrice = await currencyConverter
+  const converterPrice = await currencyConverter
     .from(currency)
     .to("OMR")
     .amount(+totalPrice)
     .convert();
+
+  const newPrice = converterPrice.toFixed(2);
 
   global.newPrice = newPrice;
   if (typeOfPayment == "thawani") {
@@ -163,7 +167,7 @@ const booking = async () => {
     const data = await response.json();
     if (data.success && data.code === 2004) {
       global.session_id = data.data.session_id;
-      const session = createSession();
+      const session = await createSession();
       session.sessionId = global.session_id;
       await session.save();
     } else {
@@ -177,7 +181,7 @@ const booking = async () => {
   } else if (typeOfPayment == "wallet") {
     const student = await Student.findOne({
       where: {
-        id: studentId,
+        id: StudentId,
       },
     });
     if (+student.wallet < +newPrice) {
@@ -185,14 +189,29 @@ const booking = async () => {
         "your current wallet is less than the required price"
       );
     }
-    const session = createSession();
+    const session = await createSession();
     session.isPaid = true;
     await session.save();
-    const wallet = createWallet();
+    const wallet = await createWallet();
     wallet.isPaid = true;
     await wallet.save();
     student.wallet -= +newPrice;
     await student.save();
+
+    await FinancialRecord.create({
+      amount: newPrice,
+      type: "booking",
+    });
+
+    const teacher = Teacher.findOne({
+      where: {
+        TeacherId,
+      },
+    });
+
+    teacher.totalAmount += newPrice;
+    await teacher.save();
+
     res.send({
       status: 201,
       data: session,
@@ -201,7 +220,7 @@ const booking = async () => {
   }
 };
 
-const bookingSuccess = async () => {
+const bookingSuccess = async (req, res) => {
   let options = {
     method: "GET",
     headers: {
@@ -224,12 +243,25 @@ const bookingSuccess = async () => {
       sessionId: global.session_id,
     },
   });
-  const { studentId } = session;
+  const { StudentId } = session;
 
   session.isPaid = true;
   await session.save();
 
   global.session_id = null;
+  await FinancialRecord.create({
+    amount: session.price,
+    type: "booking",
+  });
+
+  const teacher = Teacher.findOne({
+    where: {
+    TeacherId : session.TeacherId,
+    },
+  });
+  
+  teacher.totalAmount += +session.price;
+  await teacher.save();
 
   res.send({
     status: 201,

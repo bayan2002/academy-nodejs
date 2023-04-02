@@ -34,6 +34,7 @@ const {
   updateSubject,
   updateClass,
   updateCurriculum,
+  payDues,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -182,6 +183,13 @@ adminRouter.put(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(updateCurriculum)
+);
+
+adminRouter.post(
+  "/pay",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(payDues)
 );
 
 module.exports = adminRouter;
