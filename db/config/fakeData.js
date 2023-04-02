@@ -521,6 +521,20 @@ const days = [
     id: 7,
   },
 ];
+const rates =[
+  {
+    "StudentId": 1,
+     "TeacherId": 1,
+      "rating" : 5,
+       "comment" : "very good" 
+},
+{
+  "StudentId": 2,
+   "TeacherId": 1,
+    "rating" : 5,
+     "comment" : "very good" 
+},
+]
 
 module.exports = {
   admin,
@@ -541,5 +555,6 @@ module.exports = {
   days,
   remoteSession,
   f2fStudent,
-  f2fTeacher
+  f2fTeacher,
+  rates
 };

@@ -1,7 +1,7 @@
 const { serverErrs } = require("../middlewares/customError");
 const { Teacher, Session } = require("../models");
 const Rate = require("../models/Rate");
-const { Sequelize }= require('sequelize');
+const { Sequelize } = require("sequelize");
 
 const rateTeacher = async (req, res) => {
   const { StudentId, TeacherId, rating, comment } = req.body;
@@ -42,25 +42,24 @@ const rateTeacher = async (req, res) => {
     where: {
       TeacherId,
     },
-  attributes: [
-    [Sequelize.fn('AVG', Sequelize.col('rating')), 'avg_rating']
-  ]
+    attributes: [[Sequelize.fn("AVG", Sequelize.col("rating")), "avg_rating"]],
   });
 
-  console.log(rates)
+  console.log(rates);
 
   const avgRating = rates[0].dataValues.avg_rating;
   const ratingFromZeroToFive = Math.round((avgRating / 10) * 5);
 
-  console.log(ratingFromZeroToFive, 'hhhhhhhhhhh')
+  console.log(ratingFromZeroToFive, "hhhhhhhhhhh");
   // const teacherRates = 0;
 
   // for(let i = 0 ; i<rates.length ; ++i){
   //   teacherRates += rates[i].rating;
   // }
 
-  // teacher.rate = teacherRates / rates.length;
-  // await teacher.save();
+  teacher.rate = ratingFromZeroToFive;
+  console.log("teacher.rate : ", teacher.rate);
+  await teacher.save();
 
   res.send({
     status: 201,
