@@ -18,6 +18,7 @@ const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
+const FinancialRecord = require("../models/financialRecord");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -516,6 +517,25 @@ const updateCurriculum = async (req, res) => {
   });
 };
 
+const payDues = async(req, res) => {
+const {price, TeacherId} = req.body;
+
+await FinancialRecord.create({
+  amount: price,
+  type: "paid",
+});
+
+const teacher = Teacher.findOne({
+  where: {
+    TeacherId,
+  },
+});
+
+teacher.totalAmount += +price;
+await teacher.save();
+
+}
+
 module.exports = {
   signUp,
   login,
@@ -549,4 +569,5 @@ module.exports = {
   updateSubject,
   updateClass,
   updateCurriculum,
+  payDues
 };

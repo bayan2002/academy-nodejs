@@ -199,7 +199,7 @@ const booking = async (req, res) => {
     await student.save();
 
     await FinancialRecord.create({
-      newPrice,
+      amount: newPrice,
       type: "booking",
     });
 
@@ -250,8 +250,8 @@ const bookingSuccess = async (req, res) => {
 
   global.session_id = null;
   await FinancialRecord.create({
-    newPrice,
-    type: "paid",
+    amount: session.price,
+    type: "booking",
   });
 
   const teacher = Teacher.findOne({
