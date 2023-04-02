@@ -13,6 +13,11 @@ const {
   editImageStudent,
   resetPassword,
   getSingleTeacher,
+  getStudentCredit,
+  getWalletHistory,
+  getAllLessons,
+  getComingLessons,
+  getPreviousLessons,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -41,6 +46,19 @@ studentRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getLastTenStudent)
+);
+
+studentRouter.get("/Credit/:studentId", errorCatcher(getStudentCredit));
+
+studentRouter.get("/wallet/:studentId", errorCatcher(getWalletHistory));
+
+studentRouter.get("/lessons/:studentId", errorCatcher(getAllLessons));
+
+studentRouter.get("/comingLessons/:studentId", errorCatcher(getComingLessons));
+
+studentRouter.get(
+  "/previousLessons/:studentId",
+  errorCatcher(getPreviousLessons)
 );
 
 studentRouter.put(
