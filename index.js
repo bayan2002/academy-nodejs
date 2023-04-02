@@ -6,8 +6,8 @@ const port = app.get("port");
 
 
 sequelize
-  // .sync()
-  .sync({ force: true })
+  .sync()
+  // .sync({ force: true })
   .then(() => {
     app.listen(port, () => {
       console.log(`The Server is running on http://localhost:${port}`);

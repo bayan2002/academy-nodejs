@@ -138,5 +138,6 @@ module.exports = {
   CurriculumLevel,
   CurriculumTeacher,
   LanguageLevel,
-  FinancialRecord
+  FinancialRecord,
+  Rate
 };
