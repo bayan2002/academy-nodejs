@@ -101,12 +101,14 @@ teacherRouter.put(
 
 teacherRouter.get(
   "/lessons",
-  errorCatcher(getAllLessons)
+  checkUserAuth("teacher"),
+  getAllLessons
 );
 
 teacherRouter.get(
   "/credit",
-  errorCatcher(getCredit)
+  checkUserAuth("teacher"),
+  getCredit
 );
 
 module.exports = teacherRouter;
