@@ -17,6 +17,8 @@ const {
   searchTeacherFilterSide,
   searchTeacherFilterTop,
   resetPassword,
+  getAllLessons,
+  getCredit,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -35,18 +37,21 @@ teacherRouter.post(
   checkUserAuth("teacher"),
   errorCatcher(signAbout)
 );
+
 teacherRouter.post(
   "/image/:teacherId",
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(uploadImage)
 );
+
 teacherRouter.post(
   "/additionalInfo/:teacherId",
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(signAdditionalInfo)
 );
+
 teacherRouter.post(
   "/subjects/:teacherId",
   verifyToken,
@@ -60,18 +65,21 @@ teacherRouter.post(
   checkUserAuth("teacher"),
   errorCatcher(signResume)
 );
+
 teacherRouter.post(
   "/availability/:teacherId",
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(signAvailability)
 );
+
 teacherRouter.post(
   "/VideoLink/:teacherId",
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(signVideoLink)
 );
+
 teacherRouter.post(
   "/description/:teacherId",
   verifyToken,
@@ -89,6 +97,16 @@ teacherRouter.put(
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(resetPassword)
+);
+
+teacherRouter.get(
+  "/lessons",
+  errorCatcher(getAllLessons)
+);
+
+teacherRouter.get(
+  "/credit",
+  errorCatcher(getCredit)
 );
 
 module.exports = teacherRouter;
