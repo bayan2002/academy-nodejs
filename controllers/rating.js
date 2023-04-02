@@ -1,6 +1,7 @@
 const { serverErrs } = require("../middlewares/customError");
 const { Teacher, Session } = require("../models");
 const Rate = require("../models/Rate");
+const { Sequelize }= require('sequelize');
 
 const rateTeacher = async (req, res) => {
   const { StudentId, TeacherId, rating, comment } = req.body;
