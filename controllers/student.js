@@ -29,7 +29,7 @@ const path = require("path");
 const fs = require("fs");
 const CC = require("currency-converter-lt");
 const TeacherSubject = require("../models/TeacherSubject");
-const Rate = require("../models/Rates");
+const Rate = require("../models/Rate");
 
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;

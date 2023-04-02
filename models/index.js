@@ -26,7 +26,7 @@ const Curriculum = require("./Curriculum");
 const CurriculumLevel = require("./CurriculumLevel");
 const Certificates = require("./Certificates");
 const LanguageLevel = require("./LanguageLevel");
-const Rate = require("./Rates");
+const Rate = require("./Rate");
 const FinancialRecord = require("./financialRecord");
 
 Teacher.hasMany(LangTeachStd);
