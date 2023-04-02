@@ -105,7 +105,7 @@ Parent.hasMany(Student);
 Teacher.hasMany(Rate);
 Rate.belongsTo(Teacher);
 Student.hasMany(Rate);
-
+Rate.belongsTo(Student);
 module.exports = {
   Admin,
   Student,
