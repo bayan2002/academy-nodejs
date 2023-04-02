@@ -10,6 +10,8 @@ const {
   Student,
   Teacher,
   LanguageLevel,
+  Session,
+  Wallet,
 } = require("../models");
 const dotenv = require("dotenv");
 
@@ -531,8 +533,64 @@ const teacher = Teacher.findOne({
   },
 });
 
-teacher.totalAmount += +price;
+teacher.dues += +price;
 await teacher.save();
+
+res.send({
+  status: 201,
+  data: teacher,
+  msg: "successful paid to teacher",
+});
+}
+
+const getAllLessons = async(req, res) => {
+
+const lessons = await Session.findAll({
+  where: {
+isPaid: true
+  },
+  include: [{ model: Student }, { model: Teacher }],
+})
+
+res.send({
+  status: 201,
+  data: lessons,
+  msg: "successful get all lessons",
+});
+}
+
+const getAllWallets = async(req, res) => {
+  
+  const wallets = await Wallet.findAll({
+    where: {
+      isPaid: true,
+      typeEn: "deposit"
+    },
+    include:  [{ model: Student }]
+  })
+
+  res.send({
+    status: 201,
+    data: wallets,
+    msg: "successful get all wallets",
+  });
+}
+
+const getStudentWallets = async(req, res) => {
+
+  const {StudentId} = req.body;
+
+  const wallets = await Wallet.findAll({
+    where:{
+      StudentId,
+      isPaid: true
+    }
+  })
+  res.send({
+    status: 201,
+    data: wallets,
+    msg: "successful get all student wallets",
+  });
 
 }
 
@@ -569,5 +627,8 @@ module.exports = {
   updateSubject,
   updateClass,
   updateCurriculum,
-  payDues
+  payDues,
+  getAllLessons,
+  getAllWallets,
+  getStudentWallets
 };

@@ -86,6 +86,7 @@ const verifyCode = async (req, res) => {
   const student = await Student.findOne({
     where: {
       email,
+      registerCode
     },
   });
 

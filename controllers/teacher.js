@@ -17,6 +17,7 @@ const {
   Level,
   Curriculum,
   Subject,
+  Session,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -83,6 +84,7 @@ const verifyCode = async (req, res) => {
   const teacher = await Teacher.findOne({
     where: {
       email,
+      registerCode
     },
   });
 
@@ -678,6 +680,40 @@ const resetPassword = async (req, res) => {
   });
 };
 
+const getAllLessons = async (req, res) => {
+  const { TeacherId } = req.body;
+
+  const lessons = await Session.findAll({
+    where: {
+      TeacherId,
+      isPaid: true,
+    },
+    include: [{ model: Student }],
+  });
+
+  res.send({
+    status: 201,
+    data: lessons,
+    msg: "successful get all lessons",
+  });
+};
+
+const getCredit = async (req, res) => {
+  const { TeacherId } = req.body;
+
+  const teacher = await Teacher.findOne({
+    where: {
+      id: TeacherId,
+    },
+  });
+
+  res.send({
+    status: 201,
+    data: { totalAmount: teacher.totalAmount, dues: teacher.dues },
+    msg: "successful get all teacher credit",
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -694,4 +730,6 @@ module.exports = {
   searchTeacherFilterSide,
   searchTeacherFilterTop,
   resetPassword,
+  getAllLessons,
+  getCredit,
 };
