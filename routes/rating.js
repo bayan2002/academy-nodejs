@@ -1,10 +1,11 @@
 const express = require("express");
 const {rateTeacher, getTeacherRate} = require("../controllers/rating");
+const errorCatcher = require("../middlewares/errorCatcher");
 const ratingRouter = express.Router();
 
 
-ratingRouter.post("/", rateTeacher);
-ratingRouter.get("/teacherRate", getTeacherRate);
+ratingRouter.post("/", errorCatcher(rateTeacher));
+ratingRouter.get("/teacherRate", errorCatcher(getTeacherRate));
 
 
 module.exports = ratingRouter;

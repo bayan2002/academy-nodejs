@@ -43,9 +43,10 @@ const rateTeacher = async (req, res) => {
     },
   });
   const teacherRates = 0;
-  rates.forEach((ele) => {
-    teacherRates += +ele.rating;
-  });
+
+  for(let i = 0 ; i<rates.length ; ++i){
+    teacherRates += rates[i];
+  }
 
   teacher.rate = teacherRates / rates.length;
   await teacher.save();
