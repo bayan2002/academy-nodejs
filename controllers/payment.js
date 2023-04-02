@@ -1,9 +1,11 @@
 const CC = require("currency-converter-lt");
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const { serverErrs } = require("../middlewares/customError");
-const { Wallet, Student, Session } = require("../models");
+const { Wallet, Student, Session, Teacher } = require("../models");
+const FinancialRecord = require("../models/financialRecord");
 
-const charge = async (req,res) => {
+const charge = async (req, res) => {
   const { StudentId, price, currency } = req.body;
   let currencyConverter = new CC();
 
@@ -52,7 +54,7 @@ const charge = async (req,res) => {
   });
 };
 
-const checkoutSuccess = async (req,res) => {
+const checkoutSuccess = async (req, res) => {
   let options = {
     method: "GET",
     headers: {
@@ -99,7 +101,7 @@ const checkoutSuccess = async (req,res) => {
   });
 };
 
-const booking = async (req,res) => {
+const booking = async (req, res) => {
   const createSession = async () => {
     const session = await Session.create({
       title,
@@ -144,8 +146,8 @@ const booking = async (req,res) => {
     .to("OMR")
     .amount(+totalPrice)
     .convert();
-  
-  const newPrice = converterPrice.toFixed(2)
+
+  const newPrice = converterPrice.toFixed(2);
 
   global.newPrice = newPrice;
   if (typeOfPayment == "thawani") {
@@ -195,6 +197,21 @@ const booking = async (req,res) => {
     await wallet.save();
     student.wallet -= +newPrice;
     await student.save();
+
+    await FinancialRecord.create({
+      newPrice,
+      type: "booking",
+    });
+
+    const teacher = Teacher.findOne({
+      where: {
+        TeacherId,
+      },
+    });
+
+    teacher.totalAmount += newPrice;
+    await teacher.save();
+
     res.send({
       status: 201,
       data: session,
@@ -203,7 +220,7 @@ const booking = async (req,res) => {
   }
 };
 
-const bookingSuccess = async (req,res) => {
+const bookingSuccess = async (req, res) => {
   let options = {
     method: "GET",
     headers: {
@@ -232,6 +249,19 @@ const bookingSuccess = async (req,res) => {
   await session.save();
 
   global.session_id = null;
+  await FinancialRecord.create({
+    newPrice,
+    type: "paid",
+  });
+
+  const teacher = Teacher.findOne({
+    where: {
+    TeacherId : session.TeacherId,
+    },
+  });
+  
+  teacher.totalAmount += +session.price;
+  await teacher.save();
 
   res.send({
     status: 201,
