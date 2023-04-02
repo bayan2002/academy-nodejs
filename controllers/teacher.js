@@ -84,6 +84,7 @@ const verifyCode = async (req, res) => {
   const teacher = await Teacher.findOne({
     where: {
       email,
+      registerCode
     },
   });
 
@@ -705,7 +706,7 @@ const getCredit = async (req, res) => {
       id: TeacherId,
     },
   });
-  
+
   res.send({
     status: 201,
     data: { totalAmount: teacher.totalAmount, dues: teacher.dues },
