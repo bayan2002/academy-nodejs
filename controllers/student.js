@@ -381,7 +381,7 @@ const getSingleTeacher = async (req, res) => {
 const getStudentCredit = async (req, res) => {
   const { studentId } = req.params;
   const student = await Student.findOne({
-    where: { id: studentId, isPaid: true },
+    where: { id: studentId },
     attributes: ["wallet"],
   });
   if (!student) throw serverErrs.BAD_REQUEST("Invalid studentId! ");
