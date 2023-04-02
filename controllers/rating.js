@@ -19,8 +19,8 @@ const rateTeacher = async (req, res) => {
     },
   });
 
-  // if (!session)
-  //   throw serverErrs.BAD_REQUEST("You don't have any session with the teacher");
+  if (!session)
+    throw serverErrs.BAD_REQUEST("You don't have any session with the teacher");
 
   const rateData = await Rate.findOne({
     where: {
@@ -29,7 +29,7 @@ const rateTeacher = async (req, res) => {
     },
   });
 
-  // if (rateData) throw serverErrs.BAD_REQUEST("You already Rated the teacher ");
+  if (rateData) throw serverErrs.BAD_REQUEST("You already Rated the teacher ");
 
   const rate = await Rate.create({
     StudentId,
@@ -45,17 +45,12 @@ const rateTeacher = async (req, res) => {
     attributes: [[Sequelize.fn("AVG", Sequelize.col("rating")), "avg_rating"]],
   });
 
-  console.log(rates);
-
   const avgRating = rates[0].dataValues.avg_rating;
-  const ratingFromZeroToFive = Math.round((avgRating / 10) * 5);
-
-  console.log(ratingFromZeroToFive, "hhhhhhhhhhh");
-  // const teacherRates = 0;
-
-  // for(let i = 0 ; i<rates.length ; ++i){
-  //   teacherRates += rates[i].rating;
-  // }
+  console.log(
+    "rates[0].dataValues.avg_rating: ",
+    rates[0].dataValues.avg_rating
+  );
+  const ratingFromZeroToFive = Math.round(avgRating);
 
   teacher.rate = ratingFromZeroToFive;
   console.log("teacher.rate : ", teacher.rate);

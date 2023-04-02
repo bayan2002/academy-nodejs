@@ -525,13 +525,13 @@ const rates =[
   {
     "StudentId": 1,
      "TeacherId": 1,
-      "rating" : 5,
+      "rating" : 3,
        "comment" : "very good" 
 },
 {
   "StudentId": 2,
    "TeacherId": 1,
-    "rating" : 5,
+    "rating" : 4,
      "comment" : "very good" 
 },
 ]
