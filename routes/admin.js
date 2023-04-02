@@ -40,6 +40,7 @@ const {
   getStudentWallets,
   getThawaniSession,
   getAllTeachers,
+  getTeacherFinancial
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
