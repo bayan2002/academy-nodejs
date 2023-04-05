@@ -108,7 +108,6 @@ teacherRouter.get(
 
 teacherRouter.get(
   "/credit/:TeacherId",
-  checkUserAuth("teacher"),
   getCredit
 );
 
