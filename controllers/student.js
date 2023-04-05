@@ -32,7 +32,7 @@ const fs = require("fs");
 const CC = require("currency-converter-lt");
 const TeacherSubject = require("../models/TeacherSubject");
 const Rate = require("../models/Rate");
-
+const { Op } = require("sequelize");
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
   await validateStudent.validate({ email, name, location });
@@ -86,7 +86,7 @@ const verifyCode = async (req, res) => {
   const student = await Student.findOne({
     where: {
       email,
-      registerCode
+      registerCode,
     },
   });
 
@@ -379,12 +379,21 @@ const getSingleTeacher = async (req, res) => {
 };
 
 const getStudentCredit = async (req, res) => {
+  //
   const { studentId } = req.params;
+  const { currency } = req.query;
   const student = await Student.findOne({
     where: { id: studentId, isPaid: true },
     attributes: ["wallet"],
   });
   if (!student) throw serverErrs.BAD_REQUEST("Invalid studentId! ");
+  let currencyConverter = new CC();
+  const newPrice = await currencyConverter
+    .from("OMR")
+    .to(currency)
+    .amount(+student.Wallet)
+    .convert();
+  student.Wallet = newPrice;
 
   res.send({
     status: 201,
@@ -409,7 +418,7 @@ const getWalletHistory = async (req, res) => {
 const getAllLessons = async (req, res) => {
   const { studentId } = req.params;
   const lessons = await Session.findAll({
-    where: { studentId, isPaid: true },
+    where: { StudentId: studentId, isPaid: true },
     include: [{ model: Teacher }],
   });
 
@@ -424,9 +433,9 @@ const getComingLessons = async (req, res) => {
   const { studentId } = req.params;
   const comingLessons = await Session.findAll({
     where: {
-      studentId,
+      StudentId: studentId,
       isPaid: true,
-      date: { [Op.gte]: new Date() }
+      date: { [Op.gte]: new Date() },
     },
     include: [{ model: Teacher }],
   });
@@ -444,7 +453,7 @@ const getPreviousLessons = async (req, res) => {
     where: {
       studentId,
       isPaid: true,
-      date: { [Op.lt]: new Date() }
+      date: { [Op.lt]: new Date() },
     },
     include: [{ model: Teacher }],
   });
