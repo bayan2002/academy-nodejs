@@ -683,7 +683,7 @@ const getAllLessons = async (req, res) => {
 };
 
 const getCredit = async (req, res) => {
-  const { TeacherId } = req.body;
+  const { TeacherId } = req.params;
 
   const teacher = await Teacher.findOne({
     where: {
