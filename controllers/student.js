@@ -62,13 +62,23 @@ const signUp = async (req, res) => {
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
 
   const code = generateRandomCode();
-  const newStudent = await Student.create({
-    email,
-    name,
-    location,
-    registerCode: code,
+  const existStudent = await Student.findOne({
+    where: {
+      email,
+      isRegistered: false,
+    },
   });
-  await newStudent.save();
+  if (existStudent) await existStudent.update({ registerCode: code });
+  else {
+    const newStudent = await Student.create({
+      email,
+      name,
+      location,
+      registerCode: code,
+    });
+    await newStudent.save();
+  }
+
 
   sendEmail(email, code);
   res.send({ status: 201, msg: "successful send email" });
@@ -122,7 +132,6 @@ const signPassword = async (req, res) => {
   });
 
   if (!student) throw serverErrs.BAD_REQUEST("email not found");
-  if (student.isRegister) throw serverErrs.BAD_REQUEST("email is already used");
 
   const hashedPassword = await hash(password, 12);
 
@@ -147,28 +156,15 @@ const signPassword = async (req, res) => {
 const signData = async (req, res) => {
   const { email, gender, levelId, curriculumId, classId } = req.body;
 
-  const teacher = await Teacher.findOne({
-    where: {
-      email,
-    },
-  });
-
   const student = await Student.findOne({
     where: {
       email,
+      isRegistered
     },
   });
 
-  const parent = await Parent.findOne({
-    where: {
-      email,
-    },
-  });
 
   if (!student) throw serverErrs.BAD_REQUEST("email not found");
-  if (student.isRegister) throw serverErrs.BAD_REQUEST("email is already used");
-  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
-  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
 
   await student.update({
     gender,
