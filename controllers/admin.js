@@ -525,11 +525,12 @@ const {price, TeacherId} = req.body;
 await FinancialRecord.create({
   amount: price,
   type: "paid",
+  TeacherId
 });
 
-const teacher = Teacher.findOne({
+const teacher = await Teacher.findOne({
   where: {
-    TeacherId,
+    id: TeacherId,
   },
 });
 
