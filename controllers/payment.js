@@ -17,15 +17,15 @@ const charge = async (req, res) => {
 
   global.newPrice = newPrice;
 
-  let url = "https://uatcheckout.thawani.om/api/v1/checkout/session";
+  let url = "https://checkout.thawani.om/api/v1/checkout/session";
 
   let options = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
+      "thawani-api-key": "V27floHDuAQzb4fVaAT2isXTtSbcqm",
     },
-    body: `{"client_reference_id":"123412","mode":"test","products":[{"name":"product 1","quantity":1,"unit_amount":${
+    body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
       newPrice * 1000
     }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/success-charge","metadata":{"Customer name":"somename","order id":0}}`,
   };
@@ -49,7 +49,7 @@ const charge = async (req, res) => {
 
   res.send({
     status: 201,
-    data: `https://uatcheckout.thawani.om/pay/${data.data.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
+    data: `https://checkout.thawani.om/pay/${data.data.session_id}?key=LmFvwxjsXqUb3MeOCWDPCSrAjWrwit`,
     msg: "charged",
   });
 };
@@ -59,11 +59,11 @@ const checkoutSuccess = async (req, res) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
+      "thawani-api-key": "V27floHDuAQzb4fVaAT2isXTtSbcqm",
     },
   };
 
-  let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
+  let url = `https://checkout.thawani.om/api/v1/checkout/session/${global.session_id}`;
 
   const response = await fetch(url, options);
   const data = await response.json();
@@ -151,15 +151,15 @@ const booking = async (req, res) => {
 
   global.newPrice = newPrice;
   if (typeOfPayment == "thawani") {
-    let url = "https://uatcheckout.thawani.om/api/v1/checkout/session";
+    let url = "https://checkout.thawani.om/api/v1/checkout/session";
 
     let options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
+        "thawani-api-key": "V27floHDuAQzb4fVaAT2isXTtSbcqm",
       },
-      body: `{"client_reference_id":"123412","mode":"test","products":[{"name":"product 1","quantity":1,"unit_amount":${
+      body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
         newPrice * 1000
       }}],"success_url":"https://acacdemy.vercel.app/success-payment","cancel_url":"https://acacdemy.vercel.app/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
     };
@@ -175,7 +175,7 @@ const booking = async (req, res) => {
     }
     res.send({
       status: 201,
-      data: `https://uatcheckout.thawani.om/pay/${global.session_id}?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy`,
+      data: `https://checkout.thawani.om/pay/${global.session_id}?key=LmFvwxjsXqUb3MeOCWDPCSrAjWrwit`,
       msg: "charged with thawani",
     });
   } else if (typeOfPayment == "wallet") {
@@ -209,7 +209,7 @@ const booking = async (req, res) => {
       },
     });
 
-    teacher.totalAmount += (+newPrice* 0.8);
+    teacher.totalAmount += +newPrice * 0.8;
     await teacher.save();
 
     res.send({
@@ -225,11 +225,11 @@ const bookingSuccess = async (req, res) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "thawani-api-key": "rRQ26GcsZzoEhbrP2HZvLYDbn9C9et",
+      "thawani-api-key": "V27floHDuAQzb4fVaAT2isXTtSbcqm",
     },
   };
 
-  let url = `https://uatcheckout.thawani.om/api/v1/checkout/session/${global.session_id}`;
+  let url = `https://checkout.thawani.om/api/v1/checkout/session/${global.session_id}`;
 
   const response = await fetch(url, options);
   const data = await response.json();
@@ -256,11 +256,11 @@ const bookingSuccess = async (req, res) => {
 
   const teacher = Teacher.findOne({
     where: {
-    TeacherId : session.TeacherId,
+      TeacherId: session.TeacherId,
     },
   });
-  
-  teacher.totalAmount += (+session.price * 0.8);
+
+  teacher.totalAmount += +session.price * 0.8;
   await teacher.save();
 
   res.send({
