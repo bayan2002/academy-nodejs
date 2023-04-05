@@ -80,63 +80,53 @@ const verifyCode = async (req, res) => {
   const teacher = await Teacher.findOne({
     where: {
       email,
+      isRegistered,
+    },
+  });
+  const parent = await Parent.findOne({
+    where: {
+      email,
     },
   });
 
+  const registeredStudent = await Student.findOne({
+    where: {
+      email,
+      isRegistered,
+    },
+  });
+
+  if (registeredStudent) throw serverErrs.BAD_REQUEST("email is already used");
+  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
+  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
   const student = await Student.findOne({
     where: {
       email,
       registerCode,
     },
   });
+  if (!student) throw serverErrs.BAD_REQUEST("code is wrong");
 
-  const parent = await Parent.findOne({
-    where: {
-      email,
-    },
-  });
-
-  if (!student) throw serverErrs.BAD_REQUEST("email not found");
-  if (student.isRegistered)
-    throw serverErrs.BAD_REQUEST("email is already used");
-  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
-  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
-  if (student.registerCode != registerCode) {
-    throw serverErrs.BAD_REQUEST("code is wrong");
-  }
-
+  await student.update({ isRegistered: true });
   res.send({ status: 201, data: student, msg: "Verified code successfully" });
 };
 
 const signPassword = async (req, res) => {
   const { email, password } = req.body;
 
-  const teacher = await Teacher.findOne({
-    where: {
-      email,
-    },
-  });
-
   const student = await Student.findOne({
     where: {
       email,
-    },
-  });
-
-  const parent = await Parent.findOne({
-    where: {
-      email,
+      isRegistered,
     },
   });
 
   if (!student) throw serverErrs.BAD_REQUEST("email not found");
   if (student.isRegister) throw serverErrs.BAD_REQUEST("email is already used");
-  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
-  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
 
   const hashedPassword = await hash(password, 12);
 
-  await student.update({ password: hashedPassword,isRegistered: true });
+  await student.update({ password: hashedPassword });
   await student.save();
 
   const token = await generateToken({
