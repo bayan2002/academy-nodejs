@@ -578,7 +578,7 @@ const getAllWallets = async(req, res) => {
 
 const getStudentWallets = async(req, res) => {
 
-  const {StudentId} = req.body;
+  const {StudentId} = req.params;
 
   const wallets = await Wallet.findAll({
     where:{
@@ -596,7 +596,7 @@ const getStudentWallets = async(req, res) => {
 
 const getThawaniSession = async(req, res) => {
 
-  const {StudentId} = req.body;
+  const {StudentId} = req.params;
 
   const sessions = await Session.findAll({
     where: {
@@ -629,7 +629,7 @@ const getAllTeachers = async(req, res) =>{
 }
 
 const getTeacherFinancial = async(req, res) => {
-const {TeacherId} = req.body;
+const {TeacherId} = req.params;
 
 const records = await FinancialRecord.findAll({
   where:{

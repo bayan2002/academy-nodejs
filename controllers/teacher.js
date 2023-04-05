@@ -682,7 +682,7 @@ const resetPassword = async (req, res) => {
 };
 
 const getAllLessons = async (req, res) => {
-  const { TeacherId } = req.body;
+  const { TeacherId } = req.params;
 
   const lessons = await Session.findAll({
     where: {
@@ -716,7 +716,7 @@ const getCredit = async (req, res) => {
 };
 
 const getTeacherFinancial = async(req, res) => {
-  const {TeacherId} = req.body;
+  const {TeacherId} = req.params;
   
   const records = await FinancialRecord.findAll({
     where:{

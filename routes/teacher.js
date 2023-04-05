@@ -101,19 +101,19 @@ teacherRouter.put(
 );
 
 teacherRouter.get(
-  "/lessons",
+  "/lessons/:TeacherId",
   checkUserAuth("teacher"),
   getAllLessons
 );
 
 teacherRouter.get(
-  "/credit",
+  "/credit/:TeacherId",
   checkUserAuth("teacher"),
   getCredit
 );
 
 teacherRouter.get(
-  "/financialTeacher",
+  "/financialTeacher/:TeacherId",
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(getTeacherFinancial)
