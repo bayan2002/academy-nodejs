@@ -102,6 +102,7 @@ teacherRouter.put(
 
 teacherRouter.get(
   "/lessons/:TeacherId",
+  verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(getAllLessons)
 );

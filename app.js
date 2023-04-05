@@ -8,6 +8,7 @@ const { clientError, serverError } = require("./middlewares/error");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
+const User = require("./firebaseConfig");
 
 dotenv.config();
 const app = express();
@@ -32,6 +33,13 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.post("/create", async (req, res) => {
+  const data = req.body;
+  await User.add({ data });
+  res.send({ msg: "User Added" });
+});
+
 app.use([
   express.json(),
   cookieParser(),
