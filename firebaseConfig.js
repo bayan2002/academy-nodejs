@@ -1,7 +1,7 @@
-const firebase = require('firebase-admin');
+/* const firebase = require('firebase-admin');
 const { initializeApp } = require("firebase-admin/app");
-// require('firebase/compat/auth');
-// require('firebase/compat/firestore');
+require('firebase/compat/auth');
+require('firebase/compat/firestore');
 
 const firebaseConfig = {
   apiKey: "AIzaSyCnbE44feutaPpuJ4TSZ3v_e8W7vW1FOtM",
@@ -16,4 +16,4 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const User = db.collection("Users");
-module.exports = User;
+module.exports = User;*/
