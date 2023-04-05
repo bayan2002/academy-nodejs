@@ -103,7 +103,7 @@ teacherRouter.put(
 teacherRouter.get(
   "/lessons/:TeacherId",
   checkUserAuth("teacher"),
-  getAllLessons
+  errorCatcher(getAllLessons)
 );
 
 teacherRouter.get(
