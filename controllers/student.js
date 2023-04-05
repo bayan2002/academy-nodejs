@@ -136,7 +136,7 @@ const signPassword = async (req, res) => {
 
   const hashedPassword = await hash(password, 12);
 
-  await student.update({ password: hashedPassword });
+  await student.update({ password: hashedPassword,isRegistered: true });
   await student.save();
 
   const token = await generateToken({
@@ -383,7 +383,7 @@ const getStudentCredit = async (req, res) => {
   const { studentId } = req.params;
   const { currency } = req.query;
   const student = await Student.findOne({
-    where: { id: studentId, isPaid: true },
+    where: { id: studentId },
     attributes: ["wallet"],
   });
   if (!student) throw serverErrs.BAD_REQUEST("Invalid studentId! ");

@@ -18,6 +18,7 @@ const {
   Curriculum,
   Subject,
   Session,
+  FinancialRecord,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -681,7 +682,7 @@ const resetPassword = async (req, res) => {
 };
 
 const getAllLessons = async (req, res) => {
-  const { TeacherId } = req.body;
+  const { TeacherId } = req.params;
 
   const lessons = await Session.findAll({
     where: {
@@ -714,6 +715,22 @@ const getCredit = async (req, res) => {
   });
 };
 
+const getTeacherFinancial = async(req, res) => {
+  const {TeacherId} = req.params;
+  
+  const records = await FinancialRecord.findAll({
+    where:{
+      TeacherId
+    }
+  })
+  
+  res.send({
+    status: 201,
+    data: records,
+    msg: "successful get all financial records for teacher",
+  });
+  }
+
 module.exports = {
   signUp,
   verifyCode,
@@ -732,4 +749,5 @@ module.exports = {
   resetPassword,
   getAllLessons,
   getCredit,
+  getTeacherFinancial
 };

@@ -35,6 +35,12 @@ const {
   updateClass,
   updateCurriculum,
   payDues,
+  getAllSessions,
+  getAllWallets,
+  getStudentWallets,
+  getThawaniSession,
+  getAllTeachers,
+  getTeacherFinancial
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -190,6 +196,48 @@ adminRouter.post(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(payDues)
+);
+
+adminRouter.get(
+  "/sessions",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllSessions)
+);
+
+adminRouter.get(
+  "/wallets",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllWallets)
+);
+
+adminRouter.get(
+  "/studentWallet/:StudentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getStudentWallets)
+);
+
+adminRouter.get(
+  "/thawaniSession/:StudentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getThawaniSession)
+);
+
+adminRouter.get(
+  "/teachers",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllTeachers)
+);
+
+adminRouter.get(
+  "/financialTeacher/:TeacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getTeacherFinancial)
 );
 
 module.exports = adminRouter;
