@@ -66,7 +66,6 @@ const signUp = async (req, res) => {
       isRegistered: false,
     },
   });
-  console.log(existTeacher);
   if (existTeacher) await existTeacher.update({ registerCode: code });
   else {
     const newTeacher = await Teacher.create({
@@ -82,16 +81,10 @@ const signUp = async (req, res) => {
 const verifyCode = async (req, res) => {
   const { registerCode, email } = req.body;
 
-  const teacher = await Teacher.findOne({
-    where: {
-      email,
-      registerCode
-    },
-  });
-
   const student = await Student.findOne({
     where: {
       email,
+      isRegistered,
     },
   });
 
@@ -101,23 +94,29 @@ const verifyCode = async (req, res) => {
     },
   });
 
-  if (!teacher) throw serverErrs.BAD_REQUEST("email not found");
+  const registeredTeacher = await Teacher.findOne({
+    where: {
+      email,
+      isRegistered,
+    },
+  });
+  if (!registeredTeacher) throw serverErrs.BAD_REQUEST("email not found");
   if (teacher.isRegistered)
     throw serverErrs.BAD_REQUEST("email is already used");
   if (student) throw serverErrs.BAD_REQUEST("email is already used");
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
-  console.log(
-    "teacher.registerCode != registerCode: ",
-    teacher.registerCode != registerCode
-  );
-  console.log("sterCode: ", registerCode);
-  console.log("teacher.registerCode: ", teacher.registerCode);
 
-  if (teacher.registerCode != registerCode) {
-    throw serverErrs.BAD_REQUEST("code is wrong");
-  }
+  const teacher = await Teacher.findOne({
+    where: {
+      email,
+      registerCode,
+    },
+  });
+
+  if (!teacher) throw serverErrs.BAD_REQUEST("code is wrong");
 
   await teacher.update({ isRegistered: true });
+
   res.send({ status: 201, data: teacher, msg: "Verified code successfully" });
 };
 
@@ -715,21 +714,21 @@ const getCredit = async (req, res) => {
   });
 };
 
-const getTeacherFinancial = async(req, res) => {
-  const {TeacherId} = req.params;
-  
+const getTeacherFinancial = async (req, res) => {
+  const { TeacherId } = req.params;
+
   const records = await FinancialRecord.findAll({
-    where:{
-      TeacherId
-    }
-  })
-  
+    where: {
+      TeacherId,
+    },
+  });
+
   res.send({
     status: 201,
     data: records,
     msg: "successful get all financial records for teacher",
   });
-  }
+};
 
 module.exports = {
   signUp,
@@ -749,5 +748,5 @@ module.exports = {
   resetPassword,
   getAllLessons,
   getCredit,
-  getTeacherFinancial
+  getTeacherFinancial,
 };
