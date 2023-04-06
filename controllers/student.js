@@ -139,7 +139,8 @@ const signPassword = async (req, res) => {
   const student = await Student.findOne({
     where: {
       email,
-      isRegistered: true,    },
+      isRegistered: true,
+    },
   });
 
   if (!student) throw serverErrs.BAD_REQUEST("email not found");
