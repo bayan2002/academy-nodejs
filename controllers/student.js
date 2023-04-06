@@ -102,7 +102,7 @@ const verifyCode = async (req, res) => {
   const teacher = await Teacher.findOne({
     where: {
       email,
-      isRegistered,
+      isRegistered: true,
     },
   });
   const parent = await Parent.findOne({
@@ -114,7 +114,7 @@ const verifyCode = async (req, res) => {
   const registeredStudent = await Student.findOne({
     where: {
       email,
-      isRegistered,
+      isRegistered: true,
     },
   });
 
@@ -139,8 +139,7 @@ const signPassword = async (req, res) => {
   const student = await Student.findOne({
     where: {
       email,
-      isRegistered,
-    },
+      isRegistered: true,    },
   });
 
   if (!student) throw serverErrs.BAD_REQUEST("email not found");
