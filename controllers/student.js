@@ -164,7 +164,7 @@ const signPassword = async (req, res) => {
     html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
     We are delighted to inform you that your account has been successfully created.<br>
     Congratulations on taking the first step towards experiencing our website<br><br>
-    Thank you for choosing our services. We look forward to providing you with an exceptional experience.
+    We look forward to providing you with an exceptional experience.<br>
     Good luck,<br>
     Moalemy Team
     </div> `,

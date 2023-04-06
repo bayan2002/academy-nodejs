@@ -74,8 +74,19 @@ const signUp = async (req, res) => {
       registerCode: code,
     });
   }
-
-  sendEmail(email, code);
+  const mailOptions = {
+    from: "modarby0@gmail.com",
+    to: email,
+    subject: "Moalemy platform: Your Verification Code",
+    html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
+    We are happy to let you know that your account have been created.<br>
+    To verify your Account enter the code please!<br>
+    <b> ${code} </b>
+    Good luck,<br>
+    Moalemy Team
+    </div> `,
+  };
+  sendEmail(mailOptions);
   res.send({ status: 201, msg: "successful send email" });
 };
 
@@ -143,6 +154,20 @@ const signPassword = async (req, res) => {
   });
 
   // res.cookie("token", token);
+  const mailOptions = {
+    from: "modarby0@gmail.com",
+    to: email,
+    subject: "Moalemy platform: Account Creation Successful!",
+    html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
+    We are delighted to inform you that your account has been successfully created.<br>
+    Congratulations on taking the first step towards experiencing our website<br><br>
+    We look forward to providing you with an exceptional experience.<br>
+    Good luck,<br>
+    Moalemy Team
+    </div> `,
+  };
+  sendEmail(mailOptions);
+  
   res.send({
     status: 201,
     data: teacher,
