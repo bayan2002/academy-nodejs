@@ -21,6 +21,7 @@ const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
+const Notifications = require("../firebaseConfig");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -721,6 +722,13 @@ const payDues = async (req, res) => {
 
   teacher.dues += +price;
   await teacher.save();
+
+  await Notifications.add({ 
+    titleAR: "تم دفع المستحقات  ", 
+    titleEn:"successfully paying dues ",
+    TeacherId,
+    seen: false
+   });
 
   res.send({
     status: 201,

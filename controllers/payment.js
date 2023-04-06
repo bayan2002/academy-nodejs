@@ -4,6 +4,7 @@ const fetch = (...args) =>
 const { serverErrs } = require("../middlewares/customError");
 const { Wallet, Student, Session, Teacher } = require("../models");
 const FinancialRecord = require("../models/financialRecord");
+const Notifications = require("../firebaseConfig");
 
 const charge = async (req, res) => {
   const { StudentId, price, currency } = req.body;
@@ -173,6 +174,12 @@ const booking = async (req, res) => {
     } else {
       throw serverErrs.BAD_REQUEST("charge didn't succeed");
     }
+    await Notifications.add({ 
+      titleAR: "تم حجز الدرس بنجاح", 
+      titleEn:"booking successfully",
+      TeacherId,
+      seen: false
+     });
     res.send({
       status: 201,
       data: `https://checkout.thawani.om/pay/${global.session_id}?key=LmFvwxjsXqUb3MeOCWDPCSrAjWrwit`,
@@ -211,6 +218,13 @@ const booking = async (req, res) => {
 
     teacher.totalAmount += +newPrice * 0.8;
     await teacher.save();
+
+    await Notifications.add({ 
+      titleAR: "تم حجز الدرس بنجاح", 
+      titleEn:"booking successfully",
+      TeacherId,
+      seen: false
+     });
 
     res.send({
       status: 201,
