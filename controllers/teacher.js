@@ -75,7 +75,7 @@ const signUp = async (req, res) => {
     });
   }
   const mailOptions = {
-    from: "modarby0@gmail.com",
+    from: "moalemy2022@gmail.com",
     to: email,
     subject: "Moalemy platform: Your Verification Code",
     html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
@@ -155,7 +155,7 @@ const signPassword = async (req, res) => {
 
   // res.cookie("token", token);
   const mailOptions = {
-    from: "modarby0@gmail.com",
+    from: "moalemy2022@gmail.com",
     to: email,
     subject: "Moalemy platform: Account Creation Successful!",
     html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
