@@ -79,8 +79,20 @@ const signUp = async (req, res) => {
     await newStudent.save();
   }
 
+  const mailOptions = {
+    from: "modarby0@gmail.com",
+    to: email,
+    subject: "Moalemy platform: Your Verification Code",
+    html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
+    We are happy to let you know that your account have been created.<br>
+    To verify your Account enter the code please!<br>
+    <b> ${code} </b>
+    Good luck,<br>
+    Moalemy Team
+    </div> `,
+  };
+  sendEmail(mailOptions);
 
-  sendEmail(email, code);
   res.send({ status: 201, msg: "successful send email" });
 };
 
@@ -145,6 +157,19 @@ const signPassword = async (req, res) => {
   });
 
   // res.cookie("token", token);
+  const mailOptions = {
+    from: "modarby0@gmail.com",
+    to: email,
+    subject: "Moalemy platform: Account Creation Successful!",
+    html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
+    Dear ${name}, We are delighted to inform you that your account has been successfully created.<br>
+    Congratulations on taking the first step towards experiencing our website<br><br>
+    Thank you for choosing our services. We look forward to providing you with an exceptional experience.
+    Good luck,<br>
+    Moalemy Team
+    </div> `,
+  };
+  sendEmail(mailOptions);
   res.send({
     status: 201,
     data: student,
@@ -159,10 +184,9 @@ const signData = async (req, res) => {
   const student = await Student.findOne({
     where: {
       email,
-      isRegistered
+      isRegistered,
     },
   });
-
 
   if (!student) throw serverErrs.BAD_REQUEST("email not found");
 

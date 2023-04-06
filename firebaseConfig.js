@@ -15,8 +15,10 @@ const firebaseConfig = {
   measurementId: "G-RTHWEYXPCJ"
 };
 
-initializeApp({credential: firebase.credential.cert(serviceAccount),
-databaseURL: firebaseConfig});
+initializeApp({
+  credential: firebase.credential.cert(serviceAccount),
+  databaseURL: firebaseConfig
+});
 const db = firebase.firestore();
 const Notifications = db.collection("Notifications");
 module.exports = Notifications;;
