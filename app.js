@@ -8,7 +8,7 @@ const { clientError, serverError } = require("./middlewares/error");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
-const User = require("./firebaseConfig");
+const Notifications = require("./firebaseConfig");
 
 dotenv.config();
 const app = express();
