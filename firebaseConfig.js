@@ -1,20 +1,25 @@
-const firebase = require('firebase-admin');
-const { initializeApp } = require("firebase-admin/app");
-// require('firebase/compat/auth');
-// require('firebase/compat/firestore');
+const admin = require('firebase-admin');
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCnbE44feutaPpuJ4TSZ3v_e8W7vW1FOtM",
-  authDomain: "moalemy-88619.firebaseapp.com",
-  projectId: "moalemy-88619",
-  storageBucket: "moalemy-88619.appspot.com",
-  messagingSenderId: "447167686068",
-  appId: "1:447167686068:web:3e1d290da21df58cfd7ee1",
-  measurementId: "G-WWDR5ZT2F0"
+const serviceAccount = require('./moaley1-firebase-adminsdk-f0je6-cca4b93de4.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const registrationToken = '';
+
+const message = {
+  notification: {
+    title: '',
+    body: ''
+  },
+  token: registrationToken
 };
 
-initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const User = db.collection("Users");
-module.exports = User;
-
+admin.messaging().send(message)
+  .then((response) => {
+    console.log('Successfully sent notification:', response);
+  })
+  .catch((error) => {
+    console.error('Error sending notification:', error);
+  });

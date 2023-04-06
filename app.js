@@ -34,11 +34,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/create", async (req, res) => {
-  const data = req.body;
-  await User.add({ data });
-  res.send({ msg: "User Added" });
-});
 
 app.use([
   express.json(),
