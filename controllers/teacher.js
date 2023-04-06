@@ -45,7 +45,7 @@ const signUp = async (req, res) => {
   const student = await Student.findOne({
     where: {
       email,
-      isRegistered
+      isRegistered: true,
     },
   });
 
@@ -96,7 +96,7 @@ const verifyCode = async (req, res) => {
   const student = await Student.findOne({
     where: {
       email,
-      isRegistered,
+      isRegistered: true,
     },
   });
 
@@ -109,10 +109,10 @@ const verifyCode = async (req, res) => {
   const registeredTeacher = await Teacher.findOne({
     where: {
       email,
-      isRegistered,
+      isRegistered: true,
     },
   });
-  if (!registeredTeacher) throw serverErrs.BAD_REQUEST("email not found");
+  if (registeredTeacher) throw serverErrs.BAD_REQUEST("email is already used");
   if (student) throw serverErrs.BAD_REQUEST("email is already used");
   if (parent) throw serverErrs.BAD_REQUEST("email is already used");
 
@@ -136,7 +136,7 @@ const signPassword = async (req, res) => {
   const teacher = await Teacher.findOne({
     where: {
       email,
-      isRegistered,
+      isRegistered: true,
     },
   });
 
@@ -167,7 +167,7 @@ const signPassword = async (req, res) => {
     </div> `,
   };
   sendEmail(mailOptions);
-  
+
   res.send({
     status: 201,
     data: teacher,
