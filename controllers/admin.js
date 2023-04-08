@@ -12,6 +12,7 @@ const {
   LanguageLevel,
   Session,
   Wallet,
+  Parent,
 } = require("../models");
 const dotenv = require("dotenv");
 
@@ -833,6 +834,37 @@ const getTeacherFinancial = async (req, res) => {
   });
 };
 
+const getNumbers = async(req,res) => {
+  
+const studentsNumber = await Student.count({
+  where: {
+    isRegistered: true
+  }
+});
+
+const teachersNumber = await Teacher.count({
+  where: {
+    isRegistered: true,
+    isVerified: true
+  }
+});
+
+const parentsNumber = await Parent.count();
+
+const sessionsNumber = await Session.count({
+  where: {
+    isPaid: true
+  }
+});
+
+res.send({
+  status: 201,
+  data: {studentsNumber, teachersNumber, parentsNumber, sessionsNumber},
+  msg: "successful get all numbers",
+});
+
+}
+
 module.exports = {
   signUp,
   login,
@@ -873,4 +905,5 @@ module.exports = {
   getThawaniSession,
   getAllTeachers,
   getTeacherFinancial,
+  getNumbers
 };

@@ -40,7 +40,8 @@ const {
   getStudentWallets,
   getThawaniSession,
   getAllTeachers,
-  getTeacherFinancial
+  getTeacherFinancial,
+  getNumbers
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -238,6 +239,13 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getTeacherFinancial)
+);
+
+adminRouter.get(
+  "/numbers",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getNumbers)
 );
 
 module.exports = adminRouter;
