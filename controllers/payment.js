@@ -223,7 +223,7 @@ const booking = async (req, res) => {
 
     const teacher = await Teacher.findOne({
       where: {
-        id:TeacherId,
+        id: TeacherId,
       },
     });
 
