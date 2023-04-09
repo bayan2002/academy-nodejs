@@ -179,10 +179,11 @@ const signPassword = async (req, res) => {
     },
   });
 
-  if (!student) throw serverErrs.BAD_REQUEST({
-    arabic: "الايميل غير موجود",
-    english: "email not found",
-  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل غير موجود",
+      english: "email not found",
+    });
 
   const hashedPassword = await hash(password, 12);
 
@@ -229,10 +230,11 @@ const signData = async (req, res) => {
     },
   });
 
-  if (!student) throw serverErrs.BAD_REQUEST({
-    arabic: "الايميل غير موجود",
-    english: "email not found",
-  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل غير موجود",
+      english: "email not found",
+    });
 
   await student.update({
     gender,
@@ -242,18 +244,26 @@ const signData = async (req, res) => {
     isRegistered: true,
   });
   await student.save();
-  res.send({ status: 201, data: student, msg: {
-    arabic: "تم التسجيل البيانات بنجاح",
-    english: "signed up successfully",
-  } });
+  res.send({
+    status: 201,
+    data: student,
+    msg: {
+      arabic: "تم التسجيل البيانات بنجاح",
+      english: "signed up successfully",
+    },
+  });
 };
 
 const getStudents = async (req, res) => {
   const Students = await Student.findAll();
-  res.send({ status: 201, data: Students, msg: {
-    arabic: "تم ارجاع جميع الطلاب بنجاح",
-    english: "successful get all Students",
-  } });
+  res.send({
+    status: 201,
+    data: Students,
+    msg: {
+      arabic: "تم ارجاع جميع الطلاب بنجاح",
+      english: "successful get all Students",
+    },
+  });
 };
 
 const getSingleStudent = async (req, res) => {
@@ -297,10 +307,11 @@ const getLastTenStudent = async (req, res) => {
 const editPersonalInformation = async (req, res) => {
   const { StudentId } = req.params;
   const student = await Student.findOne({ where: { id: StudentId } });
-  if (!student) throw serverErrs.BAD_REQUEST({
-    arabic: "الطالب غير موجود",
-    english: "Student not found",
-  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الطالب غير موجود",
+      english: "Student not found",
+    });
 
   const {
     name,
@@ -353,17 +364,19 @@ const editPersonalInformation = async (req, res) => {
 const editImageStudent = async (req, res) => {
   const { StudentId } = req.params;
   const student = await Student.findOne({ where: { id: StudentId } });
-  if (!student) throw serverErrs.BAD_REQUEST({
-    arabic: "الطالب غير موجود",
-    english: "Student not found",
-  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الطالب غير موجود",
+      english: "Student not found",
+    });
   const clearImage = (filePath) => {
     filePath = path.join(__dirname, "..", `images/${filePath}`);
     fs.unlink(filePath, (err) => {
-      if (err) throw serverErrs.BAD_REQUEST({
-        arabic: "الصورة غير موجودة",
-        english: "Image not found",
-      });
+      if (err)
+        throw serverErrs.BAD_REQUEST({
+          arabic: "الصورة غير موجودة",
+          english: "Image not found",
+        });
     });
   };
   if (!req.file) {
@@ -394,15 +407,17 @@ const resetPassword = async (req, res) => {
     where: { id: StudentId },
     include: { all: true },
   });
-  if (!student) throw serverErrs.BAD_REQUEST({
-    arabic: "الطالب غير موجود",
-    english: "student not found",
-  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الطالب غير موجود",
+      english: "student not found",
+    });
   const result = await compare(oldPassword, student?.password);
-  if (!result) throw serverErrs.BAD_REQUEST({
-    arabic: "كلمة المرور خاطئة",
-    english: "Old password is wrong",
-  });
+  if (!result)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "كلمة المرور خاطئة",
+      english: "Old password is wrong",
+    });
   const hashedPassword = await hash(newPassword, 12);
   await student.update({ password: hashedPassword });
   res.send({
@@ -435,10 +450,11 @@ const getSingleTeacher = async (req, res) => {
       { model: Rate, include: [Student] },
     ],
   });
-  if (!teacher) throw serverErrs.BAD_REQUEST({
-    arabic: "المعلم غير موجود",
-    english: "Invalid teacherId! ",
-  });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
   let currencyConverter = new CC();
 
@@ -478,24 +494,24 @@ const getSingleTeacher = async (req, res) => {
 };
 
 const getStudentCredit = async (req, res) => {
-  
   const { studentId } = req.params;
   const { currency } = req.query;
   const student = await Student.findOne({
     where: { id: studentId },
     attributes: ["wallet"],
   });
-  if (!student) throw serverErrs.BAD_REQUEST({
-    arabic: "المعلم غير موجود",
-    english: "Invalid studentId! ",
-  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid studentId! ",
+    });
   let currencyConverter = new CC();
   const newPrice = await currencyConverter
     .from("OMR")
     .to(currency)
     .amount(+student.wallet)
     .convert();
-  student.Wallet = newPrice;
+  student.wallet = newPrice;
 
   res.send({
     status: 201,
