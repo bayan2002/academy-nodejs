@@ -18,6 +18,7 @@ const {
   getAllLessons,
   getComingLessons,
   getPreviousLessons,
+  rateTeacher,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -66,6 +67,13 @@ studentRouter.put(
   verifyToken,
   checkUserAuth("student"),
   errorCatcher(resetPassword)
+);
+
+studentRouter.post(
+  "/rateTeacher",
+  verifyToken,
+  checkUserAuth("student"),
+  errorCatcher(rateTeacher)
 );
 
 module.exports = studentRouter;

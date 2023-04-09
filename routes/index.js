@@ -9,7 +9,6 @@ const logout = require("../middlewares/logout");
 const errorCatcher = require("../middlewares/errorCatcher");
 const { getSingleTeacher } = require("../controllers/student");
 const paymentRouter = require("./payment");
-const ratingRouter = require("./rating");
 
 const router = express.Router();
 
@@ -19,7 +18,6 @@ router.use('/student',studentRouter)
 router.use("/parent", parentRouter);
 router.use("/language", LanguageRouter);
 router.use("/payment", paymentRouter);
-router.use("/rate", ratingRouter);
 router.post('/login', errorCatcher(login));
 router.get('/logout', logout)
 router.use("/teacherSession/:teacherId", getSingleTeacher)

@@ -47,6 +47,7 @@ const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
 const verifyToken = require("../middlewares/verifyToken");
 const errorCatcher = require("../middlewares/errorCatcher");
+const { getCredit } = require("../controllers/teacher");
 
 adminRouter.post("/signup", errorCatcher(signUp));
 adminRouter.post("/login", errorCatcher(login));
@@ -246,6 +247,13 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getNumbers)
+);
+
+adminRouter.get(
+  "/credit/:TeacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getCredit) 
 );
 
 module.exports = adminRouter;

@@ -19,6 +19,7 @@ const {
   Subject,
   Session,
   FinancialRecord,
+  Rate,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -906,6 +907,7 @@ const getTeacherFinancial = async (req, res) => {
     },
   });
 };
+
 const updateNotification = async (req, res) => {
   const { TeacherId } = req.params;
   const notificationsRef = db.collection("Notifications");
@@ -923,6 +925,24 @@ const updateNotification = async (req, res) => {
     msg: {
       arabic: "تم رؤية جميع الإشعارات ",
       english: "successful seen for all Notification",
+    },
+  });
+};
+
+const getTeacherRate = async (req, res) => {
+  const { TeacherId } = req.body;
+  const rates = await Rate.findAll({
+    where: {
+      TeacherId,
+    },
+  });
+
+  res.send({
+    status: 201,
+    data: rates,
+    msg: {
+      arabic: "تم ارجاع تقييم المعلم بنجاح",
+      english: "successful get teacher rate",
     },
   });
 };
@@ -947,4 +967,5 @@ module.exports = {
   getCredit,
   getTeacherFinancial,
   updateNotification,
+  getTeacherRate
 };

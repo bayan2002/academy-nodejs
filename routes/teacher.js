@@ -21,6 +21,7 @@ const {
   getCredit,
   getTeacherFinancial,
   updateNotification,
+  getTeacherRate,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -108,7 +109,12 @@ teacherRouter.get(
   errorCatcher(getAllLessons)
 );
 
-teacherRouter.get("/credit/:TeacherId", getCredit);
+teacherRouter.get(
+  "/credit/:TeacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(getCredit) 
+);
 
 teacherRouter.get(
   "/financialTeacher/:TeacherId",
@@ -122,5 +128,7 @@ teacherRouter.put(
   checkUserAuth("teacher"),
   errorCatcher(updateNotification)
 );
+
+teacherRouter.get("/teacherRate", errorCatcher(getTeacherRate));
 
 module.exports = teacherRouter;
