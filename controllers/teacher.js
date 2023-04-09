@@ -55,9 +55,21 @@ const signUp = async (req, res) => {
     },
   });
 
-  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
-  if (student) throw serverErrs.BAD_REQUEST("email is already used");
-  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
+  if (teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
+  if (student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
+  if (parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
 
   const code = generateRandomCode();
 
@@ -87,7 +99,10 @@ const signUp = async (req, res) => {
     </div> `,
   };
   sendEmail(mailOptions);
-  res.send({ status: 201, msg: "successful send email" });
+  res.send({
+    status: 201,
+    msg: { arabic: "تم ارسال الإيميل بنجاح", english: "successful send email" },
+  });
 };
 
 const verifyCode = async (req, res) => {
@@ -112,9 +127,21 @@ const verifyCode = async (req, res) => {
       isRegistered: true,
     },
   });
-  if (registeredTeacher) throw serverErrs.BAD_REQUEST("email is already used");
-  if (student) throw serverErrs.BAD_REQUEST("email is already used");
-  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
+  if (registeredTeacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
+  if (student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
+  if (parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
 
   const teacher = await Teacher.findOne({
     where: {
@@ -123,11 +150,22 @@ const verifyCode = async (req, res) => {
     },
   });
 
-  if (!teacher) throw serverErrs.BAD_REQUEST("code is wrong");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الكود خاطئ",
+      english: "code is wrong",
+    });
 
   await teacher.update({ isRegistered: true });
 
-  res.send({ status: 201, data: teacher, msg: "Verified code successfully" });
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: {
+      arabic: "تم تأكيد تفعيل الكود بنجاح",
+      english: "Verified code successfully",
+    },
+  });
 };
 
 const signPassword = async (req, res) => {
@@ -140,7 +178,11 @@ const signPassword = async (req, res) => {
     },
   });
 
-  if (!teacher) throw serverErrs.BAD_REQUEST("email not found");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
 
   const hashedPassword = await hash(password, 12);
 
@@ -171,7 +213,7 @@ const signPassword = async (req, res) => {
   res.send({
     status: 201,
     data: teacher,
-    msg: "successful sign up",
+    msg: { arabic: "تم التسجيل بنجاح", english: "successful sign up" },
     token: token,
   });
 };
@@ -179,9 +221,17 @@ const signPassword = async (req, res) => {
 const signAbout = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const {
     firstName,
@@ -226,7 +276,10 @@ const signAbout = async (req, res) => {
   res.send({
     status: 201,
     data: { firstName: firstNames, lastName: lastNames },
-    msg: "successful sign about data",
+    msg: {
+      arabic: "تم تسجيل معلوماتك بنجاح",
+      english: "successful sign about data",
+    },
   });
 };
 
@@ -235,9 +288,17 @@ const signAdditionalInfo = async (req, res) => {
   console.log("teacherId: ", teacherId);
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   console.log("teacher: ", teacher);
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const {
     haveCertificates,
@@ -294,7 +355,10 @@ const signAdditionalInfo = async (req, res) => {
   res.send({
     status: 201,
     data: { teacher, teacherLevels, curriculumTeachers },
-    msg: "successful sign Additional Information! ",
+    msg: {
+      arabic: "تم تسجيل معلومات إضافية بنجاح",
+      english: "successful sign Additional Information! ",
+    },
   });
 };
 
@@ -318,24 +382,43 @@ const getSingleTeacher = async (req, res) => {
     ],
   });
 
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
   res.send({
     status: 201,
     data: teacher,
-    msg: "successful get single Teacher",
+    msg: {
+      arabic: "تم إرجاع معلومات المعلم بنجاح",
+      english: "successful get single Teacher",
+    },
   });
 };
 
 const uploadImage = async (req, res) => {
   const { teacherId } = req.params;
 
-  if (!req.file) throw serverErrs.BAD_REQUEST("Image not exist ");
+  if (!req.file)
+    throw serverErrs.BAD_REQUEST({
+      arabic: " الصورة غير موجودة ",
+      english: "Image not exist ",
+    });
 
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const clearImage = (filePath) => {
     filePath = path.join(__dirname, "..", `images/${filePath}`);
@@ -351,7 +434,10 @@ const uploadImage = async (req, res) => {
   res.send({
     status: 201,
     data: req.file.filename,
-    msg: "uploaded image successfully",
+    msg: {
+      arabic: "تم إدراج الصورة بنجاح",
+      english: "uploaded image successfully",
+    },
   });
 };
 
@@ -359,9 +445,17 @@ const addSubjects = async (req, res) => {
   const { teacherId } = req.params;
 
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const { subjects, remote, f2fStudent, f2fTeacher } = req.body;
 
@@ -450,16 +544,27 @@ const addSubjects = async (req, res) => {
       f2fStudentSession,
       f2fTeacherSession,
     },
-    msg: "added subjects and session type successfully",
+    msg: {
+      arabic: "تم إضافة مادة ونوع الجلسة بنجاح",
+      english: "added subjects and session type successfully",
+    },
   });
 };
 
 const signAvailability = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const { timeZone, teacherDayes } = req.body;
 
@@ -487,7 +592,10 @@ const signAvailability = async (req, res) => {
   res.send({
     status: 201,
     data: { teacher, dayesTeacher },
-    msg: "successful sign availability!",
+    msg: {
+      arabic: "تم تسجيل الوقت المتاح بنجاح",
+      english: "successful sign availability!",
+    },
   });
 };
 
@@ -495,9 +603,17 @@ const addDescription = async (req, res) => {
   const { teacherId } = req.params;
 
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const { shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn } =
     req.body;
@@ -511,16 +627,27 @@ const addDescription = async (req, res) => {
   res.send({
     status: 201,
     data: updatedTeacher,
-    msg: "added description successfully",
+    msg: {
+      arabic: "تم إضافة وصف بنجاح",
+      english: "added description successfully",
+    },
   });
 };
 
 const signResume = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const { certificates, experiences, educationDegrees } = req.body;
 
@@ -576,16 +703,27 @@ const signResume = async (req, res) => {
   res.send({
     status: 201,
     data: { teacherCertificates, teacherExperiences, teacherEducationDegrees },
-    msg: "successful sign Resume Information! ",
+    msg: {
+      arabic: "تم إدخال معلومات السيرة الذاتية بنجاح",
+      english: "successful sign Resume Information!",
+    },
   });
 };
 
 const signVideoLink = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
 
-  if (teacher.id != req.user.userId) throw serverErrs.BAD_REQUEST("No Auth ");
+  if (teacher.id != req.user.userId)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد حق بالوصول",
+      english: "No Auth ",
+    });
 
   const { videoLink } = req.body;
 
@@ -597,7 +735,10 @@ const signVideoLink = async (req, res) => {
   res.send({
     status: 201,
     data: teacher,
-    msg: "successful sign VideoLink Information! ",
+    msg: {
+      arabic: "تم إدراج الفيديو بنجاح",
+      english: "successful sign VideoLink Information!",
+    },
   });
 };
 
@@ -635,7 +776,10 @@ const searchTeacherFilterSide = async (req, res) => {
   res.send({
     status: 201,
     data: teachers,
-    msg: "successful search ",
+    msg: {
+      arabic: "تم البحث بنجاح",
+      english: "successful search",
+    },
   });
 };
 
@@ -666,7 +810,10 @@ const searchTeacherFilterTop = async (req, res) => {
   res.send({
     status: 201,
     data: teachers,
-    msg: "successful search",
+    msg: {
+      arabic: "تم البحث بنجاح",
+      english: "successful search",
+    },
   });
 };
 
@@ -677,15 +824,26 @@ const resetPassword = async (req, res) => {
     where: { id: TeacherId },
     include: { all: true },
   });
-  if (!teacher) throw serverErrs.BAD_REQUEST("teacher not found");
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "teacher not found",
+    });
   const result = await compare(oldPassword, teacher?.password);
-  if (!result) throw serverErrs.BAD_REQUEST("Old password is wrong");
+  if (!result)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "كلمة المرور غير صحيحة",
+      english: "Old password is wrong",
+    });
   const hashedPassword = await hash(newPassword, 12);
   await teacher.update({ password: hashedPassword });
   res.send({
     status: 201,
     data: teacher,
-    msg: "successful update teacher password",
+    msg: {
+      arabic: "تم تحديث كلمة المرور بنجاح",
+      english: "successful update teacher password",
+    },
   });
 };
 
@@ -703,7 +861,10 @@ const getAllLessons = async (req, res) => {
   res.send({
     status: 201,
     data: lessons,
-    msg: "successful get all lessons",
+    msg: {
+      arabic: "تم إرجاع جميع الدروس بنجاح",
+      english: "successful get all lessons",
+    },
   });
 };
 
@@ -719,7 +880,10 @@ const getCredit = async (req, res) => {
   res.send({
     status: 201,
     data: { totalAmount: teacher.totalAmount, dues: teacher.dues },
-    msg: "successful get all teacher credit",
+    msg: {
+      arabic: "تم إرجاع مستحقات المعلم بنجاح",
+      english: "successful get all teacher credit & dues",
+    },
   });
 };
 
@@ -735,7 +899,10 @@ const getTeacherFinancial = async (req, res) => {
   res.send({
     status: 201,
     data: records,
-    msg: "successful get all financial records for teacher",
+    msg: {
+      arabic: "تم إرجاع السجل المالي بنجاح",
+      english: "successful get all financial records",
+    },
   });
 };
 

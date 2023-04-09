@@ -26,9 +26,21 @@ const signUp = async (req, res) => {
       email,
     },
   });
-  if (parent) throw serverErrs.BAD_REQUEST({arabic: "الإيميل مستخدم مسبقا", english: "email is already used"});
-  if (teacher) throw serverErrs.BAD_REQUEST({arabic: "الإيميل مستخدم مسبقا", english: "email is already used"});
-  if (student) throw serverErrs.BAD_REQUEST({arabic: "الإيميل مستخدم مسبقا", english: "email is already used"});
+  if (parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم مسبقا",
+      english: "email is already used",
+    });
+  if (teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم مسبقا",
+      english: "email is already used",
+    });
+  if (student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم مسبقا",
+      english: "email is already used",
+    });
 
   const hashedPassword = await hash(password, 12);
 
@@ -51,7 +63,7 @@ const signUp = async (req, res) => {
   res.send({
     status: 201,
     data: newParent,
-    msg: {arabic: "تم التسجيل بنجاح", english: "successful sign up"},
+    msg: { arabic: "تم التسجيل بنجاح", english: "successful sign up" },
     token: token,
   });
 };
@@ -65,7 +77,10 @@ const getSingleParent = async (req, res) => {
   res.send({
     status: 201,
     data: parent,
-    msg: {arabic: "تم ارجاع الأب بنجاح", english: "successful get single parent"},
+    msg: {
+      arabic: "تم ارجاع الأب بنجاح",
+      english: "successful get single parent",
+    },
   });
 };
 
@@ -81,10 +96,21 @@ const addStudentToParent = async (req, res) => {
     include: { all: true },
   });
 
-  if (!parent) throw serverErrs.BAD_REQUEST({arabic: "الأب غير موجود", english: "parent not exist"});
-  if (!student) throw serverErrs.BAD_REQUEST({arabic: "الطالب غير موجود", english: "student not exist"});
+  if (!parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الأب غير موجود",
+      english: "parent not exist",
+    });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الطالب غير موجود",
+      english: "student not exist",
+    });
   if (student.ParentId)
-    throw serverErrs.BAD_REQUEST({arabic: "يوجد أب للابن", english: "student already have a parent"});
+    throw serverErrs.BAD_REQUEST({
+      arabic: "يوجد أب للابن",
+      english: "student already have a parent",
+    });
 
   const oldParentStudent = await ParentStudent.findOne({
     where: { ParentId, StudentId, status: { [Op.ne]: -1 } },
@@ -92,7 +118,10 @@ const addStudentToParent = async (req, res) => {
   });
 
   if (oldParentStudent)
-    throw serverErrs.BAD_REQUEST({arabic: "طلب الابن موجود مسبقا", english: "student request is already exist"});
+    throw serverErrs.BAD_REQUEST({
+      arabic: "طلب الابن موجود مسبقا",
+      english: "student request is already exist",
+    });
 
   const newParentStudent = await ParentStudent.create({
     ParentId,
@@ -103,7 +132,10 @@ const addStudentToParent = async (req, res) => {
   res.send({
     status: 201,
     data: newParentStudent,
-    msg: {arabic: "تم اضافة طلب الطالب الى قائمة الانتظار", english: "successful added student to parent waiting list"},
+    msg: {
+      arabic: "تم اضافة طلب الطالب الى قائمة الانتظار",
+      english: "successful added student to parent waiting list",
+    },
   });
 };
 
@@ -117,7 +149,10 @@ const getStudentsByParentId = async (req, res) => {
   res.send({
     status: 201,
     data: students,
-    msg: {arabic: "ارجاع جميع الأبناء للأب", english: "successful get all Students for single Parent"},
+    msg: {
+      arabic: "ارجاع جميع الأبناء للأب",
+      english: "successful get all Students for single Parent",
+    },
   });
 };
 
