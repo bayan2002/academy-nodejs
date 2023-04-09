@@ -33,6 +33,7 @@ const CC = require("currency-converter-lt");
 const TeacherSubject = require("../models/TeacherSubject");
 const Rate = require("../models/Rate");
 const { Op } = require("sequelize");
+
 const signUp = async (req, res) => {
   const { email, name, location } = req.body;
   await validateStudent.validate({ email, name, location });
@@ -57,9 +58,21 @@ const signUp = async (req, res) => {
     },
   });
 
-  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
-  if (student) throw serverErrs.BAD_REQUEST("email is already used");
-  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
+  if (teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل مستخدم من قبل",
+      english: "email is already used",
+    });
+  if (student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل مستخدم من قبل",
+      english: "email is already used",
+    });
+  if (parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل مستخدم من قبل",
+      english: "email is already used",
+    });
 
   const code = generateRandomCode();
   const existStudent = await Student.findOne({
@@ -118,19 +131,42 @@ const verifyCode = async (req, res) => {
     },
   });
 
-  if (registeredStudent) throw serverErrs.BAD_REQUEST("email is already used");
-  if (teacher) throw serverErrs.BAD_REQUEST("email is already used");
-  if (parent) throw serverErrs.BAD_REQUEST("email is already used");
+  if (registeredStudent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل مستخدم من قبل",
+      english: "email is already used",
+    });
+  if (teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل مستخدم من قبل",
+      english: "email is already used",
+    });
+  if (parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الايميل مستخدم من قبل",
+      english: "email is already used",
+    });
   const student = await Student.findOne({
     where: {
       email,
       registerCode,
     },
   });
-  if (!student) throw serverErrs.BAD_REQUEST("code is wrong");
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الكود خاطئ",
+      english: "code is wrong",
+    });
 
   await student.update({ isRegistered: true });
-  res.send({ status: 201, data: student, msg: "Verified code successfully" });
+  res.send({
+    status: 201,
+    data: student,
+    msg: {
+      arabic: "تم التحقق من الكود بنجاح",
+      english: "Verified code successfully",
+    },
+  });
 };
 
 const signPassword = async (req, res) => {
@@ -143,7 +179,10 @@ const signPassword = async (req, res) => {
     },
   });
 
-  if (!student) throw serverErrs.BAD_REQUEST("email not found");
+  if (!student) throw serverErrs.BAD_REQUEST({
+    arabic: "الايميل غير موجود",
+    english: "email not found",
+  });
 
   const hashedPassword = await hash(password, 12);
 
@@ -156,7 +195,6 @@ const signPassword = async (req, res) => {
     role: "student",
   });
 
-  // res.cookie("token", token);
   const mailOptions = {
     from: "moalemy2022@gmail.com",
     to: email,
@@ -173,7 +211,10 @@ const signPassword = async (req, res) => {
   res.send({
     status: 201,
     data: student,
-    msg: "successful sign password",
+    msg: {
+      arabic: "تم تسجيل كلمة المرور بنجاح",
+      english: "successful sign password",
+    },
     token: token,
   });
 };
@@ -188,7 +229,10 @@ const signData = async (req, res) => {
     },
   });
 
-  if (!student) throw serverErrs.BAD_REQUEST("email not found");
+  if (!student) throw serverErrs.BAD_REQUEST({
+    arabic: "الايميل غير موجود",
+    english: "email not found",
+  });
 
   await student.update({
     gender,
@@ -198,12 +242,18 @@ const signData = async (req, res) => {
     isRegistered: true,
   });
   await student.save();
-  res.send({ status: 201, data: student, msg: "signed up successfully" });
+  res.send({ status: 201, data: student, msg: {
+    arabic: "تم التسجيل البيانات بنجاح",
+    english: "signed up successfully",
+  } });
 };
 
 const getStudents = async (req, res) => {
   const Students = await Student.findAll();
-  res.send({ status: 201, data: Students, msg: "successful get all Students" });
+  res.send({ status: 201, data: Students, msg: {
+    arabic: "تم ارجاع جميع الطلاب بنجاح",
+    english: "successful get all Students",
+  } });
 };
 
 const getSingleStudent = async (req, res) => {
@@ -220,7 +270,10 @@ const getSingleStudent = async (req, res) => {
   res.send({
     status: 201,
     data: student,
-    msg: "successful get single student",
+    msg: {
+      arabic: "تم ارجاع الطالب",
+      english: "successful get single student",
+    },
   });
 };
 
@@ -234,14 +287,20 @@ const getLastTenStudent = async (req, res) => {
   res.send({
     status: 201,
     data: students,
-    msg: "successful get last ten students",
+    msg: {
+      arabic: "تم ارجاع اخر 10 طلاب مسجلين بنجاح",
+      english: "successful get last ten students",
+    },
   });
 };
 
 const editPersonalInformation = async (req, res) => {
   const { StudentId } = req.params;
   const student = await Student.findOne({ where: { id: StudentId } });
-  if (!student) throw serverErrs.BAD_REQUEST("Student not found");
+  if (!student) throw serverErrs.BAD_REQUEST({
+    arabic: "الطالب غير موجود",
+    english: "Student not found",
+  });
 
   const {
     name,
@@ -284,22 +343,34 @@ const editPersonalInformation = async (req, res) => {
 
   res.send({
     status: 201,
-    msg: "successful edit personal information data",
+    msg: {
+      arabic: "تم تعديل بيانات الطالب بنجاح",
+      english: "successful edit personal information data",
+    },
   });
 };
 
 const editImageStudent = async (req, res) => {
   const { StudentId } = req.params;
   const student = await Student.findOne({ where: { id: StudentId } });
-  if (!student) throw serverErrs.BAD_REQUEST("Student not found");
+  if (!student) throw serverErrs.BAD_REQUEST({
+    arabic: "الطالب غير موجود",
+    english: "Student not found",
+  });
   const clearImage = (filePath) => {
     filePath = path.join(__dirname, "..", `images/${filePath}`);
     fs.unlink(filePath, (err) => {
-      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+      if (err) throw serverErrs.BAD_REQUEST({
+        arabic: "الصورة غير موجودة",
+        english: "Image not found",
+      });
     });
   };
   if (!req.file) {
-    throw serverErrs.BAD_REQUEST("Image not found");
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الصورة غير موجودة",
+      english: "Image not found",
+    });
   }
 
   if (student.image) {
@@ -309,7 +380,10 @@ const editImageStudent = async (req, res) => {
   res.send({
     status: 201,
     student,
-    msg: "successful edit student image",
+    msg: {
+      arabic: "تم تعديل الصورة بنجاح",
+      english: "successful edit student image",
+    },
   });
 };
 
@@ -320,15 +394,24 @@ const resetPassword = async (req, res) => {
     where: { id: StudentId },
     include: { all: true },
   });
-  if (!student) throw serverErrs.BAD_REQUEST("student not found");
+  if (!student) throw serverErrs.BAD_REQUEST({
+    arabic: "الطالب غير موجود",
+    english: "student not found",
+  });
   const result = await compare(oldPassword, student?.password);
-  if (!result) throw serverErrs.BAD_REQUEST("Old password is wrong");
+  if (!result) throw serverErrs.BAD_REQUEST({
+    arabic: "كلمة المرور خاطئة",
+    english: "Old password is wrong",
+  });
   const hashedPassword = await hash(newPassword, 12);
   await student.update({ password: hashedPassword });
   res.send({
     status: 201,
     data: student,
-    msg: "successful update student password",
+    msg: {
+      arabic: "تم تغيير كلمة المرور بنجاح",
+      english: "successful update student password",
+    },
   });
 };
 
@@ -352,7 +435,10 @@ const getSingleTeacher = async (req, res) => {
       { model: Rate, include: [Student] },
     ],
   });
-  if (!teacher) throw serverErrs.BAD_REQUEST("Invalid teacherId! ");
+  if (!teacher) throw serverErrs.BAD_REQUEST({
+    arabic: "المعلم غير موجود",
+    english: "Invalid teacherId! ",
+  });
 
   let currencyConverter = new CC();
 
@@ -384,19 +470,25 @@ const getSingleTeacher = async (req, res) => {
   res.send({
     status: 201,
     data: teacher,
-    msg: "successful convert price",
+    msg: {
+      arabic: "ارجاع بيانات الملعم بنجاح مع تحويل العملة",
+      english: "successful get teacher with converted currency",
+    },
   });
 };
 
 const getStudentCredit = async (req, res) => {
-  //
+  
   const { studentId } = req.params;
   const { currency } = req.query;
   const student = await Student.findOne({
     where: { id: studentId },
     attributes: ["wallet"],
   });
-  if (!student) throw serverErrs.BAD_REQUEST("Invalid studentId! ");
+  if (!student) throw serverErrs.BAD_REQUEST({
+    arabic: "المعلم غير موجود",
+    english: "Invalid studentId! ",
+  });
   let currencyConverter = new CC();
   const newPrice = await currencyConverter
     .from("OMR")
@@ -408,7 +500,10 @@ const getStudentCredit = async (req, res) => {
   res.send({
     status: 201,
     data: student,
-    msg: "successful send student wallet",
+    msg: {
+      arabic: "تم ارجاع محفظة الطالب بعملته الأصلية",
+      english: "successful get student wallet",
+    },
   });
 };
 
@@ -421,7 +516,10 @@ const getWalletHistory = async (req, res) => {
   res.send({
     status: 201,
     data: walletHistory,
-    msg: "successful send Wallet History",
+    msg: {
+      arabic: "تم ارجاع تاريخ المحفظة بنجاح",
+      english: "successful get Wallet History",
+    },
   });
 };
 
@@ -435,7 +533,10 @@ const getAllLessons = async (req, res) => {
   res.send({
     status: 201,
     data: lessons,
-    msg: "successful send  all lessons",
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات بنجاح",
+      english: "successful get all lessons",
+    },
   });
 };
 
@@ -453,7 +554,10 @@ const getComingLessons = async (req, res) => {
   res.send({
     status: 201,
     data: comingLessons,
-    msg: "successful send  all Coming Lessons",
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات القادمة",
+      english: "successful get all Coming Lessons",
+    },
   });
 };
 
@@ -471,9 +575,13 @@ const getPreviousLessons = async (req, res) => {
   res.send({
     status: 201,
     data: previousLessons,
-    msg: "successful send  all Previous Lessons",
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات السابقة",
+      english: "successful get all Previous Lessons",
+    },
   });
 };
+
 module.exports = {
   signUp,
   verifyCode,

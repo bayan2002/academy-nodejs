@@ -21,7 +21,10 @@ const rateTeacher = async (req, res) => {
   });
 
   if (!session)
-    throw serverErrs.BAD_REQUEST("You don't have any session with the teacher");
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لا يوجد أي جلسة مع المعلم ",
+      english: "You don't have any session with the teacher"
+    });
 
   const rateData = await Rate.findOne({
     where: {
@@ -30,7 +33,10 @@ const rateTeacher = async (req, res) => {
     },
   });
 
-  if (rateData) throw serverErrs.BAD_REQUEST("You already Rated the teacher ");
+  if (rateData) throw serverErrs.BAD_REQUEST({
+    arabic: "لقد قمت بتقييم المعلم من قبل",
+    english: "You already Rated the teacher ",
+  });
 
   const rate = await Rate.create({
     StudentId,
@@ -60,7 +66,10 @@ const rateTeacher = async (req, res) => {
   res.send({
     status: 201,
     data: rate,
-    msg: "successful rate teacher",
+    msg: {
+      arabic: "تم تقييم المعلم بنجاح",
+      english: "successful rate teacher",
+    },
   });
 };
 
@@ -75,7 +84,10 @@ const getTeacherRate = async (req, res) => {
   res.send({
     status: 201,
     data: rates,
-    msg: "successful get teacher rate",
+    msg: {
+      arabic: "تم ارجاع تقييم المعلم بنجاح",
+      english: "successful get teacher rate",
+    },
   });
 };
 

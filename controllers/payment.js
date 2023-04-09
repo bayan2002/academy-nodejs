@@ -51,7 +51,7 @@ const charge = async (req, res) => {
   res.send({
     status: 201,
     data: `https://checkout.thawani.om/pay/${data.data.session_id}?key=LmFvwxjsXqUb3MeOCWDPCSrAjWrwit`,
-    msg: "charged",
+    msg: { arabic: "تم شحن المبلغ", english: "charged" },
   });
 };
 
@@ -98,7 +98,7 @@ const checkoutSuccess = async (req, res) => {
   res.send({
     status: 201,
     data: student,
-    msg: "successful charging",
+    msg: { arabic: "تم الدفع بنجاح", english: "successful charging" },
   });
 };
 
@@ -174,16 +174,27 @@ const booking = async (req, res) => {
     } else {
       throw serverErrs.BAD_REQUEST("charge didn't succeed");
     }
-    await Notifications.add({ 
-      titleAR: "تم حجز الدرس بنجاح", 
-      titleEn:"booking successfully",
+
+    const student = await Student.findOne({
+      where: {
+        id: StudentId,
+      },
+    });
+
+    await Notifications.add({
+      titleAR: `تم حجز الدرس من الطالب ${student.name}`,
+      titleEn: `booking successfully from student ${student.name}`,
       TeacherId,
-      seen: false
-     });
+      seen: false,
+      date: Date.now(),
+    });
     res.send({
       status: 201,
       data: `https://checkout.thawani.om/pay/${global.session_id}?key=LmFvwxjsXqUb3MeOCWDPCSrAjWrwit`,
-      msg: "charged with thawani",
+      msg: {
+        arabic: "تم الحجز من خلال ثواني",
+        english: "booking with thawani",
+      },
     });
   } else if (typeOfPayment == "wallet") {
     const student = await Student.findOne({
@@ -210,26 +221,30 @@ const booking = async (req, res) => {
       type: "booking",
     });
 
-    const teacher = Teacher.findOne({
+    const teacher = await Teacher.findOne({
       where: {
-        TeacherId,
+        id:TeacherId,
       },
     });
 
     teacher.totalAmount += +newPrice * 0.8;
     await teacher.save();
 
-    await Notifications.add({ 
-      titleAR: "تم حجز الدرس بنجاح", 
-      titleEn:"booking successfully",
+    await Notifications.add({
+      titleAR: `تم حجز الدرس من الطالب ${student.name}`,
+      titleEn: `booking successfully from student ${student.name}`,
       TeacherId,
-      seen: false
-     });
+      seen: false,
+      date: Date.now(),
+    });
 
     res.send({
       status: 201,
       data: session,
-      msg: "charged with wallet",
+      msg: {
+        arabic: "تم الدفع من خلال المحفظة",
+        english: "booking with wallet",
+      },
     });
   }
 };
@@ -270,7 +285,7 @@ const bookingSuccess = async (req, res) => {
 
   const teacher = Teacher.findOne({
     where: {
-      TeacherId: session.TeacherId,
+      id: session.TeacherId,
     },
   });
 
@@ -280,7 +295,10 @@ const bookingSuccess = async (req, res) => {
   res.send({
     status: 201,
     data: session,
-    msg: "successful booking",
+    msg: {
+      arabic: "تم الدفع بنجاح من خلال منصة ثواني",
+      english: "successful booking from thawani",
+    },
   });
 };
 
