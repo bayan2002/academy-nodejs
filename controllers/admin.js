@@ -492,6 +492,7 @@ const getParentStudentAccOrRej = async (req, res) => {
     },
   });
 };
+
 const acceptTeacher = async (req, res) => {
   const { teacherId } = req.params;
   const teacher = await Teacher.findOne({
@@ -514,6 +515,7 @@ const acceptTeacher = async (req, res) => {
     },
   });
 };
+
 const getAcceptedTeachers = async (req, res) => {
   const acceptedTeachers = await Teacher.findAll({
     where: { isVerified: true },
@@ -724,17 +726,20 @@ const payDues = async (req, res) => {
   teacher.dues += +price;
   await teacher.save();
 
-  await Notifications.add({ 
-    titleAR: "تم دفع المستحقات  ", 
-    titleEn:"successfully paying dues ",
+  await Notifications.add({
+    titleAR: "تم دفع المستحقات  ",
+    titleEn: "successfully paying dues ",
     TeacherId,
-    seen: false
-   });
+    seen: false,
+  });
 
   res.send({
     status: 201,
     data: teacher,
-    msg: "successful paid to teacher",
+    msg: {
+      arabic: "تم الدفع للمعلم بنجاح",
+      english: "successful paid to teacher",
+    },
   });
 };
 
@@ -749,7 +754,10 @@ const getAllSessions = async (req, res) => {
   res.send({
     status: 201,
     data: lessons,
-    msg: "successful get all lessons",
+    msg: {
+      arabic: "تم ارجاع الجلسات بنجاح",
+      english: "successful get all lessons",
+    },
   });
 };
 
@@ -765,7 +773,10 @@ const getAllWallets = async (req, res) => {
   res.send({
     status: 201,
     data: wallets,
-    msg: "successful get all wallets",
+    msg: {
+      arabic: "تم ارجاع جميع المحفظات",
+      english: "successful get all wallets",
+    },
   });
 };
 
@@ -781,7 +792,10 @@ const getStudentWallets = async (req, res) => {
   res.send({
     status: 201,
     data: wallets,
-    msg: "successful get all student wallets",
+    msg: {
+      arabic: "تم ارجاع محفظة الطالب بنجاح",
+      english: "successful get all student wallets",
+    },
   });
 };
 
@@ -799,7 +813,10 @@ const getThawaniSession = async (req, res) => {
   res.send({
     status: 201,
     data: sessions,
-    msg: "successful get all thawani session",
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات التي تم تسجيلها من منصة ثواني",
+      english: "successful get all thawani session",
+    },
   });
 };
 
@@ -814,7 +831,10 @@ const getAllTeachers = async (req, res) => {
   res.send({
     status: 201,
     data: teachers,
-    msg: "successful get all teachers",
+    msg: {
+      arabic: "تم ارجاع جميع المعلمين",
+      english: "successful get all teachers",
+    },
   });
 };
 
@@ -830,40 +850,44 @@ const getTeacherFinancial = async (req, res) => {
   res.send({
     status: 201,
     data: records,
-    msg: "successful get all financial records for teacher",
+    msg: {
+      arabic: "تم ارجاع جميع السجل المالي للمعلم",
+      english: "successful get all financial records for teacher",
+    },
   });
 };
 
-const getNumbers = async(req,res) => {
-  
-const studentsNumber = await Student.count({
-  where: {
-    isRegistered: true
-  }
-});
+const getNumbers = async (req, res) => {
+  const studentsNumber = await Student.count({
+    where: {
+      isRegistered: true,
+    },
+  });
 
-const teachersNumber = await Teacher.count({
-  where: {
-    isRegistered: true,
-    isVerified: true
-  }
-});
+  const teachersNumber = await Teacher.count({
+    where: {
+      isRegistered: true,
+      isVerified: true,
+    },
+  });
 
-const parentsNumber = await Parent.count();
+  const parentsNumber = await Parent.count();
 
-const sessionsNumber = await Session.count({
-  where: {
-    isPaid: true
-  }
-});
+  const sessionsNumber = await Session.count({
+    where: {
+      isPaid: true,
+    },
+  });
 
-res.send({
-  status: 201,
-  data: {studentsNumber, teachersNumber, parentsNumber, sessionsNumber},
-  msg: "successful get all numbers",
-});
-
-}
+  res.send({
+    status: 201,
+    data: { studentsNumber, teachersNumber, parentsNumber, sessionsNumber },
+    msg: {
+      arabic: "تم ارجاع جميع الطلاب والمعلمين والاباء المسجلين",
+      english: "successful get all numbers",
+    },
+  });
+};
 
 module.exports = {
   signUp,
@@ -905,5 +929,5 @@ module.exports = {
   getThawaniSession,
   getAllTeachers,
   getTeacherFinancial,
-  getNumbers
+  getNumbers,
 };
