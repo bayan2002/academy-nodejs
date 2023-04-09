@@ -493,7 +493,7 @@ const getStudentCredit = async (req, res) => {
   const newPrice = await currencyConverter
     .from("OMR")
     .to(currency)
-    .amount(+student.Wallet)
+    .amount(+student.wallet)
     .convert();
   student.Wallet = newPrice;
 
