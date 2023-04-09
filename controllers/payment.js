@@ -221,9 +221,9 @@ const booking = async (req, res) => {
       type: "booking",
     });
 
-    const teacher = Teacher.findOne({
+    const teacher = await Teacher.findOne({
       where: {
-        TeacherId,
+        id:TeacherId,
       },
     });
 

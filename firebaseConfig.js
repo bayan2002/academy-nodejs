@@ -1,18 +1,16 @@
 const firebase = require('firebase-admin');
 const { initializeApp } = require("firebase-admin/app");
-const serviceAccount = require('./moaley1-firebase-adminsdk-f0je6-cca4b93de4.json')
-// require('firebase/compat/auth');
-// require('firebase/compat/firestore');
+const serviceAccount = require('./moalemy-54d19-firebase-adminsdk-3xshx-5db105a3d9.json')
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCL1e4gmRg0F5Iv-oZRZ4BscCqfGK74rTw",
-  authDomain: "moaley1.firebaseapp.com",
-  databaseURL: "https://moaley1-default-rtdb.firebaseio.com",
-  projectId: "moaley1",
-  storageBucket: "moaley1.appspot.com",
-  messagingSenderId: "1052100611364",
-  appId: "1:1052100611364:web:695d9a058cef4c3f24f7b1",
-  measurementId: "G-RTHWEYXPCJ"
+  apiKey: "AIzaSyDgCmRAtjY-jqVRmHb4W_dlmkJoZnwbZs8",
+  authDomain: "moalemy-54d19.firebaseapp.com",
+  projectId: "moalemy-54d19",
+  storageBucket: "moalemy-54d19.appspot.com",
+  messagingSenderId: "239715172398",
+  appId: "1:239715172398:web:79534f914a21f869c11fbf",
+  measurementId: "G-51Y8PNXGK8"
 };
 
 initializeApp({
