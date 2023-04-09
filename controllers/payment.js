@@ -4,7 +4,7 @@ const fetch = (...args) =>
 const { serverErrs } = require("../middlewares/customError");
 const { Wallet, Student, Session, Teacher } = require("../models");
 const FinancialRecord = require("../models/financialRecord");
-const Notifications = require("../firebaseConfig");
+const {Notifications} = require("../firebaseConfig");
 
 const charge = async (req, res) => {
   const { StudentId, price, currency } = req.body;

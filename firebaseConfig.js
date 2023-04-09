@@ -19,4 +19,4 @@ initializeApp({
 });
 const db = firebase.firestore();
 const Notifications = db.collection("Notifications");
-module.exports = Notifications;;
+module.exports = {Notifications, db};

@@ -30,6 +30,7 @@ const path = require("path");
 const fs = require("fs");
 const TeacherSubject = require("../models/TeacherSubject");
 const { Op } = require("sequelize");
+const { db } = require("../firebaseConfig");
 
 const signUp = async (req, res) => {
   const { email } = req.body;
@@ -905,6 +906,26 @@ const getTeacherFinancial = async (req, res) => {
     },
   });
 };
+const updateNotification = async (req, res) => {
+  const { TeacherId } = req.params;
+  const notificationsRef = db.collection("Notifications");
+  const query = notificationsRef.where("TeacherId", "==", TeacherId);
+
+  query.get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const notificationRef = notificationsRef.doc(doc.id);
+      notificationRef.update({ seen: true });
+    });
+  });
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم رؤية جميع الإشعارات ",
+      english: "successful seen for all Notification",
+    },
+  });
+};
 
 module.exports = {
   signUp,
@@ -925,4 +946,5 @@ module.exports = {
   getAllLessons,
   getCredit,
   getTeacherFinancial,
+  updateNotification,
 };
