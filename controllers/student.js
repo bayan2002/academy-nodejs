@@ -226,8 +226,8 @@ const signData = async (req, res) => {
 
   const student = await Student.findOne({
     where: {
-      email,
-      isRegistered,
+      email:email,
+      isRegistered:true,
     },
   });
 
