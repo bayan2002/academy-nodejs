@@ -19,6 +19,7 @@ const {
   getComingLessons,
   getPreviousLessons,
   rateTeacher,
+  getSubjectByCategoryId,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -75,5 +76,7 @@ studentRouter.post(
   checkUserAuth("student"),
   errorCatcher(rateTeacher)
 );
+
+studentRouter.get("/subject/:id/all", errorCatcher(getSubjectByCategoryId));
 
 module.exports = studentRouter;
