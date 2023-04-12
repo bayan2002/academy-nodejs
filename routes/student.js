@@ -79,7 +79,7 @@ studentRouter.post(
   errorCatcher(rateTeacher)
 );
 studentRouter.get("/class/:levelId", errorCatcher(getClassByLevelId));
-studentRouter.get("/Curriculum/:levelId", errorCatcher(getCurriculumByLevelId));
+studentRouter.get("/curriculum/:levelId", errorCatcher(getCurriculumByLevelId));
 
 studentRouter.get("/subject/:id/all", errorCatcher(getSubjectByCategoryId));
 

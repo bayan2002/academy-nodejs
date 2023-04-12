@@ -722,8 +722,8 @@ const getClassByLevelId = async (req, res) => {
     status: 201,
     data: Classes,
     msg: {
-      arabic: "تم ارجاع الفصل بنجاح",
-      english: "successful get single singleClass",
+      arabic: "تم ارجاع الفصول بنجاح",
+      english: "successful get classes",
     },
   });
 };
