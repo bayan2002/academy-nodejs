@@ -113,7 +113,7 @@ teacherRouter.get(
   "/credit/:TeacherId",
   verifyToken,
   checkUserAuth("teacher"),
-  errorCatcher(getCredit) 
+  errorCatcher(getCredit)
 );
 
 teacherRouter.get(
@@ -129,6 +129,6 @@ teacherRouter.put(
   errorCatcher(updateNotification)
 );
 
-teacherRouter.get("/teacherRate", errorCatcher(getTeacherRate));
+teacherRouter.get("/teacherRate/:TeacherId", errorCatcher(getTeacherRate));
 
 module.exports = teacherRouter;

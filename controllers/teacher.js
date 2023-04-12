@@ -930,7 +930,7 @@ const updateNotification = async (req, res) => {
 };
 
 const getTeacherRate = async (req, res) => {
-  const { TeacherId } = req.body;
+  const { TeacherId } = req.params;
   const rates = await Rate.findAll({
     where: {
       TeacherId,
@@ -967,5 +967,5 @@ module.exports = {
   getCredit,
   getTeacherFinancial,
   updateNotification,
-  getTeacherRate
+  getTeacherRate,
 };
