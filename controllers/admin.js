@@ -731,6 +731,7 @@ const payDues = async (req, res) => {
     titleEn: "successfully paying dues ",
     TeacherId,
     seen: false,
+    date: Date.now()
   });
 
   res.send({
