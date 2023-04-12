@@ -20,6 +20,7 @@ const {
   getPreviousLessons,
   rateTeacher,
 } = require("../controllers/student");
+const { getSingleClass, getSingleCurriculum } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
 const errorCatcher = require("../middlewares/errorCatcher");
@@ -75,5 +76,7 @@ studentRouter.post(
   checkUserAuth("student"),
   errorCatcher(rateTeacher)
 );
+studentRouter.get("/class/:classId", errorCatcher(getSingleClass));
+studentRouter.get("/Curriculum/:curriculumId", errorCatcher(getSingleCurriculum));
 
 module.exports = studentRouter;
