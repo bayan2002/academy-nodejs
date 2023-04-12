@@ -713,7 +713,7 @@ const getClassByLevelId = async (req, res) => {
   const Classes = await Class.findAll({
     where: { LevelId: levelId },
   });
-  if (!singleClass)
+  if (!Classes)
     throw serverErrs.BAD_REQUEST({
       arabic: "الفصل غير موجود",
       english: "Invalid classId! ",
