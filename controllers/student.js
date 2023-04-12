@@ -683,9 +683,11 @@ const getSubjectByCategoryId = async (req, res) => {
 };
 const getCurriculumByLevelId = async (req, res) => {
   const { levelId } = req.params;
-  const curriculum = await Curriculum.findOne({
-    where: { LevelId: levelId },
-    include: { all: true },
+  const curriculum = await Curriculum.findAll({
+    include: [{
+      model: Level,
+      where: { id: levelId }
+    }]
   });
   if (!curriculum)
     throw serverErrs.BAD_REQUEST({
