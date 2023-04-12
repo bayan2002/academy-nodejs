@@ -20,6 +20,7 @@ const {
   Subject,
   Wallet,
   Session,
+  CurriculumLevel,
 } = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -685,9 +686,11 @@ const getCurriculumByLevelId = async (req, res) => {
   const { levelId } = req.params;
   const curriculum = await Curriculum.findAll({
     include: [{
-      model: Level,
-      where: { id: levelId }
-    }]
+      model: CurriculumLevel,
+      where: { LevelId: levelId },
+      attributes: [], 
+    }],
+    attributes: ['titleEN', 'titleAR'],
   });
   if (!curriculum)
     throw serverErrs.BAD_REQUEST({
@@ -705,9 +708,8 @@ const getCurriculumByLevelId = async (req, res) => {
 };
 const getClassByLevelId = async (req, res) => {
   const { levelId } = req.params;
-  const singleClass = await Class.findOne({
+  const Classes = await Class.findAll({
     where: { LevelId: levelId },
-    include: { all: true },
   });
   if (!singleClass)
     throw serverErrs.BAD_REQUEST({
@@ -716,7 +718,7 @@ const getClassByLevelId = async (req, res) => {
     });
   res.send({
     status: 201,
-    data: singleClass,
+    data: Classes,
     msg: {
       arabic: "تم ارجاع الفصل بنجاح",
       english: "successful get single singleClass",
