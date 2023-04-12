@@ -583,7 +583,7 @@ const getPreviousLessons = async (req, res) => {
   const { studentId } = req.params;
   const previousLessons = await Session.findAll({
     where: {
-      studentId,
+      StudentId: studentId,
       isPaid: true,
       date: { [Op.lt]: new Date() },
     },
