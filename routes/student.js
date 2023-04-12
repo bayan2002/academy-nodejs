@@ -19,6 +19,7 @@ const {
   getComingLessons,
   getPreviousLessons,
   rateTeacher,
+  getSubjectByCategoryId,
 } = require("../controllers/student");
 const { getSingleClass, getSingleCurriculum } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
@@ -78,5 +79,7 @@ studentRouter.post(
 );
 studentRouter.get("/class/:classId", errorCatcher(getSingleClass));
 studentRouter.get("/Curriculum/:curriculumId", errorCatcher(getSingleCurriculum));
+
+studentRouter.get("/subject/:id/all", errorCatcher(getSubjectByCategoryId));
 
 module.exports = studentRouter;

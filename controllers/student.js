@@ -226,8 +226,8 @@ const signData = async (req, res) => {
 
   const student = await Student.findOne({
     where: {
-      email,
-      isRegistered,
+      email: email,
+      isRegistered: true,
     },
   });
 
@@ -619,7 +619,7 @@ const rateTeacher = async (req, res) => {
   if (!session)
     throw serverErrs.BAD_REQUEST({
       arabic: "لا يوجد أي جلسة مع المعلم ",
-      english: "You don't have any session with the teacher"
+      english: "You don't have any session with the teacher",
     });
 
   const rateData = await Rate.findOne({
@@ -629,10 +629,11 @@ const rateTeacher = async (req, res) => {
     },
   });
 
-  if (rateData) throw serverErrs.BAD_REQUEST({
-    arabic: "لقد قمت بتقييم المعلم من قبل",
-    english: "You already Rated the teacher ",
-  });
+  if (rateData)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "لقد قمت بتقييم المعلم من قبل",
+      english: "You already Rated the teacher ",
+    });
 
   const rate = await Rate.create({
     StudentId,
@@ -669,6 +670,18 @@ const rateTeacher = async (req, res) => {
   });
 };
 
+const getSubjectByCategoryId = async (req, res) => {
+  const { id } = req.params;
+  const subjects = await Subject.findAll({
+    where: { SubjectCategoryId: id },
+  });
+  console.log(id, subjects);
+  res.send({
+    status: 200,
+    data: subjects,
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -686,5 +699,6 @@ module.exports = {
   getAllLessons,
   getComingLessons,
   getPreviousLessons,
-  rateTeacher
+  rateTeacher,
+  getSubjectByCategoryId,
 };
