@@ -681,6 +681,46 @@ const getSubjectByCategoryId = async (req, res) => {
     data: subjects,
   });
 };
+const getCurriculumByLevelId = async (req, res) => {
+  const { levelId } = req.params;
+  const curriculum = await Curriculum.findOne({
+    where: { LevelId: levelId },
+    include: { all: true },
+  });
+  if (!curriculum)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المنهج غير موجود",
+      english: "Invalid curriculumId! ",
+    });
+  res.send({
+    status: 201,
+    data: curriculum,
+    msg: {
+      arabic: "تم ارجاع المنهج بنجاح",
+      english: "successful get single curriculum",
+    },
+  });
+};
+const getClassByLevelId = async (req, res) => {
+  const { levelId } = req.params;
+  const singleClass = await Class.findOne({
+    where: { LevelId: levelId },
+    include: { all: true },
+  });
+  if (!singleClass)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الفصل غير موجود",
+      english: "Invalid classId! ",
+    });
+  res.send({
+    status: 201,
+    data: singleClass,
+    msg: {
+      arabic: "تم ارجاع الفصل بنجاح",
+      english: "successful get single singleClass",
+    },
+  });
+};
 
 module.exports = {
   signUp,
@@ -701,4 +741,6 @@ module.exports = {
   getPreviousLessons,
   rateTeacher,
   getSubjectByCategoryId,
+  getCurriculumByLevelId,
+  getClassByLevelId,
 };

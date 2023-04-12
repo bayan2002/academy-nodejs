@@ -20,8 +20,9 @@ const {
   getPreviousLessons,
   rateTeacher,
   getSubjectByCategoryId,
+  getCurriculumByLevelId,
+  getClassByLevelId,
 } = require("../controllers/student");
-const { getSingleClass, getSingleCurriculum } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
 const errorCatcher = require("../middlewares/errorCatcher");
@@ -77,8 +78,8 @@ studentRouter.post(
   checkUserAuth("student"),
   errorCatcher(rateTeacher)
 );
-studentRouter.get("/class/:classId", errorCatcher(getSingleClass));
-studentRouter.get("/Curriculum/:curriculumId", errorCatcher(getSingleCurriculum));
+studentRouter.get("/class/:levelId", errorCatcher(getClassByLevelId));
+studentRouter.get("/Curriculum/:levelId", errorCatcher(getCurriculumByLevelId));
 
 studentRouter.get("/subject/:id/all", errorCatcher(getSubjectByCategoryId));
 
