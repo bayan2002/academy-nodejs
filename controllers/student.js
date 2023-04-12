@@ -685,12 +685,14 @@ const getSubjectByCategoryId = async (req, res) => {
 const getCurriculumByLevelId = async (req, res) => {
   const { levelId } = req.params;
   const curriculum = await Curriculum.findAll({
-    include: [{
-      model: CurriculumLevel,
-      where: { LevelId: levelId },
-      attributes: [], 
-    }],
-    attributes: ['titleEN', 'titleAR'],
+    include: [
+      {
+        model: CurriculumLevel,
+        where: { LevelId: levelId },
+        attributes: [],
+      },
+    ],
+    attributes: ["id", "titleEN", "titleAR"],
   });
   if (!curriculum)
     throw serverErrs.BAD_REQUEST({
