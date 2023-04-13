@@ -124,6 +124,14 @@ const Teacher = Sequelize.define("Teacher", {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  hoursNumbers:{
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  bookingNumbers:{
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  }
 });
 
 module.exports = Teacher;
