@@ -196,8 +196,6 @@ const booking = async (req, res) => {
     }
     const session = await createSession();
     session.isPaid = true;
-    const prePeriod = session.period;
-    session.period += prePeriod;
     await session.save();
     const wallet = await createWallet();
     wallet.isPaid = true;
@@ -218,6 +216,7 @@ const booking = async (req, res) => {
 
     teacher.totalAmount += +newPrice * 0.8;
     teacher.bookingNumbers += 1;
+    teacher.hoursNumbers += +session.period;
     await teacher.save();
 
     await Notifications.add({
@@ -265,8 +264,6 @@ const bookingSuccess = async (req, res) => {
   const { StudentId } = session;
 
   session.isPaid = true;
-  const prePeriod = session.period;
-  session.period += prePeriod;
   await session.save();
 
   global.session_id = null;
@@ -283,6 +280,7 @@ const bookingSuccess = async (req, res) => {
 
   teacher.totalAmount += +session.price * 0.8;
   teacher.bookingNumbers += 1;
+  teacher.hoursNumbers += +session.period;
   await teacher.save();
 
   const student = await Student.findOne({
