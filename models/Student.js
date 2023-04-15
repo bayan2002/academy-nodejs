@@ -50,7 +50,7 @@ const Student = sequelize.define("Student", {
   },
   regionTime: {
     type: DataTypes.STRING,
-    defaultValue: false,
+    defaultValue: "",
   },
   registerCode: {
     type: DataTypes.INTEGER,
