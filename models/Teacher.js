@@ -73,7 +73,7 @@ const Teacher = Sequelize.define("Teacher", {
     defaultValue: "",
   },
   timeZone: {
-    type: DataTypes.STRING,
+    type: DataTypes.JSON,
     defaultValue: "",
   },
   articleExperience: {
