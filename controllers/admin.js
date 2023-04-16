@@ -16,6 +16,8 @@ const {
 } = require("../models");
 const dotenv = require("dotenv");
 const PDFDocument = require("pdfkit");
+const path= require('path')
+const fs = require('fs')
 
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
