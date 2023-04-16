@@ -5,6 +5,7 @@ const { serverErrs } = require("../middlewares/customError");
 const { Wallet, Student, Session, Teacher } = require("../models");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
+const sendEmail = require("../middlewares/sendEmail");
 
 const charge = async (req, res) => {
   const { StudentId, price, currency } = req.body;
@@ -227,6 +228,37 @@ const booking = async (req, res) => {
       date: Date.now(),
     });
 
+    const mailOptions = {
+      from: "moalemy2022@gmail.com",
+      to: student.email,
+      subject: "Moalemy platform: Confirmation - Your Session with Teacher",
+      html: `<div>Dear ${student.name},<br>
+      I am writing to confirm that your session with your teacher,${teacher.name}, has been successfully scheduled.
+      Your session will take place on ${session.date} and will be held ${session.type}.<br>
+      We are glad that you have taken the initiative to book this session, and we are confident that it will be
+      beneficial for your academic progress. This session is an excellent opportunity for you to discuss any questions or concerns you may have with your teacher and to receive guidance on your academic performance.<br>
+      Good luck,<br>
+      Moalemy Team
+      </div> `,
+    };
+    sendEmail(mailOptions);
+
+    const mailOption = {
+      from: "moalemy2022@gmail.com",
+      to: teacher.email,
+      subject: "Moalemy platform: Confirmation of Successful Session Booking",
+      html: `<div>Dear ${teacher.name},<br>
+      I am writing to confirm that ${student.name} has successfully booked a session with you. The session has been scheduled at ${session.date}.
+     ${student.name} is really looking forward to the session and is excited to learn from you. We appreciate the opportunity to learn from such
+      a knowledgeable and experienced teacher like yourself.<br>
+      We are glad that you have taken the initiative to book this session, and we are confident that it will be
+      beneficial for your academic progress. This session is an excellent opportunity for you to discuss any questions or concerns you may have with your teacher and to receive guidance on your academic performance.<br>
+      Good luck,<br>
+      Moalemy Team
+      </div> `,
+    };
+    sendEmail(mailOption);
+
     res.send({
       status: 201,
       data: session,
@@ -296,7 +328,36 @@ const bookingSuccess = async (req, res) => {
     seen: false,
     date: Date.now(),
   });
+  const mailOptions = {
+    from: "moalemy2022@gmail.com",
+    to: student.email,
+    subject: "Moalemy platform: Confirmation - Your Session with Teacher",
+    html: `<div>Dear ${student.name},<br>
+    I am writing to confirm that your session with your teacher,${teacher.name}, has been successfully scheduled.
+    Your session will take place on ${session.date} and will be held ${session.type}.<br>
+    We are glad that you have taken the initiative to book this session, and we are confident that it will be
+    beneficial for your academic progress. This session is an excellent opportunity for you to discuss any questions or concerns you may have with your teacher and to receive guidance on your academic performance.<br>
+    Good luck,<br>
+    Moalemy Team
+    </div> `,
+  };
+  sendEmail(mailOptions);
 
+  const mailOption = {
+    from: "moalemy2022@gmail.com",
+    to: teacher.email,
+    subject: "Moalemy platform: Confirmation of Successful Session Booking",
+    html: `<div>Dear ${teacher.name},<br>
+    I am writing to confirm that ${student.name} has successfully booked a session with you. The session has been scheduled at ${session.date}.
+   ${student.name} is really looking forward to the session and is excited to learn from you. We appreciate the opportunity to learn from such
+    a knowledgeable and experienced teacher like yourself.<br>
+    We are glad that you have taken the initiative to book this session, and we are confident that it will be
+    beneficial for your academic progress. This session is an excellent opportunity for you to discuss any questions or concerns you may have with your teacher and to receive guidance on your academic performance.<br>
+    Good luck,<br>
+    Moalemy Team
+    </div> `,
+  };
+  sendEmail(mailOption);
   res.send({
     status: 201,
     data: session,
