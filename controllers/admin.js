@@ -15,6 +15,7 @@ const {
   Parent,
 } = require("../models");
 const dotenv = require("dotenv");
+const PDFDocument = require("pdfkit");
 
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -894,6 +895,44 @@ const getNumbers = async (req, res) => {
     },
   });
 };
+const getAllWalletsPdf = async (req, res) => {
+  const wallets = await Wallet.findAll({
+    where: {
+      isPaid: true,
+      typeEn: "deposit",
+    },
+    include: [{ model: Student }],
+  });
+  try {
+    const invoicename = "invoice-" + 1 + ".pdf";
+    const invoicepath = path.join("invoices", invoicename);
+    res.setHeader("Content-type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "inline;filename=" + invoicename + '"'
+    );
+    const pdfDoc = new PDFDocument();
+    pdfDoc.pipe(fs.createWriteStream(invoicepath));
+    pdfDoc.pipe(res);
+    wallets.forEach((wallet) => {
+      pdfDoc.text(wallet.price - wallet.currency - wallet.Student.name);
+    });
+    pdfDoc.end();
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    throw err;
+  }
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: " PDF تم ارجاع جميع المحفظات وتحويلها الى صيغة ",
+      english: "successful get all wallets converted to pdf",
+    },
+  });
+};
 
 module.exports = {
   signUp,
@@ -936,4 +975,5 @@ module.exports = {
   getAllTeachers,
   getTeacherFinancial,
   getNumbers,
+  getAllWalletsPdf,
 };
