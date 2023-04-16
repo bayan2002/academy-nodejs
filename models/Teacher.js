@@ -73,8 +73,8 @@ const Teacher = Sequelize.define("Teacher", {
     defaultValue: "",
   },
   timeZone: {
-    type: DataTypes.JSON,
-    defaultValue: {},
+    type: DataTypes.STRING,
+    defaultValue: "",
   },
   articleExperience: {
     type: DataTypes.BOOLEAN,
@@ -124,6 +124,14 @@ const Teacher = Sequelize.define("Teacher", {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  hoursNumbers:{
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  bookingNumbers:{
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  }
 });
 
 module.exports = Teacher;

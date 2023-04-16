@@ -6,7 +6,7 @@ const port = app.get("port");
 
 
 sequelize
-  .sync()
+  .sync({alter:true})
   // .sync({ force: true })
   .then(() => {
     app.listen(port, () => {
