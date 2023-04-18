@@ -918,7 +918,7 @@ const getAllWalletsPdf = async (req, res) => {
     pdfDoc.pipe(res);
     wallets.forEach((wallet) => {
       pdfDoc.text(
-        `${wallet.price} , $${wallet.currency} , ${wallet.Student.name}`
+        wallet.price + "," + wallet.currency + "," + wallet.Student.name
       );
     });
     pdfDoc.end();
