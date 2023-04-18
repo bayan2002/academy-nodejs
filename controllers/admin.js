@@ -714,12 +714,6 @@ const updateCurriculum = async (req, res) => {
 const payDues = async (req, res) => {
   const { price, TeacherId } = req.body;
 
-  await FinancialRecord.create({
-    amount: price,
-    type: "paid",
-    TeacherId,
-  });
-
   const teacher = await Teacher.findOne({
     where: {
       id: TeacherId,
@@ -731,6 +725,12 @@ const payDues = async (req, res) => {
       english: "you are paying more than the requested price",
     });
   }
+  await FinancialRecord.create({
+    amount: price,
+    type: "paid",
+    TeacherId,
+  });
+
   teacher.dues += +price;
   await teacher.save();
 
