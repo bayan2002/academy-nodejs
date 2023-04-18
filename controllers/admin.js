@@ -16,8 +16,8 @@ const {
 } = require("../models");
 const dotenv = require("dotenv");
 const PDFDocument = require("pdfkit");
-const path= require('path')
-const fs = require('fs')
+const path = require("path");
+const fs = require("fs");
 
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -917,7 +917,9 @@ const getAllWalletsPdf = async (req, res) => {
     pdfDoc.pipe(fs.createWriteStream(invoicepath));
     pdfDoc.pipe(res);
     wallets.forEach((wallet) => {
-      pdfDoc.text(wallet.price - wallet.currency - wallet.Student.name);
+      pdfDoc.text(
+        `${wallet.price} , $${wallet.currency} , ${wallet.Student.name}`
+      );
     });
     pdfDoc.end();
   } catch (err) {
@@ -926,14 +928,6 @@ const getAllWalletsPdf = async (req, res) => {
     }
     throw err;
   }
-
-  res.send({
-    status: 201,
-    msg: {
-      arabic: " PDF تم ارجاع جميع المحفظات وتحويلها الى صيغة ",
-      english: "successful get all wallets converted to pdf",
-    },
-  });
 };
 
 module.exports = {
