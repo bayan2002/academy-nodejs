@@ -905,29 +905,20 @@ const getAllWalletsPdf = async (req, res) => {
     },
     include: [{ model: Student }],
   });
-  try {
-    const invoicename = "invoice-" + 1 + ".pdf";
-    const invoicepath = path.join("invoices", invoicename);
-    res.setHeader("Content-type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      "inline;filename=" + invoicename + '"'
+
+  const invoicename = "invoice-" + 1 + ".pdf";
+  const invoicepath = path.join("invoices", invoicename);
+  res.setHeader("Content-type", "application/pdf");
+  res.setHeader("Content-Disposition", "inline;filename=" + invoicename + '"');
+  const pdfDoc = new PDFDocument();
+  pdfDoc.pipe(fs.createWriteStream(invoicepath));
+  pdfDoc.pipe(res);
+  wallets.forEach((wallet) => {
+    pdfDoc.text(
+      wallet.price + "," + wallet.currency + "," + wallet.Student.name
     );
-    const pdfDoc = new PDFDocument();
-    pdfDoc.pipe(fs.createWriteStream(invoicepath));
-    pdfDoc.pipe(res);
-    wallets.forEach((wallet) => {
-      pdfDoc.text(
-        wallet.price + "," + wallet.currency + "," + wallet.Student.name
-      );
-    });
-    pdfDoc.end();
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    throw err;
-  }
+  });
+  pdfDoc.end();
 };
 
 module.exports = {
