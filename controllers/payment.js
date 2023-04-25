@@ -29,7 +29,7 @@ const charge = async (req, res) => {
     },
     body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
       newPrice * 1000
-    }}],"success_url":"https://acacdemy.vercel.app/success-charge","cancel_url":"https://acacdemy.vercel.app/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
+    }}],"success_url":"https://moalime.com/success-charge","cancel_url":"https://moalime.com/fail-charge","metadata":{"Customer name":"somename","order id":0}}`,
   };
 
   const response = await fetch(url, options);
@@ -163,7 +163,7 @@ const booking = async (req, res) => {
       },
       body: `{"client_reference_id":"123412","mode":"payment","products":[{"name":"product 1","quantity":1,"unit_amount":${
         newPrice * 1000
-      }}],"success_url":"https://acacdemy.vercel.app/success-payment","cancel_url":"https://acacdemy.vercel.app/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
+      }}],"success_url":"https://moalime.com/success-payment","cancel_url":"https://moalime.com/fail-payment","metadata":{"Customer name":"somename","order id":0}}`,
     };
     const response = await fetch(url, options);
     const data = await response.json();
