@@ -229,7 +229,7 @@ const booking = async (req, res) => {
     });
 
     const mailOptions = {
-      from: "moalime",
+      from: "info@moalime.com",
       to: student.email,
       subject: "Moalime platform: Confirmation - Your Session with Teacher",
       html: `<div>Dear ${student.name},<br>
@@ -244,7 +244,7 @@ const booking = async (req, res) => {
     sendEmail(mailOptions);
 
     const mailOption = {
-      from: "moalime@gmail.com",
+      from: "info@moalime.com",
       to: teacher.email,
       subject: "Moalime platform: Confirmation of Successful Session Booking",
       html: `<div>Dear ${teacher.name},<br>
@@ -329,7 +329,7 @@ const bookingSuccess = async (req, res) => {
     date: Date.now(),
   });
   const mailOptions = {
-    from: "moalime",
+    from: "info@moalime.com",
     to: student.email,
     subject: "Moalime platform: Confirmation - Your Session with Teacher",
     html: `<div>Dear ${student.name},<br>
@@ -344,7 +344,7 @@ const bookingSuccess = async (req, res) => {
   sendEmail(mailOptions);
 
   const mailOption = {
-    from: "Moalime",
+    from: "info@moalime.com",
     to: teacher.email,
     subject: "Moalime platform: Confirmation of Successful Session Booking",
     html: `<div>Dear ${teacher.name},<br>
