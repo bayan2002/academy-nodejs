@@ -89,7 +89,7 @@ const signUp = async (req, res) => {
     });
   }
   const mailOptions = {
-    from: "moalime",
+    from: "info@moalime.com",
     to: email,
     subject: "Moalime platform: Your Verification Code",
     html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
@@ -199,7 +199,7 @@ const signPassword = async (req, res) => {
 
   // res.cookie("token", token);
   const mailOptions = {
-    from: "moalime",
+    from: "info@moalime.com",
     to: email,
     subject: "Moalime platform: Account Creation Successful!",
     html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
