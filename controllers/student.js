@@ -95,15 +95,15 @@ const signUp = async (req, res) => {
   }
 
   const mailOptions = {
-    from: "moalemy2022@gmail.com",
+    from: "moalime",
     to: email,
-    subject: "Moalemy platform: Your Verification Code",
+    subject: "Moalime platform: Your Verification Code",
     html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
     We are happy to let you know that your account have been created.<br>
     To verify your Account enter the code please!<br>
     <b> ${code} </b>
     Good luck,<br>
-    Moalemy Team
+    Moalime Team
     </div> `,
   };
   sendEmail(mailOptions);
@@ -199,15 +199,15 @@ const signPassword = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "moalemy2022@gmail.com",
+    from: "moalime",
     to: email,
-    subject: "Moalemy platform: Account Creation Successful!",
+    subject: "Moalime platform: Account Creation Successful!",
     html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
     We are delighted to inform you that your account has been successfully created.<br>
     Congratulations on taking the first step towards experiencing our website<br><br>
     We look forward to providing you with an exceptional experience.<br>
     Good luck,<br>
-    Moalemy Team
+    Moalime Team
     </div> `,
   };
   sendEmail(mailOptions);
