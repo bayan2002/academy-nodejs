@@ -97,14 +97,14 @@ const signUp = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: email,
-    subject: "Moalime platform: Your Verification Code",
-    html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
-    We are happy to let you know that your account have been created.<br>
-    To verify your Account enter the code please!<br>
+    subject: "منصة معلمي: رمز التحقق الخاص بك",
+    html: `<div> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا </ b>
+    يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
+    !للتحقق من حسابك أدخل الرمز من فضلك <br>
     <b> ${code} </b>
-    Good luck,<br>
-    Moalime Team
-    </div> `,
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
   };
   sendEmail(mailOptions);
 
@@ -201,14 +201,14 @@ const signPassword = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: email,
-    subject: "Moalime platform: Account Creation Successful!",
-    html: `<div>Welcome, <br>Thank you so much for taking time to joining us </b>
-    We are delighted to inform you that your account has been successfully created.<br>
-    Congratulations on taking the first step towards experiencing our website<br><br>
-    We look forward to providing you with an exceptional experience.<br>
-    Good luck,<br>
-    Moalime Team
-    </div> `,
+    subject: "!منصة معلمي : تم إنشاء الحساب بنجاح",
+    html: `<div> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا </ b>
+    يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
+    تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
+    .نتطلع إلى تزويدك بتجربة استثنائية <br>
+    ,حظًا سعيدًا <br>
+    فريق معلمي
+    </div>`,
   };
   sendEmail(mailOptions);
   res.send({
