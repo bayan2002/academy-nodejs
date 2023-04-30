@@ -243,9 +243,12 @@ const signAbout = async (req, res) => {
     phone,
     country,
     city,
-    languages,
+    // languages,
   } = req.body;
-
+  let { languages } = req.body;
+  if (typeof languages === "string") {
+    languages = JSON.parse(languages);
+  }
   await teacher.update({
     firstName,
     lastName,
