@@ -260,9 +260,7 @@ const signAbout = async (req, res) => {
       TeacherId: teacher.id,
     },
   });
-  if (typeof languages === "string") {
-    languages = JSON.parse(languages);
-  }
+
   await LangTeachStd.bulkCreate(languages).then(() =>
     console.log("LangTeachStd data have been created")
   );
