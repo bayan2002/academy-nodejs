@@ -235,16 +235,8 @@ const signAbout = async (req, res) => {
       english: "No Auth ",
     });
 
-  const {
-    firstName,
-    lastName,
-    gender,
-    dateOfBirth,
-    phone,
-    country,
-    city,
-    // languages,
-  } = req.body;
+  const { firstName, lastName, gender, dateOfBirth, phone, country, city } =
+    req.body;
   let { languages } = req.body;
   if (typeof languages === "string") {
     languages = JSON.parse(languages);
@@ -290,9 +282,9 @@ const signAbout = async (req, res) => {
 
 const signAdditionalInfo = async (req, res) => {
   const { teacherId } = req.params;
-  console.log("teacherId: ", teacherId);
+  // console.log("teacherId: ", teacherId);
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  console.log("teacher: ", teacher);
+  // console.log("teacher: ", teacher);
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
       arabic: "المعلم غير موجود",
@@ -312,9 +304,15 @@ const signAdditionalInfo = async (req, res) => {
     favStdGender,
     favHours,
     articleExperience,
-    levels,
-    curriculums,
   } = req.body;
+
+  let { levels, curriculums } = req.body;
+  if (typeof levels === "string") {
+    levels = JSON.parse(levels);
+  }
+  if (typeof curriculums === "string") {
+    curriculums = JSON.parse(curriculums);
+  }
 
   await teacher.update({
     haveCertificates,
@@ -462,8 +460,12 @@ const addSubjects = async (req, res) => {
       english: "No Auth ",
     });
 
-  const { subjects, remote, f2fStudent, f2fTeacher } = req.body;
+  const { remote, f2fStudent, f2fTeacher } = req.body;
 
+  let { subjects } = req.body;
+  if (typeof subjects === "string") {
+    subjects = JSON.parse(subjects);
+  }
   await TeacherSubject.destroy({
     where: {
       TeacherId: teacher.id,
@@ -571,7 +573,12 @@ const signAvailability = async (req, res) => {
       english: "No Auth ",
     });
 
-  const { timeZone, teacherDayes } = req.body;
+  const { timeZone } = req.body;
+  let { teacherDayes } = req.body;
+
+  if (typeof teacherDayes === "string") {
+    teacherDayes = JSON.parse(teacherDayes);
+  }
 
   await teacher.update({
     timeZone,
@@ -654,7 +661,17 @@ const signResume = async (req, res) => {
       english: "No Auth ",
     });
 
-  const { certificates, experiences, educationDegrees } = req.body;
+  let { certificates, experiences, educationDegrees } = req.body;
+
+  if (typeof certificates === "string") {
+    certificates = JSON.parse(certificates);
+  }
+  if (typeof experiences === "string") {
+    experiences = JSON.parse(experiences);
+  }
+  if (typeof educationDegrees === "string") {
+    educationDegrees = JSON.parse(educationDegrees);
+  }
 
   const teacherCertificate = await Certificates.destroy({
     where: {

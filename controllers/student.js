@@ -324,11 +324,15 @@ const editPersonalInformation = async (req, res) => {
     nationality,
     location,
     regionTime,
-    languages,
     LevelId,
     ClassId,
     CurriculumId,
   } = req.body;
+
+  let { languages } = req.body;
+  if (typeof languages === "string") {
+    languages = JSON.parse(languages);
+  }
 
   await student.update({
     name,
