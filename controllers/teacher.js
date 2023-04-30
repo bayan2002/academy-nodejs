@@ -807,7 +807,11 @@ const searchTeacherFilterSide = async (req, res) => {
 };
 
 const searchTeacherFilterTop = async (req, res) => {
-  const { LevelId, subjects } = req.body;
+  const { LevelId } = req.body;
+  let { subjects } = req.body;
+  if (typeof subjects === "string") {
+    subjects = JSON.parse(subjects);
+  }
   let whereInclude = [];
   if (LevelId !== "all") {
     whereInclude.push({
