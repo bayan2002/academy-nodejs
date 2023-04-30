@@ -260,7 +260,9 @@ const signAbout = async (req, res) => {
       TeacherId: teacher.id,
     },
   });
-
+  if (typeof languages === "string") {
+    languages = JSON.parse(languages);
+  }
   await LangTeachStd.bulkCreate(languages).then(() =>
     console.log("LangTeachStd data have been created")
   );
@@ -746,7 +748,7 @@ const signVideoLink = async (req, res) => {
 
 const searchTeacherFilterSide = async (req, res) => {
   const { videoLink, gender, LanguageId, CurriculumId } = req.body;
-  const {currency} = req.query;
+  const { currency } = req.query;
   let whereTeacher = { isVerified: 1 };
   let whereInclude = [];
   if (videoLink) {
