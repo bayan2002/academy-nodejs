@@ -32,6 +32,9 @@ const fs = require("fs");
 const TeacherSubject = require("../models/TeacherSubject");
 const { Op } = require("sequelize");
 const { db } = require("../firebaseConfig");
+const CC = require("currency-converter-lt");
+
+let currencyConverter = new CC();
 
 const signUp = async (req, res) => {
   const { email } = req.body;
@@ -768,7 +771,17 @@ const searchTeacherFilterSide = async (req, res) => {
   const { videoLink, gender, LanguageId, CurriculumId } = req.body;
   const { currency } = req.query;
   let whereTeacher = { isVerified: 1 };
-  let whereInclude = [];
+  const whereInclude = [
+    {
+      model: F2FSessionTeacher,
+    },
+    {
+      model: F2FSessionStd,
+    },
+    {
+      model: RemoteSession,
+    },
+  ];
   if (videoLink) {
     whereTeacher["videoLink"] = { [Op.not]: "" };
   }
@@ -791,10 +804,44 @@ const searchTeacherFilterSide = async (req, res) => {
       where: { CurriculumId: +CurriculumId },
     });
   }
+
   const teachers = await Teacher.findAll({
     where: whereTeacher,
     include: whereInclude,
   });
+
+  await Promise.all(
+    teachers.map(async (teacher) => {
+      if (teacher.RemoteSession) {
+        const newPriceRemote = await currencyConverter
+          .from(teacher.RemoteSession.currency)
+          .to(currency)
+          .amount(+teacher.RemoteSession.price)
+          .convert();
+        teacher.RemoteSession.price = newPriceRemote;
+        teacher.RemoteSession.currency = currency;
+      }
+      if (teacher.F2FSessionStd) {
+        const newPriceF2FStudent = await currencyConverter
+          .from(teacher.F2FSessionStd.currency)
+          .to(currency)
+          .amount(+teacher.F2FSessionStd.price)
+          .convert();
+        teacher.F2FSessionStd.price = newPriceF2FStudent;
+        teacher.F2FSessionStd.currency = currency;
+      }
+      if (teacher.F2FSessionTeacher) {
+        const newPriceF2FTeacher = await currencyConverter
+          .from(teacher.F2FSessionTeacher.currency)
+          .to(currency)
+          .amount(+teacher.F2FSessionTeacher.price)
+          .convert();
+        teacher.F2FSessionTeacher.price = newPriceF2FTeacher;
+        teacher.F2FSessionTeacher.currency = currency;
+      }
+      return teacher;
+    })
+  );
 
   res.send({
     status: 201,
@@ -809,16 +856,31 @@ const searchTeacherFilterSide = async (req, res) => {
 const searchTeacherFilterTop = async (req, res) => {
   const { LevelId } = req.body;
   let { subjects } = req.body;
+  const { currency } = req.query;
+
   if (typeof subjects === "string") {
     subjects = JSON.parse(subjects);
   }
-  let whereInclude = [];
+
+  const whereInclude = [
+    {
+      model: F2FSessionTeacher,
+    },
+    {
+      model: F2FSessionStd,
+    },
+    {
+      model: RemoteSession,
+    },
+  ];
+
   if (LevelId !== "all") {
     whereInclude.push({
       model: TeacherLevel,
       where: { LevelId: +LevelId },
     });
   }
+
   if (subjects.length > 0) {
     whereInclude.push({
       model: TeacherSubject,
@@ -829,10 +891,44 @@ const searchTeacherFilterTop = async (req, res) => {
       },
     });
   }
+
   const teachers = await Teacher.findAll({
     where: { isVerified: 1 },
     include: whereInclude,
   });
+
+  await Promise.all(
+    teachers.map(async (teacher) => {
+      if (teacher.RemoteSession) {
+        const newPriceRemote = await currencyConverter
+          .from(teacher.RemoteSession.currency)
+          .to(currency)
+          .amount(+teacher.RemoteSession.price)
+          .convert();
+        teacher.RemoteSession.price = newPriceRemote;
+        teacher.RemoteSession.currency = currency;
+      }
+      if (teacher.F2FSessionStd) {
+        const newPriceF2FStudent = await currencyConverter
+          .from(teacher.F2FSessionStd.currency)
+          .to(currency)
+          .amount(+teacher.F2FSessionStd.price)
+          .convert();
+        teacher.F2FSessionStd.price = newPriceF2FStudent;
+        teacher.F2FSessionStd.currency = currency;
+      }
+      if (teacher.F2FSessionTeacher) {
+        const newPriceF2FTeacher = await currencyConverter
+          .from(teacher.F2FSessionTeacher.currency)
+          .to(currency)
+          .amount(+teacher.F2FSessionTeacher.price)
+          .convert();
+        teacher.F2FSessionTeacher.price = newPriceF2FTeacher;
+        teacher.F2FSessionTeacher.currency = currency;
+      }
+      return teacher;
+    })
+  );
 
   res.send({
     status: 201,
