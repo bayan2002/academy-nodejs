@@ -132,7 +132,7 @@ teacherRouter.put(
 
 teacherRouter.get("/teacherRate/:TeacherId", errorCatcher(getTeacherRate));
 
-teacherRouter.get(
+teacherRouter.patch(
   "/acceptLesson/:TeacherId",
   verifyToken,
   checkUserAuth("teacher"),

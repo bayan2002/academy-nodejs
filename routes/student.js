@@ -84,7 +84,7 @@ studentRouter.get("/curriculum/:levelId", errorCatcher(getCurriculumByLevelId));
 
 studentRouter.get("/subject/:id/all", errorCatcher(getSubjectByCategoryId));
 
-studentRouter.get(
+studentRouter.patch(
   "/acceptLesson/:StudentId",
   verifyToken,
   checkUserAuth("student"),
