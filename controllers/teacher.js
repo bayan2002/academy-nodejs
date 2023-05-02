@@ -1074,7 +1074,7 @@ const acceptLesson = async (req, res) => {
 
   const session = await Session.findOne({
     where: {
-      SessionId,
+      id: SessionId,
       TeacherId,
     },
   });
@@ -1089,7 +1089,6 @@ const acceptLesson = async (req, res) => {
 
   res.send({
     status: 201,
-    data: session,
     msg: {
       arabic: "تم تعديل الجلسة بنجاح",
       english: "successful update session",

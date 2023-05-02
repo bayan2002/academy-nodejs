@@ -756,7 +756,6 @@ const acceptLesson = async (req, res) => {
 
   res.send({
     status: 201,
-    data: session,
     msg: {
       arabic: "تم تعديل الجلسة بنجاح",
       english: "successful update session",
