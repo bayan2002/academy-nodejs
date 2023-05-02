@@ -9,18 +9,25 @@ const logout = require("../middlewares/logout");
 const errorCatcher = require("../middlewares/errorCatcher");
 const { getSingleTeacher } = require("../controllers/student");
 const paymentRouter = require("./payment");
+const {
+  forgetPassword,
+  verifyCodeForgottenPassword,
+  editForgottenPassword,
+} = require("../middlewares/forgetPassword");
 
 const router = express.Router();
 
 router.use("/admin", adminRouter);
 router.use("/teacher", teacherRouter);
-router.use('/student',studentRouter)
+router.use("/student", studentRouter);
 router.use("/parent", parentRouter);
 router.use("/language", LanguageRouter);
 router.use("/payment", paymentRouter);
-router.post('/login', errorCatcher(login));
-router.get('/logout', logout)
-router.use("/teacherSession/:teacherId", getSingleTeacher)
-
+router.post("/login", errorCatcher(login));
+router.get("/logout", logout);
+router.use("/teacherSession/:teacherId", getSingleTeacher);
+router.post("/forgetPassword", errorCatcher(forgetPassword));
+router.post("/forgetPassword/code", errorCatcher(verifyCodeForgottenPassword));
+router.post("/forgetPassword/edit", errorCatcher(editForgottenPassword));
 
 module.exports = router;

@@ -22,9 +22,6 @@ const {
   getSubjectByCategoryId,
   getCurriculumByLevelId,
   getClassByLevelId,
-  forgetPassword,
-  verifyCodeForgottenPassword,
-  editForgottenPassword,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -85,12 +82,5 @@ studentRouter.get("/class/:levelId", errorCatcher(getClassByLevelId));
 studentRouter.get("/curriculum/:levelId", errorCatcher(getCurriculumByLevelId));
 
 studentRouter.get("/subject/:id/all", errorCatcher(getSubjectByCategoryId));
-
-studentRouter.post("/forgetPassword", errorCatcher(forgetPassword));
-studentRouter.post(
-  "/forgetPassword/code",
-  errorCatcher(verifyCodeForgottenPassword)
-);
-studentRouter.post("/forgetPassword/edit", errorCatcher(editForgottenPassword));
 
 module.exports = studentRouter;
