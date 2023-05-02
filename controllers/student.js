@@ -579,6 +579,7 @@ const getSingleTeacher = async (req, res) => {
       .amount(+teacher.RemoteSession.price)
       .convert();
     teacher.RemoteSession.price = newPriceRemote;
+    teacher.RemoteSession.currency = currency;
   }
   if (teacher.F2FSessionStd) {
     const newPriceF2FStudent = await currencyConverter
@@ -587,6 +588,7 @@ const getSingleTeacher = async (req, res) => {
       .amount(+teacher.F2FSessionStd.price)
       .convert();
     teacher.F2FSessionStd.price = newPriceF2FStudent;
+    teacher.F2FSessionStd.currency = currency;
   }
   if (teacher.F2FSessionTeacher) {
     const newPriceF2FTeacher = await currencyConverter
@@ -595,6 +597,7 @@ const getSingleTeacher = async (req, res) => {
       .amount(+teacher.F2FSessionTeacher.price)
       .convert();
     teacher.F2FSessionTeacher.price = newPriceF2FTeacher;
+    teacher.F2FSessionTeacher.currency = currency;
   }
 
   res.send({
