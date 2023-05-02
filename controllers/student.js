@@ -741,7 +741,7 @@ const acceptLesson = async (req, res) => {
 
   const session = await Session.findOne({
     where: {
-      SessionId,
+      id: SessionId,
       StudentId,
     },
   });
@@ -750,7 +750,6 @@ const acceptLesson = async (req, res) => {
     throw serverErrs.BAD_REQUEST({
       arabic: "الجلسة غير موجودة",
       english: "session not found",
-      session: { session, SessionId, StudentId },
     });
 
   await session.update({ studentAccept: true });
