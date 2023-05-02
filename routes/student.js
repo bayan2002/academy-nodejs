@@ -22,6 +22,7 @@ const {
   getSubjectByCategoryId,
   getCurriculumByLevelId,
   getClassByLevelId,
+  acceptLesson,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -82,5 +83,12 @@ studentRouter.get("/class/:levelId", errorCatcher(getClassByLevelId));
 studentRouter.get("/curriculum/:levelId", errorCatcher(getCurriculumByLevelId));
 
 studentRouter.get("/subject/:id/all", errorCatcher(getSubjectByCategoryId));
+
+studentRouter.get(
+  "/acceptLesson/:StudentId",
+  verifyToken,
+  checkUserAuth("student"),
+  errorCatcher(acceptLesson)
+);
 
 module.exports = studentRouter;

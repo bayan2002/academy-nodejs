@@ -1068,6 +1068,35 @@ const getTeacherRate = async (req, res) => {
   });
 };
 
+const acceptLesson = async (req, res) => {
+  const { TeacherId } = req.params;
+  const { SessionId } = req.body;
+
+  const session = await Session.findOne({
+    where: {
+      SessionId,
+      TeacherId,
+    },
+  });
+
+  if (!session)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الجلسة غير موجودة",
+      english: "session not found",
+    });
+
+  await session.update({ teacherAccept: true });
+
+  res.send({
+    status: 201,
+    data: session,
+    msg: {
+      arabic: "تم تعديل الجلسة بنجاح",
+      english: "successful update session",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -1089,4 +1118,5 @@ module.exports = {
   getTeacherFinancial,
   updateNotification,
   getTeacherRate,
+  acceptLesson,
 };

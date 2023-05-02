@@ -48,6 +48,14 @@ const Session = Sequelize.define("Session", {
     type: DataTypes.STRING,
     defaultValue: "",
   },
+  teacherAccept: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  studentAccept: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = Session;
