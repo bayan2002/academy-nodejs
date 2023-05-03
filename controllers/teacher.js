@@ -580,6 +580,10 @@ const addSubjects = async (req, res) => {
 
   let { remote, f2fStudent, f2fTeacher, subjects } = req.body;
 
+  if (!remote || !f2fStudent || !f2fTeacher || !subjects) {
+    throw serverErrs.BAD_REQUEST("one of the data is empty");
+  }
+
   if (typeof subjects === "string") {
     subjects = JSON.parse(subjects);
   }
