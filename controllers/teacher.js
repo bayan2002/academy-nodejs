@@ -447,6 +447,121 @@ const uploadImage = async (req, res) => {
   });
 };
 
+// const addSubjects = async (req, res) => {
+//   const { teacherId } = req.params;
+
+//   const teacher = await Teacher.findOne({ where: { id: teacherId } });
+//   if (!teacher)
+//     throw serverErrs.BAD_REQUEST({
+//       arabic: "المعلم غير موجود",
+//       english: "Invalid teacherId! ",
+//     });
+
+//   if (teacher.id != req.user.userId)
+//     throw serverErrs.BAD_REQUEST({
+//       arabic: "لا يوجد حق بالوصول",
+//       english: "No Auth ",
+//     });
+
+//   const { remote, f2fStudent, f2fTeacher } = req.body;
+
+//   let { subjects } = req.body;
+
+//   if (typeof subjects === "string") {
+//     subjects = JSON.parse(subjects);
+//   }
+//   await TeacherSubject.destroy({
+//     where: {
+//       TeacherId: teacher.id,
+//     },
+//   });
+
+//   await RemoteSession.destroy({
+//     where: {
+//       TeacherId: teacher.id,
+//     },
+//   });
+
+//   await F2FSessionStd.destroy({
+//     where: {
+//       TeacherId: teacher.id,
+//     },
+//   });
+//   await F2FSessionTeacher.destroy({
+//     where: {
+//       TeacherId: teacher.id,
+//     },
+//   });
+
+//   await TeacherSubject.bulkCreate(subjects).then(() =>
+//     console.log("Teacher Subjects data have been created")
+//   );
+//   if (remote) {
+//     await RemoteSession.create(remote).then(() =>
+//       console.log("Teacher remote session has been saved")
+//     );
+//   }
+//   if (f2fStudent) {
+//     await F2FSessionStd.create(f2fStudent).then(() =>
+//       console.log("teacher session at home student has been saved")
+//     );
+//   }
+//   if (f2fTeacher) {
+//     await F2FSessionTeacher.create(f2fTeacher).then(() =>
+//       console.log("Teacher session at teacher home has been saved")
+//     );
+//   }
+
+//   const teacherSubjects = await TeacherSubject.findAll({
+//     where: {
+//       TeacherId: teacherId,
+//     },
+//     include: {
+//       all: true,
+//     },
+//   });
+
+//   const remoteSession = await RemoteSession.findAll({
+//     where: {
+//       TeacherId: teacherId,
+//     },
+//     include: {
+//       all: true,
+//     },
+//   });
+
+//   const f2fStudentSession = await F2FSessionStd.findAll({
+//     where: {
+//       TeacherId: teacherId,
+//     },
+//     include: {
+//       all: true,
+//     },
+//   });
+
+//   const f2fTeacherSession = await F2FSessionTeacher.findAll({
+//     where: {
+//       TeacherId: teacherId,
+//     },
+//     include: {
+//       all: true,
+//     },
+//   });
+//   res.send({
+//     status: 201,
+//     data: {
+//       teacherSubjects,
+//       remoteSession,
+//       f2fStudentSession,
+//       f2fTeacherSession,
+//     },
+//     msg: {
+//       arabic: "تم إضافة مادة ونوع الجلسة بنجاح",
+//       english: "added subjects and session type successfully",
+//     },
+//   });
+// };
+
 const addSubjects = async (req, res) => {
   const { teacherId } = req.params;
 
@@ -463,12 +578,21 @@ const addSubjects = async (req, res) => {
       english: "No Auth ",
     });
 
-  const { remote, f2fStudent, f2fTeacher } = req.body;
+  let { remote, f2fStudent, f2fTeacher, subjects } = req.body;
 
-  let { subjects } = req.body;
   if (typeof subjects === "string") {
     subjects = JSON.parse(subjects);
   }
+  if (typeof remote === "string") {
+    remote = JSON.parse(remote);
+  }
+  if (typeof f2fStudent === "string") {
+    f2fStudent = JSON.parse(f2fStudent);
+  }
+  if (typeof f2fTeacher === "string") {
+    f2fTeacher = JSON.parse(f2fTeacher);
+  }
+
   await TeacherSubject.destroy({
     where: {
       TeacherId: teacher.id,
