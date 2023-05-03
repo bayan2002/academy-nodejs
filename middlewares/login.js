@@ -6,7 +6,8 @@ const generateToken = require("./generateToken");
 const { serverErrs } = require("./customError");
 
 const login = async (req, res) => {
-  const { email, password, long, lat } = req.body;
+  const { email, password } = req.body;
+  // const { email, password, long, lat } = req.body;
 
   await loginValidation.validate({ email, password });
 
@@ -32,7 +33,7 @@ const login = async (req, res) => {
 
   const role = teacher ? "teacher" : student ? "student" : "parent";
   const data = teacher ? teacher : student ? student : parent;
-  await data.update({ long, lat });
+  // await data.update({ long, lat });
   const token = await generateToken({ userId: data.id, name: data.name, role });
 
   // res.cookie("token", token);
