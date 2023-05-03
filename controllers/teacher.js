@@ -111,7 +111,7 @@ const signUp = async (req, res) => {
 };
 
 const verifyCode = async (req, res) => {
-  const { registerCode, email } = req.body;
+  const { registerCode, email, long, lat } = req.body;
 
   const student = await Student.findOne({
     where: {
@@ -161,7 +161,7 @@ const verifyCode = async (req, res) => {
       english: "code is wrong",
     });
 
-  await teacher.update({ isRegistered: true });
+  await teacher.update({ isRegistered: true, long, lat });
 
   res.send({
     status: 201,
