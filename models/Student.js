@@ -63,15 +63,7 @@ const Student = sequelize.define("Student", {
   wallet: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
-  },
-  long: {
-    type: DataTypes.DOUBLE,
-    defaultValue: 0,
-  },
-  lat: {
-    type: DataTypes.DOUBLE,
-    defaultValue: 0,
-  },
+  }
 });
 
 module.exports = Student;

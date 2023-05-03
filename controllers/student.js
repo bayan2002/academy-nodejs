@@ -112,7 +112,7 @@ const signUp = async (req, res) => {
 };
 
 const verifyCode = async (req, res) => {
-  const { registerCode, email, long, lat } = req.body;
+  const { registerCode, email } = req.body;
 
   const teacher = await Teacher.findOne({
     where: {
@@ -160,13 +160,13 @@ const verifyCode = async (req, res) => {
       english: "code is wrong",
     });
 
-  await student.update({ isRegistered: true, long, lat });
+  await student.update({ isRegistered: true });
   res.send({
     status: 201,
     data: student,
     msg: {
-      arabic: "تم التحقق من الكود بنجاح واضافة الموقع بنجاح",
-      english: "Verified code successfully and add address successfully",
+      arabic: "تم التحقق من الكود بنجاح",
+      english: "Verified code successfully",
     },
   });
 };
@@ -763,64 +763,6 @@ const acceptLesson = async (req, res) => {
   });
 };
 
-const nearestTeachers = async (req, res) => {
-  const { StudentId } = req.params;
-  const { distance } = req.body;
-
-  const student = await Student.findOne({
-    where: {
-      id: StudentId,
-    },
-  });
-
-  if (!student)
-    throw serverErrs.BAD_REQUEST({
-      arabic: "الطالب غير موجودة",
-      english: "student not found",
-    });
-
-  if (!distance)
-    throw serverErrs.BAD_REQUEST({
-      arabic: "المسافة غير موجودة",
-      english: "distance not found",
-    });
-
-  const teachers = await Teacher.findAll({});
-
-  const lon1 = student.long;
-  const lat1 = student.lat;
-  const result = [];
-  teachers?.forEach((tch) => {
-    const lon2 = tch.long;
-    const lat2 = tch.lat;
-    const R = 6371e3; // metres
-    const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
-    const φ2 = (lat2 * Math.PI) / 180;
-    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-    const a =
-      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const d = R * c; // in metres
-
-    if (d < distance * 1000) {
-      result.push(tch);
-    }
-  });
-
-  res.send({
-    status: 201,
-    result,
-    msg: {
-      arabic: "تم ايجاد المعلمين في المسافة المطلوبة",
-      english: "successful get teachers in specefic distance",
-    },
-  });
-};
-
 module.exports = {
   signUp,
   verifyCode,
@@ -843,5 +785,4 @@ module.exports = {
   getCurriculumByLevelId,
   getClassByLevelId,
   acceptLesson,
-  nearestTeachers,
 };

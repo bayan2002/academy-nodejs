@@ -116,30 +116,22 @@ const Teacher = Sequelize.define("Teacher", {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  totalAmount: {
+  totalAmount:{
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  dues: {
+  dues:{
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  hoursNumbers: {
+  hoursNumbers:{
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  bookingNumbers: {
+  bookingNumbers:{
     type: DataTypes.INTEGER,
     defaultValue: 0,
-  },
-  long: {
-    type: DataTypes.DOUBLE,
-    defaultValue: 0,
-  },
-  lat: {
-    type: DataTypes.DOUBLE,
-    defaultValue: 0,
-  },
+  }
 });
 
 module.exports = Teacher;

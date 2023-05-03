@@ -34,8 +34,6 @@ const teachers = [
     EducationDegreeId: 1,
     CertificateId: 1,
     ExperienceId: 1,
-    long: -87.631677,
-    lat: 41.80899,
     // 1
   },
   {
@@ -65,8 +63,6 @@ const teachers = [
     EducationDegreeId: 2,
     CertificateId: 2,
     ExperienceId: 2,
-    long: -87.585388,
-    lat: 41.790797,
     // 2
   },
   {
@@ -96,8 +92,6 @@ const teachers = [
     EducationDegreeId: 3,
     CertificateId: 2,
     ExperienceId: 3,
-    long: -87.624352,
-    lat: 41.884238,
     // 3
   },
 ];
@@ -121,8 +115,6 @@ const students = [
     ClassId: 1,
     CurriculumId: 1,
     ParentId: 1,
-    long: -87.631677,
-    lat: 41.80899,
     // 1
   },
   {
@@ -142,8 +134,6 @@ const students = [
     LevelId: 2,
     ClassId: 2,
     CurriculumId: 2,
-    long: -87.585388,
-    lat: 41.790797,
     // 2
   },
   {
@@ -163,8 +153,6 @@ const students = [
     LevelId: 3,
     ClassId: 3,
     CurriculumId: 3,
-    long: -87.624352,
-    lat: 41.884238,
     // 3
   },
 ];
@@ -244,22 +232,25 @@ const classes = [
   {
     titleAR: "سنة أولى",
     titleEN: "first year",
-    LevelId: "1",
+    LevelId : "1",
   }, //1
   {
     titleAR: "سنة ثانية",
     titleEN: "second year",
-    LevelId: "1",
+    LevelId : "1",
+
   }, //2
   {
     titleAR: "سنة ثالثة",
     titleEN: "third year",
-    LevelId: "1",
+    LevelId : "1",
+
   }, //3
   {
     titleAR: "سنة رابعة",
     titleEN: "fourth year",
-    LevelId: "1",
+    LevelId : "1",
+
   }, //4
 ];
 
@@ -471,27 +462,27 @@ const LangTeachStds = [
 
 const remoteSession = [
   {
-    price: "34",
-    currency: "USD",
-    TeacherId: 1,
-  },
-];
+    price : "34",
+    currency : "USD",
+    TeacherId: 1
+  }
+]
 
 const f2fStudent = [
   {
-    price: "300",
-    currency: "USD",
-    TeacherId: 1,
-  },
-];
+    price : "300",
+    currency : "USD",
+    TeacherId: 1
+  }
+]
 
 const f2fTeacher = [
   {
-    price: "498",
-    currency: "USD",
-    TeacherId: 1,
-  },
-];
+    price : "498",
+    currency : "USD",
+    TeacherId: 1
+  }
+]
 
 const days = [
   {
@@ -530,20 +521,20 @@ const days = [
     id: 7,
   },
 ];
-const rates = [
+const rates =[
   {
-    StudentId: 1,
-    TeacherId: 1,
-    rating: 3,
-    comment: "very good",
-  },
-  {
-    StudentId: 2,
-    TeacherId: 1,
-    rating: 4,
-    comment: "very good",
-  },
-];
+    "StudentId": 1,
+     "TeacherId": 1,
+      "rating" : 3,
+       "comment" : "very good" 
+},
+{
+  "StudentId": 2,
+   "TeacherId": 1,
+    "rating" : 4,
+     "comment" : "very good" 
+},
+]
 
 module.exports = {
   admin,
@@ -565,5 +556,5 @@ module.exports = {
   remoteSession,
   f2fStudent,
   f2fTeacher,
-  rates,
+  rates
 };

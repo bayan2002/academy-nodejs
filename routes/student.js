@@ -23,7 +23,6 @@ const {
   getCurriculumByLevelId,
   getClassByLevelId,
   acceptLesson,
-  nearestTeachers,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -90,13 +89,6 @@ studentRouter.patch(
   verifyToken,
   checkUserAuth("student"),
   errorCatcher(acceptLesson)
-);
-
-studentRouter.post(
-  "/nearestTeachers/:StudentId",
-  verifyToken,
-  checkUserAuth("student"),
-  errorCatcher(nearestTeachers)
 );
 
 module.exports = studentRouter;
