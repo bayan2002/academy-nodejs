@@ -21,7 +21,7 @@ const {
   FinancialRecord,
   Rate,
 } = require("../models");
-const { validateTeacher, loginValidation } = require("../validation");
+const { validateTeacher } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const generateRandomCode = require("../middlewares/generateCode");
 const sendEmail = require("../middlewares/sendEmail");
@@ -30,7 +30,7 @@ const generateToken = require("../middlewares/generateToken");
 const path = require("path");
 const fs = require("fs");
 const TeacherSubject = require("../models/TeacherSubject");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { db } = require("../firebaseConfig");
 const CC = require("currency-converter-lt");
 
@@ -238,12 +238,26 @@ const signAbout = async (req, res) => {
       english: "No Auth ",
     });
 
-  const { firstName, lastName, gender, dateOfBirth, phone, country, city } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    gender,
+    dateOfBirth,
+    phone,
+    country,
+    city,
+    // latitude,
+    // longitude,
+  } = req.body;
   let { languages } = req.body;
   if (typeof languages === "string") {
     languages = JSON.parse(languages);
   }
+  // const point = {
+  //   type: "Point",
+  //   coordinates: [31.354825, 34.310846],
+  //   // coordinates: [latitude, longitude],
+  // };
   await teacher.update({
     firstName,
     lastName,
@@ -252,6 +266,7 @@ const signAbout = async (req, res) => {
     phone,
     country,
     city,
+    // point,
   });
   const langTeacher = await LangTeachStd.destroy({
     where: {
@@ -463,11 +478,19 @@ const addSubjects = async (req, res) => {
       english: "No Auth ",
     });
 
-  const { remote, f2fStudent, f2fTeacher } = req.body;
+  let { remote, f2fStudent, f2fTeacher, subjects } = req.body;
 
-  let { subjects } = req.body;
   if (typeof subjects === "string") {
     subjects = JSON.parse(subjects);
+  }
+  if (typeof remote === "string") {
+    remote = JSON.parse(remote);
+  }
+  if (typeof f2fStudent === "string") {
+    f2fStudent = JSON.parse(f2fStudent);
+  }
+  if (typeof f2fTeacher === "string") {
+    f2fTeacher = JSON.parse(f2fTeacher);
   }
   await TeacherSubject.destroy({
     where: {
@@ -1095,7 +1118,47 @@ const acceptLesson = async (req, res) => {
     },
   });
 };
+/*
+const nearestTeachers = async (req, res) => {
+  const { TeacherId } = req.params;
+  const { long, lat, range } = req.body;
 
+  const teacher = await Teacher.findOne({
+    where: {
+      id: TeacherId,
+    },
+  });
+
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجودة",
+      english: "teacher not found",
+    });
+
+  const teachers = await Teacher.findAll({
+    where: Sequelize.where(
+      Sequelize.fn(
+        "ST_DWithin",
+        Sequelize.col("location"),
+        Sequelize.fn(
+          "ST_SetSRID",
+          Sequelize.fn("ST_MakePoint", long, lat),
+          4326
+        ),
+        +range * 0.016
+      )
+    ),
+  });
+  res.send({
+    status: 201,
+    teachers,
+    // msg: {
+    //   arabic: "تم تعديل الجلسة بنجاح",
+    //   english: "successful update session",
+    // },
+  });
+};
+*/
 module.exports = {
   signUp,
   verifyCode,
@@ -1118,4 +1181,5 @@ module.exports = {
   updateNotification,
   getTeacherRate,
   acceptLesson,
+  nearestTeachers,
 };
