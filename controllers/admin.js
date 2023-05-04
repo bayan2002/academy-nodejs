@@ -27,7 +27,7 @@ const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
-const SocialMedia = require("../models/Socialmedia");
+// const SocialMedia = require("../models/Socialmedia");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -1264,7 +1264,7 @@ const getSessionsForTeacher = async (req, res) => {
     },
   });
 };
-
+/*
 const editWhatsappPhone = async (req, res) => {
   const id = req.user.userId;
   const { whatsappPhone } = req.body;
@@ -1320,7 +1320,7 @@ const editSocialMedia = async (req, res) => {
     },
   });
 };
-
+*/
 module.exports = {
   signUp,
   login,
@@ -1368,7 +1368,7 @@ module.exports = {
   getAllParentsPDF,
   getSessionsForStudent,
   getSessionsForTeacher,
-  editWhatsappPhone,
-  createSocialMedia,
-  editSocialMedia,
+  // editWhatsappPhone,
+  // createSocialMedia,
+  // editSocialMedia,
 };
