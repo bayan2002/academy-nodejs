@@ -348,15 +348,17 @@ const editPersonalInformation = async (req, res) => {
     CurriculumId,
   });
 
-  await LangTeachStd.destroy({
-    where: {
-      StudentId: student.id,
-    },
-  });
+  if (languages) {
+    await LangTeachStd.destroy({
+      where: {
+        StudentId: student.id,
+      },
+    });
 
-  await LangTeachStd.bulkCreate(languages).then(() =>
-    console.log("LangTeachStd data have been created")
-  );
+    await LangTeachStd.bulkCreate(languages).then(() =>
+      console.log("LangTeachStd data have been created")
+    );
+  }
 
   res.send({
     status: 201,
