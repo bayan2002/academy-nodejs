@@ -999,6 +999,11 @@ const getAllStudentsPDF = async (req, res) => {
   const options = {
     format: "A4",
     orientation: "landscape",
+    httpCookies: [
+      {
+        domain: "https://server.moalime.com",
+      },
+    ],
   };
   try {
     pdf
