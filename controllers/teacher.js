@@ -439,7 +439,7 @@ const uploadImage = async (req, res) => {
   await teacher.update({ image: req.file.filename });
   res.send({
     status: 201,
-    data: req.file.filename,
+    teacher,
     msg: {
       arabic: "تم إدراج الصورة بنجاح",
       english: "uploaded image successfully",
