@@ -46,6 +46,8 @@ const {
   getAllStudentsPDF,
   getAllParentsPDF,
   getAllTeachersPDF,
+  getSessionsForStudent,
+  getSessionsForTeacher,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -284,6 +286,20 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getAllParentsPDF)
+);
+
+adminRouter.get(
+  "/studentSessions/:StudentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getSessionsForStudent)
+);
+
+adminRouter.get(
+  "/teacherSessions/:TeacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getSessionsForTeacher)
 );
 
 module.exports = adminRouter;

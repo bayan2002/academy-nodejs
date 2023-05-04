@@ -1236,6 +1236,40 @@ const getAllParentsPDF = async (req, res) => {
     });
 };
 
+const getSessionsForStudent = async (req, res) => {
+  const { StudentId } = req.params;
+  const sessions = await Session.findAll({
+    where: {
+      StudentId,
+    },
+  });
+  res.send({
+    status: 200,
+    sessions,
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات للطالب بنجاح",
+      english: "successful get all sessions for the student successfully",
+    },
+  });
+};
+
+const getSessionsForTeacher = async (req, res) => {
+  const { TeacherId } = req.params;
+  const sessions = await Session.findAll({
+    where: {
+      TeacherId,
+    },
+  });
+  res.send({
+    status: 200,
+    sessions,
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات للمعلم بنجاح",
+      english: "successful get all sessions for the teacher successfully",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -1281,4 +1315,6 @@ module.exports = {
   getAllStudentsPDF,
   getAllTeachersPDF,
   getAllParentsPDF,
+  getSessionsForStudent,
+  getSessionsForTeacher,
 };
