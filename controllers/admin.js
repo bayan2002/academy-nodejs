@@ -1002,7 +1002,7 @@ const getAllStudentsPDF = async (req, res) => {
       { model: Session },
     ],
   });
-  console.log(students[0].toJSON());
+
   const html = `
     <html>
       <head>
@@ -1072,17 +1072,19 @@ const getAllStudentsPDF = async (req, res) => {
     orientation: "landscape",
   };
 
-  pdf.create(html, options).toFile("students.pdf", (err, response) => {
-    if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-    res.send({
-      status: 201,
-      response,
-      msg: {
-        arabic: "تم ارجاع جميع الطلاب المسجلين",
-        english: "successful get all students",
-      },
+  pdf
+    .create(html, options)
+    .toFile(path.join("invoices", "students.pdf"), (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+      res.send({
+        status: 201,
+        response,
+        msg: {
+          arabic: "تم ارجاع جميع الطلاب المسجلين",
+          english: "successful get all students",
+        },
+      });
     });
-  });
 };
 const getAllTeachersPDF = async (req, res) => {
   const teachers = await Teacher.findAll({
@@ -1150,17 +1152,19 @@ const getAllTeachersPDF = async (req, res) => {
     orientation: "landscape",
   };
 
-  pdf.create(html, options).toFile("teachers.pdf", (err, response) => {
-    if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-    res.send({
-      status: 201,
-      response,
-      msg: {
-        arabic: "تم ارجاع جميع المعلمين المسجلين",
-        english: "successful get all teachers",
-      },
+  pdf
+    .create(html, options)
+    .toFile(path.join("invoices", "teachers.pdf"), (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+      res.send({
+        status: 201,
+        response,
+        msg: {
+          arabic: "تم ارجاع جميع المعلمين المسجلين",
+          english: "successful get all teachers",
+        },
+      });
     });
-  });
 };
 const getAllParentsPDF = async (req, res) => {
   const parents = await Parent.findAll({
@@ -1218,17 +1222,19 @@ const getAllParentsPDF = async (req, res) => {
     orientation: "landscape",
   };
 
-  pdf.create(html, options).toFile("parents.pdf", (err, response) => {
-    if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-    res.send({
-      status: 201,
-      response,
-      msg: {
-        arabic: "تم ارجاع جميع الاباء المسجلين",
-        english: "successful get all parents",
-      },
+  pdf
+    .create(html, options)
+    .toFile(path.join("invoices", "parents.pdf"), (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+      res.send({
+        status: 201,
+        response,
+        msg: {
+          arabic: "تم ارجاع جميع الاباء المسجلين",
+          english: "successful get all parents",
+        },
+      });
     });
-  });
 };
 
 const getSessionsForStudent = async (req, res) => {
