@@ -11,7 +11,7 @@ const teachers = [
     email: "ali@gmail.com",
     firstName: "Ali",
     lastName: "Mater",
-    password: "$2y$10$L6Q3y.O9Q5ZFb6VQpvJSF.N5lYXz1APUV8tVBXvVZs6yuwNkb7jJm", //1234
+    password: "$2a$12$YaI2mrUUWDlW3rlaINDoN.8YLdGq21uu48Oh0I3FE53.7OPSuH9Bi", //1234
     gender: "male",
     phone: "0599993697",
     // image:
@@ -30,17 +30,19 @@ const teachers = [
     descriptionEn: "Arabic Teacher specialized in literature",
     instantBooking: true,
     isRegistered: false,
-    isVerified: false,
+    isRegistered: true,
     EducationDegreeId: 1,
     CertificateId: 1,
     ExperienceId: 1,
+    long: -87.631677,
+    lat: 41.80899,
     // 1
   },
   {
     email: "Islam@gmail.com",
     firstName: "Islam",
     lastName: "Ali",
-    password: "$2y$10$NYLOPjnCZoZFNvjdQ55myuoq8ypEs/jUP76whwKVdz1hI9Sey.IH6", //4321
+    password: "$2a$12$YaI2mrUUWDlW3rlaINDoN.8YLdGq21uu48Oh0I3FE53.7OPSuH9Bi", //1234
     gender: "male",
     phone: "0599923697",
     // image:
@@ -59,17 +61,19 @@ const teachers = [
     descriptionEn: "English Teacher specialized in literature",
     instantBooking: true,
     isRegistered: false,
-    isVerified: false,
+    isRegistered: true,
     EducationDegreeId: 2,
     CertificateId: 2,
     ExperienceId: 2,
+    long: -87.585388,
+    lat: 41.790797,
     // 2
   },
   {
     email: "mart@gmail.com",
     firstName: "Mart",
     lastName: "Ahmed",
-    password: "$2y$10$G7AXXySlmW/1IPNHguTXaOL9LcqSMO2YiRCsoELITJN1Vp8va264e", //5678
+    password: "$2a$12$YaI2mrUUWDlW3rlaINDoN.8YLdGq21uu48Oh0I3FE53.7OPSuH9Bi", //1234
     gender: "male",
     phone: "0599923697",
     // image:
@@ -88,10 +92,12 @@ const teachers = [
     descriptionEn: "Counting Teacher",
     instantBooking: true,
     isRegistered: false,
-    isVerified: false,
+    isRegistered: true,
     EducationDegreeId: 3,
     CertificateId: 2,
     ExperienceId: 3,
+    long: -87.624352,
+    lat: 41.884238,
     // 3
   },
 ];
@@ -100,10 +106,10 @@ const students = [
   {
     email: "rawan@gmail.com",
     name: "Rawan Ali",
-    password: "$2y$10$qyPwWfg1kdd4/jMIJ/aWyuCSl8CBtEGyns9b1HfrbhXTUR03cQrVm", // 1234
+    password: "$2a$12$YaI2mrUUWDlW3rlaINDoN.8YLdGq21uu48Oh0I3FE53.7OPSuH9Bi", // 1234
     gender: "female",
     city: "London",
-    isVerified: false,
+    isRegistered: true,
     dateOfBirth: "10/7/1999",
     nationality: "English",
     location: "England",
@@ -115,15 +121,17 @@ const students = [
     ClassId: 1,
     CurriculumId: 1,
     ParentId: 1,
+    long: -87.631677,
+    lat: 41.80899,
     // 1
   },
   {
     email: "sara@gmail.com",
     name: "Sara Ali",
-    password: "$2y$10$bHRzbIQH2Gm7n73pS7CzueCRZicTnj.r.yBM2IzqSiSxJQc0QPtGq", // 4321
+    password: "$2a$12$YaI2mrUUWDlW3rlaINDoN.8YLdGq21uu48Oh0I3FE53.7OPSuH9Bi", // 1234
     gender: "female",
     city: "Canada",
-    isVerified: false,
+    isRegistered: true,
     dateOfBirth: "10/7/1990",
     nationality: "American",
     location: "USA",
@@ -134,15 +142,17 @@ const students = [
     LevelId: 2,
     ClassId: 2,
     CurriculumId: 2,
+    long: -87.585388,
+    lat: 41.790797,
     // 2
   },
   {
     email: "Awne@gmail.com",
     name: "Awne Ali",
-    password: "$2y$10$bHRzbIQH2Gm7n73pS7CzueCRZicTnj.r.yBM2IzqSiSxJQc0QPtGq", // 4321
+    password: "$2a$12$YaI2mrUUWDlW3rlaINDoN.8YLdGq21uu48Oh0I3FE53.7OPSuH9Bi", // 1234
     gender: "male",
     city: "Canada",
-    isVerified: false,
+    isRegistered: true,
     dateOfBirth: "10/2/1990",
     nationality: "American",
     location: "USA",
@@ -153,6 +163,8 @@ const students = [
     LevelId: 3,
     ClassId: 3,
     CurriculumId: 3,
+    long: -87.624352,
+    lat: 41.884238,
     // 3
   },
 ];
@@ -232,25 +244,22 @@ const classes = [
   {
     titleAR: "سنة أولى",
     titleEN: "first year",
-    LevelId : "1",
+    LevelId: "1",
   }, //1
   {
     titleAR: "سنة ثانية",
     titleEN: "second year",
-    LevelId : "1",
-
+    LevelId: "1",
   }, //2
   {
     titleAR: "سنة ثالثة",
     titleEN: "third year",
-    LevelId : "1",
-
+    LevelId: "1",
   }, //3
   {
     titleAR: "سنة رابعة",
     titleEN: "fourth year",
-    LevelId : "1",
-
+    LevelId: "1",
   }, //4
 ];
 
@@ -462,27 +471,27 @@ const LangTeachStds = [
 
 const remoteSession = [
   {
-    price : "34",
-    currency : "USD",
-    TeacherId: 1
-  }
-]
+    price: "34",
+    currency: "USD",
+    TeacherId: 1,
+  },
+];
 
 const f2fStudent = [
   {
-    price : "300",
-    currency : "USD",
-    TeacherId: 1
-  }
-]
+    price: "300",
+    currency: "USD",
+    TeacherId: 1,
+  },
+];
 
 const f2fTeacher = [
   {
-    price : "498",
-    currency : "USD",
-    TeacherId: 1
-  }
-]
+    price: "498",
+    currency: "USD",
+    TeacherId: 1,
+  },
+];
 
 const days = [
   {
@@ -521,20 +530,20 @@ const days = [
     id: 7,
   },
 ];
-const rates =[
+const rates = [
   {
-    "StudentId": 1,
-     "TeacherId": 1,
-      "rating" : 3,
-       "comment" : "very good" 
-},
-{
-  "StudentId": 2,
-   "TeacherId": 1,
-    "rating" : 4,
-     "comment" : "very good" 
-},
-]
+    StudentId: 1,
+    TeacherId: 1,
+    rating: 3,
+    comment: "very good",
+  },
+  {
+    StudentId: 2,
+    TeacherId: 1,
+    rating: 4,
+    comment: "very good",
+  },
+];
 
 module.exports = {
   admin,
@@ -556,5 +565,5 @@ module.exports = {
   remoteSession,
   f2fStudent,
   f2fTeacher,
-  rates
+  rates,
 };
