@@ -18,6 +18,7 @@ const dotenv = require("dotenv");
 const PDFDocument = require("pdfkit");
 const path = require("path");
 const fs = require("fs");
+const pdf = require("html-pdf");
 
 const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -920,6 +921,320 @@ const getAllWalletsPdf = async (req, res) => {
   });
   pdfDoc.end();
 };
+/*
+const getAllStudentsPDF = async (req, res) => {
+  const students = await Student.findAll({
+    include: [
+      { model: Level },
+      { model: Class },
+      { model: Curriculum },
+      { model: Parent },
+    ],
+  });
+
+  const invoicename = "invoice-students" + 1 + ".pdf";
+  const invoicepath = path.join("invoices", invoicename);
+  res.setHeader("Content-type", "application/pdf");
+  res.setHeader("Content-Disposition", "inline;filename=" + invoicename + '"');
+  const pdfDoc = new PDFDocument();
+  pdfDoc.pipe(fs.createWriteStream(invoicepath));
+  pdfDoc.pipe(res);
+  pdfDoc.fontSize(20).text("All Students");
+  pdfDoc.moveDown();
+  const headers = [
+    // "ID",
+    "Email",
+    "Name",
+    "Gender",
+    // "Image",
+    "City",
+    "Date of Birth",
+    "Nationality",
+    "Location",
+    "Phone Number",
+    // "Region Time",
+    // "Longtitude",
+    // "Latitude",
+    // "Level",
+    // "Class",
+    // "Curriculum",
+    // "Parent",
+  ];
+  const table = { headers: headers.join("  "), rows: [] };
+
+  students.forEach((student) => {
+    const row = [
+      // student.id,
+      student.email,
+      student.name,
+      student.gender,
+      // student.image,
+      student.city,
+      student.dateOfBirth,
+      student.nationality,
+      student.location,
+      student.phoneNumber,
+      // student.regionTime,
+      // student.long,
+      // student.lat,
+      // student.Level.name,
+      // student.Class.name,
+      // student.Curriculum.name,
+      // student.Parent.name
+    ];
+    table.rows.push(row);
+  });
+  pdfDoc.font("Helvetica-Bold").fontSize(12).text(table.headers);
+  table.rows.forEach((row) => {
+    pdfDoc.font("Helvetica").fontSize(10).text(row.join("  "));
+  });
+  pdfDoc.end();
+};*/
+
+const getAllStudentsPDF = async (req, res) => {
+  const students = await Student.findAll({
+    include: [
+      { model: Level },
+      { model: Class },
+      { model: Curriculum },
+      { model: Parent },
+      { model: Session },
+    ],
+  });
+  console.log(students[0].toJSON());
+  const html = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Students</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>City</th>
+              <th>Date of Birth</th>
+              <th>Nationality</th>
+              <th>Location</th>
+              <th>Phone Number</th>
+              <th>Level</th>
+              <th>Class</th>
+              <th>Curriculum</th>
+              <th>Sessions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${students
+              .map(
+                (student) => `
+              <tr>
+                <td>${student.email}</td>
+                <td>${student.name}</td>
+                <td>${student.gender}</td>
+                <td>${student.city}</td>
+                <td>${student.dateOfBirth}</td>
+                <td>${student.nationality}</td>
+                <td>${student.location}</td>
+                <td>${student.phoneNumber}</td>
+                <td>${student.Level.titleEN}</td>
+                <td>${student.Class.titleEN}</td>
+                <td>${student.Curriculum.titleEN}</td>
+                <td>${student.Sessions.length}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const options = {
+    format: "A4",
+    orientation: "landscape",
+  };
+
+  pdf
+    .create(html, options)
+    .toFile(path.join("invoices", "students.pdf"), (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+      res.send({
+        status: 201,
+        response,
+        msg: {
+          arabic: "تم ارجاع جميع الطلاب المسجلين",
+          english: "successful get all students",
+        },
+      });
+    });
+};
+const getAllTeachersPDF = async (req, res) => {
+  const teachers = await Teacher.findAll({
+    include: { model: Session },
+  });
+
+  const html = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Students</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>City</th>
+              <th>Date of Birth</th>
+              <th>Phone Number</th>
+              <th>Country</th>
+              <th>Sessions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${teachers
+              .map(
+                (teacher) => `
+              <tr>
+                <td>${teacher.email}</td>
+                <td>${teacher.firstName + " " + teacher.lastName}</td>
+                <td>${teacher.gender}</td>
+                <td>${teacher.city}</td>
+                <td>${teacher.dateOfBirth}</td>
+                <td>${teacher.phone}</td>
+                <td>${teacher.country}</td>
+                <td>${teacher.Sessions.length}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const options = {
+    format: "A4",
+    orientation: "landscape",
+  };
+
+  pdf
+    .create(html, options)
+    .toFile(path.join("invoices", "teachers.pdf"), (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+      res.send({
+        status: 201,
+        response,
+        msg: {
+          arabic: "تم ارجاع جميع المعلمين المسجلين",
+          english: "successful get all teachers",
+        },
+      });
+    });
+};
+const getAllParentsPDF = async (req, res) => {
+  const parents = await Parent.findAll({
+    include: { model: Student },
+  });
+
+  const html = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Students</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Number of children</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${parents
+              .map(
+                (parent) => `
+              <tr>
+                <td>${parent.email}</td>
+                <td>${parent.name}</td>
+                <td>${parent.Students.length}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const options = {
+    format: "A4",
+    orientation: "landscape",
+  };
+
+  pdf
+    .create(html, options)
+    .toFile(path.join("invoices", "parents.pdf"), (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+      res.send({
+        status: 201,
+        response,
+        msg: {
+          arabic: "تم ارجاع جميع الاباء المسجلين",
+          english: "successful get all parents",
+        },
+      });
+    });
+};
 
 module.exports = {
   signUp,
@@ -963,4 +1278,7 @@ module.exports = {
   getTeacherFinancial,
   getNumbers,
   getAllWalletsPdf,
+  getAllStudentsPDF,
+  getAllTeachersPDF,
+  getAllParentsPDF,
 };

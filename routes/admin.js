@@ -42,7 +42,10 @@ const {
   getAllTeachers,
   getTeacherFinancial,
   getNumbers,
-  getAllWalletsPdf
+  getAllWalletsPdf,
+  getAllStudentsPDF,
+  getAllParentsPDF,
+  getAllTeachersPDF,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -254,7 +257,7 @@ adminRouter.get(
   "/credit/:TeacherId",
   verifyToken,
   checkUserAuth("admin"),
-  errorCatcher(getCredit) 
+  errorCatcher(getCredit)
 );
 
 adminRouter.get(
@@ -262,6 +265,25 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getAllWalletsPdf)
+);
+
+adminRouter.get(
+  "/allStudentsPDF",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllStudentsPDF)
+);
+adminRouter.get(
+  "/allTeachersPDF",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllTeachersPDF)
+);
+adminRouter.get(
+  "/allParentsPDF",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllParentsPDF)
 );
 
 module.exports = adminRouter;
