@@ -463,12 +463,21 @@ const addSubjects = async (req, res) => {
       english: "No Auth ",
     });
 
-  const { remote, f2fStudent, f2fTeacher } = req.body;
+  let { remote, f2fStudent, f2fTeacher, subjects } = req.body;
 
-  let { subjects } = req.body;
   if (typeof subjects === "string") {
     subjects = JSON.parse(subjects);
   }
+  if (typeof remote === "string") {
+    remote = JSON.parse(remote);
+  }
+  if (typeof f2fStudent === "string") {
+    f2fStudent = JSON.parse(f2fStudent);
+  }
+  if (typeof f2fTeacher === "string") {
+    f2fTeacher = JSON.parse(f2fTeacher);
+  }
+
   await TeacherSubject.destroy({
     where: {
       TeacherId: teacher.id,
