@@ -6,13 +6,15 @@ const generateToken = require("./generateToken");
 const { serverErrs } = require("./customError");
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, long, lat } = req.body;
 
   await loginValidation.validate({ email, password });
 
   const parent = await Parent.findOne({ where: { email } });
 
-  const student = await Student.findOne({ where: { email, isRegistered: true  } });
+  const student = await Student.findOne({
+    where: { email, isRegistered: true },
+  });
 
   const teacher = await Teacher.findOne({
     where: { email, isRegistered: true },
@@ -29,6 +31,7 @@ const login = async (req, res) => {
 
   const role = teacher ? "teacher" : student ? "student" : "parent";
   const data = teacher ? teacher : student ? student : parent;
+  await data.update({ long, lat });
   const token = await generateToken({ userId: data.id, name: data.name, role });
 
   // res.cookie("token", token);

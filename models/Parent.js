@@ -13,7 +13,15 @@ const Parent = sequelize.define("Parent", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-  }
+  },
+  long: {
+    type: DataTypes.DOUBLE,
+    defaultValue: 0,
+  },
+  lat: {
+    type: DataTypes.DOUBLE,
+    defaultValue: 0,
+  },
 });
 
 module.exports = Parent;
