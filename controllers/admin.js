@@ -932,14 +932,99 @@ const getAllStudentsPDF = async (req, res) => {
     ],
   });
 
-  res.send({
-    status: 201,
-    students,
-    msg: {
-      arabic: "تم ارجاع جميع الطلاب المسجلين",
-      english: "successful get all students",
-    },
-  });
+  const html = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Students</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>City</th>
+              <th>Date of Birth</th>
+              <th>Nationality</th>
+              <th>Location</th>
+              <th>Phone Number</th>
+              <th>Level</th>
+              <th>Class</th>
+              <th>Curriculum</th>
+              <th>Sessions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${students
+              .map(
+                (student) => `
+              <tr>
+                <td>${student.email}</td>
+                <td>${student.name}</td>
+                <td>${student.gender}</td>
+                <td>${student.city}</td>
+                <td>${student.dateOfBirth}</td>
+                <td>${student.nationality}</td>
+                <td>${student.location}</td>
+                <td>${student.phoneNumber}</td>
+                <td>${student.Level?.titleEN || "not exist"}</td>
+                <td>${student.Class?.titleEN || "not exist"}</td>
+                <td>${student.Curriculum?.titleEN || "not exist"}</td>
+                <td>${student.Sessions?.length || 0}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const options = {
+    format: "A4",
+    orientation: "landscape",
+  };
+  try {
+    pdf
+      .create(html, options)
+      .toFile(path.join("invoices", "students.pdf"), (err, response) => {
+        if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+        res.send({
+          status: 201,
+          response,
+          msg: {
+            arabic: "تم ارجاع جميع الطلاب المسجلين",
+            english: "successful get all students",
+          },
+        });
+      });
+  } catch (error) {
+    res.send({
+      message: "failed to save pdf",
+      // status: 201,
+      // response,
+      // msg: {
+      //   arabic: "تم ارجاع جميع الطلاب المسجلين",
+      //   english: "successful get all students",
+      // },
+    });
+  }
 };
 
 module.exports = {
