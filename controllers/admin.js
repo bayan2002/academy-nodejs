@@ -27,6 +27,7 @@ const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
+const SocialMedia = require("../models/Socialmedia");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -1071,19 +1072,17 @@ const getAllStudentsPDF = async (req, res) => {
     orientation: "landscape",
   };
 
-  pdf
-    .create(html, options)
-    .toFile(path.join("invoices", "students.pdf"), (err, response) => {
-      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      res.send({
-        status: 201,
-        response,
-        msg: {
-          arabic: "تم ارجاع جميع الطلاب المسجلين",
-          english: "successful get all students",
-        },
-      });
+  pdf.create(html, options).toFile("students.pdf", (err, response) => {
+    if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+    res.send({
+      status: 201,
+      response,
+      msg: {
+        arabic: "تم ارجاع جميع الطلاب المسجلين",
+        english: "successful get all students",
+      },
     });
+  });
 };
 const getAllTeachersPDF = async (req, res) => {
   const teachers = await Teacher.findAll({
@@ -1151,19 +1150,17 @@ const getAllTeachersPDF = async (req, res) => {
     orientation: "landscape",
   };
 
-  pdf
-    .create(html, options)
-    .toFile(path.join("invoices", "teachers.pdf"), (err, response) => {
-      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      res.send({
-        status: 201,
-        response,
-        msg: {
-          arabic: "تم ارجاع جميع المعلمين المسجلين",
-          english: "successful get all teachers",
-        },
-      });
+  pdf.create(html, options).toFile("teachers.pdf", (err, response) => {
+    if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+    res.send({
+      status: 201,
+      response,
+      msg: {
+        arabic: "تم ارجاع جميع المعلمين المسجلين",
+        english: "successful get all teachers",
+      },
     });
+  });
 };
 const getAllParentsPDF = async (req, res) => {
   const parents = await Parent.findAll({
@@ -1221,19 +1218,17 @@ const getAllParentsPDF = async (req, res) => {
     orientation: "landscape",
   };
 
-  pdf
-    .create(html, options)
-    .toFile(path.join("invoices", "parents.pdf"), (err, response) => {
-      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      res.send({
-        status: 201,
-        response,
-        msg: {
-          arabic: "تم ارجاع جميع الاباء المسجلين",
-          english: "successful get all parents",
-        },
-      });
+  pdf.create(html, options).toFile("parents.pdf", (err, response) => {
+    if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+    res.send({
+      status: 201,
+      response,
+      msg: {
+        arabic: "تم ارجاع جميع الاباء المسجلين",
+        english: "successful get all parents",
+      },
     });
+  });
 };
 
 const getSessionsForStudent = async (req, res) => {
@@ -1266,6 +1261,62 @@ const getSessionsForTeacher = async (req, res) => {
     msg: {
       arabic: "تم ارجاع جميع الجلسات للمعلم بنجاح",
       english: "successful get all sessions for the teacher successfully",
+    },
+  });
+};
+
+const editWhatsappPhone = async (req, res) => {
+  const id = req.user.userId;
+  const { whatsappPhone } = req.body;
+  const admin = await Admin.findOne({
+    where: { id },
+  });
+  await admin.update({ whatsappPhone });
+  res.send({
+    status: 201,
+    admin,
+    msg: {
+      arabic: "تم تحديث رقم الواتس بنجاح",
+      english: "successful update whatsapp phone successfully",
+    },
+  });
+};
+
+const createSocialMedia = async (req, res) => {
+  const { type, link } = req.body;
+  const newSocialMedia = await SocialMedia.create(
+    {
+      type,
+      link,
+    },
+    {
+      returning: true,
+    }
+  );
+  await newSocialMedia.save();
+  res.send({
+    status: 201,
+    data: newSocialMedia,
+    msg: {
+      arabic: "تم إضافة رابط السوشيال ميديا بنجاح",
+      english: "successful create new SocialMedia",
+    },
+  });
+};
+
+const editSocialMedia = async (req, res) => {
+  const { SocialMediaId } = req.params;
+  const { type, link } = req.body;
+  const socialMedia = await SocialMedia.findOne({
+    where: { id: SocialMediaId },
+  });
+  await socialMedia.update({ type, link });
+  res.send({
+    status: 201,
+    data: socialMedia,
+    msg: {
+      arabic: "تم تحديث رابط السوشيال ميديا بنجاح",
+      english: "successful update new SocialMedia",
     },
   });
 };
@@ -1317,4 +1368,7 @@ module.exports = {
   getAllParentsPDF,
   getSessionsForStudent,
   getSessionsForTeacher,
+  editWhatsappPhone,
+  createSocialMedia,
+  editSocialMedia,
 };
