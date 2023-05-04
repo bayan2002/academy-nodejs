@@ -922,75 +922,6 @@ const getAllWalletsPdf = async (req, res) => {
   });
   pdfDoc.end();
 };
-/*
-const getAllStudentsPDF = async (req, res) => {
-  const students = await Student.findAll({
-    include: [
-      { model: Level },
-      { model: Class },
-      { model: Curriculum },
-      { model: Parent },
-    ],
-  });
-
-  const invoicename = "invoice-students" + 1 + ".pdf";
-  const invoicepath = path.join("invoices", invoicename);
-  res.setHeader("Content-type", "application/pdf");
-  res.setHeader("Content-Disposition", "inline;filename=" + invoicename + '"');
-  const pdfDoc = new PDFDocument();
-  pdfDoc.pipe(fs.createWriteStream(invoicepath));
-  pdfDoc.pipe(res);
-  pdfDoc.fontSize(20).text("All Students");
-  pdfDoc.moveDown();
-  const headers = [
-    // "ID",
-    "Email",
-    "Name",
-    "Gender",
-    // "Image",
-    "City",
-    "Date of Birth",
-    "Nationality",
-    "Location",
-    "Phone Number",
-    // "Region Time",
-    // "Longtitude",
-    // "Latitude",
-    // "Level",
-    // "Class",
-    // "Curriculum",
-    // "Parent",
-  ];
-  const table = { headers: headers.join("  "), rows: [] };
-
-  students.forEach((student) => {
-    const row = [
-      // student.id,
-      student.email,
-      student.name,
-      student.gender,
-      // student.image,
-      student.city,
-      student.dateOfBirth,
-      student.nationality,
-      student.location,
-      student.phoneNumber,
-      // student.regionTime,
-      // student.long,
-      // student.lat,
-      // student.Level.name,
-      // student.Class.name,
-      // student.Curriculum.name,
-      // student.Parent.name
-    ];
-    table.rows.push(row);
-  });
-  pdfDoc.font("Helvetica-Bold").fontSize(12).text(table.headers);
-  table.rows.forEach((row) => {
-    pdfDoc.font("Helvetica").fontSize(10).text(row.join("  "));
-  });
-  pdfDoc.end();
-};*/
 
 const getAllStudentsPDF = async (req, res) => {
   const students = await Student.findAll({
@@ -1071,20 +1002,31 @@ const getAllStudentsPDF = async (req, res) => {
     format: "A4",
     orientation: "landscape",
   };
-
-  pdf
-    .create(html, options)
-    .toFile(path.join("invoices", "students.pdf"), (err, response) => {
-      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      res.send({
-        status: 201,
-        response,
-        msg: {
-          arabic: "تم ارجاع جميع الطلاب المسجلين",
-          english: "successful get all students",
-        },
+  try {
+    pdf
+      .create(html, options)
+      .toFile(path.join("invoices", "students.pdf"), (err, response) => {
+        if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+        res.send({
+          status: 201,
+          response,
+          msg: {
+            arabic: "تم ارجاع جميع الطلاب المسجلين",
+            english: "successful get all students",
+          },
+        });
       });
+  } catch (error) {
+    res.send({
+      message: "failed to save pdf",
+      // status: 201,
+      // response,
+      // msg: {
+      //   arabic: "تم ارجاع جميع الطلاب المسجلين",
+      //   english: "successful get all students",
+      // },
     });
+  }
 };
 const getAllTeachersPDF = async (req, res) => {
   const teachers = await Teacher.findAll({
@@ -1236,7 +1178,7 @@ const getAllParentsPDF = async (req, res) => {
       });
     });
 };
-
+/*
 const getSessionsForStudent = async (req, res) => {
   const { StudentId } = req.params;
   const sessions = await Session.findAll({
@@ -1270,7 +1212,7 @@ const getSessionsForTeacher = async (req, res) => {
     },
   });
 };
-/*
+
 const editWhatsappPhone = async (req, res) => {
   const id = req.user.userId;
   const { whatsappPhone } = req.body;
@@ -1372,8 +1314,8 @@ module.exports = {
   getAllStudentsPDF,
   getAllTeachersPDF,
   getAllParentsPDF,
-  getSessionsForStudent,
-  getSessionsForTeacher,
+  // getSessionsForStudent,
+  // getSessionsForTeacher,
   // editWhatsappPhone,
   // createSocialMedia,
   // editSocialMedia,
