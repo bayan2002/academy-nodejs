@@ -13,6 +13,7 @@ const {
   Session,
   Wallet,
   Parent,
+  SocialMedia,
 } = require("../models");
 const PDFDocument = require("pdfkit");
 const path = require("path");
@@ -1178,6 +1179,102 @@ const getAllParentsPDF = async (req, res) => {
     });
 };
 
+const getSessionsForStudent = async (req, res) => {
+  const { StudentId } = req.params;
+  const sessions = await Session.findAll({
+    where: {
+      StudentId,
+    },
+  });
+  res.send({
+    status: 200,
+    sessions,
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات للطالب بنجاح",
+      english: "successful get all sessions for the student successfully",
+    },
+  });
+};
+
+const getSessionsForTeacher = async (req, res) => {
+  const { TeacherId } = req.params;
+  const sessions = await Session.findAll({
+    where: {
+      TeacherId,
+    },
+  });
+  res.send({
+    status: 200,
+    sessions,
+    msg: {
+      arabic: "تم ارجاع جميع الجلسات للمعلم بنجاح",
+      english: "successful get all sessions for the teacher successfully",
+    },
+  });
+};
+
+const editWhatsappPhone = async (req, res) => {
+  const id = req.user.userId;
+  const { whatsappPhone } = req.body;
+  const admin = await Admin.findOne({
+    where: { id },
+  });
+  if (!admin) {
+    throw serverErrs.BAD_REQUEST("Admin not found");
+  }
+  await admin.update({ whatsappPhone });
+  res.send({
+    status: 201,
+    admin,
+    msg: {
+      arabic: "تم تحديث رقم الواتس بنجاح",
+      english: "successful update whatsapp phone successfully",
+    },
+  });
+};
+
+const createSocialMedia = async (req, res) => {
+  const { type, link } = req.body;
+  const newSocialMedia = await SocialMedia.create(
+    {
+      type,
+      link,
+    },
+    {
+      returning: true,
+    }
+  );
+  await newSocialMedia.save();
+  res.send({
+    status: 201,
+    data: newSocialMedia,
+    msg: {
+      arabic: "تم إضافة رابط السوشيال ميديا بنجاح",
+      english: "successful create new SocialMedia",
+    },
+  });
+};
+
+const editSocialMedia = async (req, res) => {
+  const { SocialMediaId } = req.params;
+  const { type, link } = req.body;
+  const socialMedia = await SocialMedia.findOne({
+    where: { id: SocialMediaId },
+  });
+  if (!socialMedia) {
+    throw serverErrs.BAD_REQUEST("socialMedia not found");
+  }
+  await socialMedia.update({ type, link });
+  res.send({
+    status: 201,
+    data: socialMedia,
+    msg: {
+      arabic: "تم تحديث رابط السوشيال ميديا بنجاح",
+      english: "successful update new SocialMedia",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -1223,4 +1320,9 @@ module.exports = {
   getAllStudentsPDF,
   getAllTeachersPDF,
   getAllParentsPDF,
+  getSessionsForStudent,
+  getSessionsForTeacher,
+  editWhatsappPhone,
+  createSocialMedia,
+  editSocialMedia,
 };

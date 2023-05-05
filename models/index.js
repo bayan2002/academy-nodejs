@@ -28,6 +28,7 @@ const Certificates = require("./Certificates");
 const LanguageLevel = require("./LanguageLevel");
 const Rate = require("./Rate");
 const FinancialRecord = require("./financialRecord");
+const SocialMedia = require("./SocialMedia");
 
 Teacher.hasMany(LangTeachStd);
 LangTeachStd.belongsTo(Teacher);
@@ -139,5 +140,6 @@ module.exports = {
   CurriculumTeacher,
   LanguageLevel,
   FinancialRecord,
-  Rate
+  Rate,
+  SocialMedia,
 };

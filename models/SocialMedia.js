@@ -1,28 +1,21 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/config/connection");
 
-const Admin = sequelize.define("Admin", {
+const SocialMedia = sequelize.define("SocialMedia", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  email: {
+  type: {
+    type: DataTypes.STRING,
+    defaultValue: "",
+  },
+  link: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  whatsappPhone: {
-    type: DataTypes.STRING,
   },
 });
 
-module.exports = Admin;
+module.exports = SocialMedia;
