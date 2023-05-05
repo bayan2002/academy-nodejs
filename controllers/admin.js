@@ -997,7 +997,7 @@ const getAllStudentsPDF = async (req, res) => {
   `;
 
   const options = {
-    format: "A1",
+    format: "A3",
     orientation: "landscape",
   };
   try {
@@ -1051,7 +1051,7 @@ const getAllTeachersPDF = async (req, res) => {
         </style>
       </head>
       <body>
-        <h1>All Students</h1>
+        <h1>All Teachers</h1>
         <table>
           <thead>
             <tr>
@@ -1089,7 +1089,7 @@ const getAllTeachersPDF = async (req, res) => {
   `;
 
   const options = {
-    format: "A4",
+    format: "A3",
     orientation: "landscape",
   };
 
@@ -1131,7 +1131,7 @@ const getAllParentsPDF = async (req, res) => {
         </style>
       </head>
       <body>
-        <h1>All Students</h1>
+        <h1>All Parents</h1>
         <table>
           <thead>
             <tr>
@@ -1159,7 +1159,7 @@ const getAllParentsPDF = async (req, res) => {
   `;
 
   const options = {
-    format: "A4",
+    format: "A5",
     orientation: "landscape",
   };
 
