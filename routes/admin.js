@@ -44,6 +44,8 @@ const {
   getNumbers,
   getAllWalletsPdf,
   getAllStudentsPDF,
+  getAllParentsPDF,
+  getAllTeachersPDF,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -272,4 +274,17 @@ adminRouter.get(
   errorCatcher(getAllStudentsPDF)
 );
 
+adminRouter.get(
+  "/allTeachersPDF",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllTeachersPDF)
+);
+
+adminRouter.get(
+  "/allParentsPDF",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getAllParentsPDF)
+);
 module.exports = adminRouter;
