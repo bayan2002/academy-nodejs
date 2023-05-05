@@ -997,7 +997,7 @@ const getAllStudentsPDF = async (req, res) => {
   `;
 
   const options = {
-    format: "A3",
+    format: "A2",
     orientation: "landscape",
   };
   try {
