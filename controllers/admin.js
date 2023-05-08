@@ -935,6 +935,17 @@ const getAllStudentsPDF = async (req, res) => {
     ],
   });
 
+  students.map((student) => {
+    let c = 0;
+    if (student.Sessions) {
+      student.Sessions.forEach((Session) => {
+        if (Session.isPaid) c++;
+      });
+    }
+    student.sessionsCount = c;
+    return student;
+  });
+
   const html = `
     <html>
       <head>
@@ -988,7 +999,7 @@ const getAllStudentsPDF = async (req, res) => {
                 <td>${student.Level?.titleEN || "not exist"}</td>
                 <td>${student.Class?.titleEN || "not exist"}</td>
                 <td>${student.Curriculum?.titleEN || "not exist"}</td>
-                <td>${student.Sessions?.length || 0}</td>
+                <td>${student.sessionsCount}</td>
               </tr>
             `
               )
@@ -1038,22 +1049,16 @@ const getAllTeachersPDF = async (req, res) => {
     include: { model: Session },
   });
 
-  await Promise.all(
-    teachers.map(async (teacher) => {
-      let c = 0;
-      if (teacher.sessions) {
-        await teacher.sessions.forEach(async (session) => {
-          if (await session.isPaid) c += 1;
-        });
-      }
-      teacher.sessionsCount = c;
-      return teacher;
-    })
-  );
-
-  // const teachers = await Teacher.findAll({
-  //   include: { model: Session, where: { isPaid: true } },
-  // });
+  teachers.map((teacher) => {
+    let c = 0;
+    if (teacher.Sessions) {
+      teacher.Sessions.forEach((Session) => {
+        if (Session.isPaid) c++;
+      });
+    }
+    teacher.sessionsCount = c;
+    return teacher;
+  });
 
   const html = `
     <html>
