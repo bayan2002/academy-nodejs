@@ -1099,7 +1099,7 @@ const getAllTeachersPDF = async (req, res) => {
                 <td>${teacher.dateOfBirth}</td>
                 <td>${teacher.phone}</td>
                 <td>${teacher.country}</td>
-                <td>${teacher.Sessions}</td>
+                <td>${teacher.Sessions?.length}</td>
               </tr>
             `
               )
