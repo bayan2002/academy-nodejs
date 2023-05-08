@@ -1046,7 +1046,7 @@ const getAllTeachersPDF = async (req, res) => {
           if (session.isPaid) c++;
         });
       }
-      teacher.sessions = c;
+      teacher.sessionsCount = c;
       return teacher;
     })
   );
@@ -1099,7 +1099,7 @@ const getAllTeachersPDF = async (req, res) => {
                 <td>${teacher.dateOfBirth}</td>
                 <td>${teacher.phone}</td>
                 <td>${teacher.country}</td>
-                <td>${teacher.Sessions?.length}</td>
+                <td>${teacher.sessionsCount}</td>
               </tr>
             `
               )
