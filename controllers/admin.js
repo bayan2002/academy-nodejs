@@ -1195,7 +1195,9 @@ const getSessionsForStudent = async (req, res) => {
   const sessions = await Session.findAll({
     where: {
       StudentId,
+      isPaid: true,
     },
+    include: [{ model: Teacher }],
   });
   res.send({
     status: 200,
@@ -1212,7 +1214,9 @@ const getSessionsForTeacher = async (req, res) => {
   const sessions = await Session.findAll({
     where: {
       TeacherId,
+      isPaid: true,
     },
+    include: [{ model: Student }],
   });
   res.send({
     status: 200,
