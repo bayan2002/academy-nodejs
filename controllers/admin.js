@@ -931,7 +931,7 @@ const getAllStudentsPDF = async (req, res) => {
       { model: Class },
       { model: Curriculum },
       { model: Parent },
-      { model: Session },
+      { model: Session, where: { isPaid: true } },
     ],
   });
 
@@ -1035,7 +1035,7 @@ const getAllStudentsPDF = async (req, res) => {
 
 const getAllTeachersPDF = async (req, res) => {
   const teachers = await Teacher.findAll({
-    include: { model: Session },
+    include: { model: Session, where: { isPaid: true } },
   });
 
   const html = `
