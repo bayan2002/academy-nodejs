@@ -931,7 +931,7 @@ const getAllStudentsPDF = async (req, res) => {
       { model: Class },
       { model: Curriculum },
       { model: Parent },
-      { model: Session, where: { isPaid: true } },
+      { model: Session },
     ],
   });
 
@@ -1035,8 +1035,23 @@ const getAllStudentsPDF = async (req, res) => {
 
 const getAllTeachersPDF = async (req, res) => {
   const teachers = await Teacher.findAll({
-    include: { model: Session, where: { isPaid: true } },
+    include: { model: Session },
   });
+
+  await Promise.all(
+    teachers.map(async (teacher) => {
+      let c = 0;
+      if (teacher.sessions) {
+        teacher.sessions.forEach((session) => {
+          if (session.isPaid) c++;
+        });
+      }
+      teacher.sessions = c;
+    })
+  );
+  // const teachers = await Teacher.findAll({
+  //   include: { model: Session, where: { isPaid: true } },
+  // });
 
   const html = `
     <html>
@@ -1083,7 +1098,7 @@ const getAllTeachersPDF = async (req, res) => {
                 <td>${teacher.dateOfBirth}</td>
                 <td>${teacher.phone}</td>
                 <td>${teacher.country}</td>
-                <td>${teacher.Sessions?.length}</td>
+                <td>${teacher.Sessions}</td>
               </tr>
             `
               )
