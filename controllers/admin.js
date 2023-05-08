@@ -27,6 +27,8 @@ const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -1004,16 +1006,19 @@ const getAllStudentsPDF = async (req, res) => {
   try {
     pdf
       .create(html, options)
-      .toFile(path.join("invoices", "students.pdf"), (err, response) => {
+      .toFile(path.join("invoices", "students.pdf"), async (err, response) => {
         if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-        res.send({
-          status: 201,
-          response,
-          msg: {
-            arabic: "تم ارجاع جميع الطلاب المسجلين",
-            english: "successful get all students",
-          },
+        const pdf = await fetch(
+          "https://server.moalime.com/invoices/students.pdf"
+        );
+        const buffer = await pdf.arrayBuffer();
+        const fileData = Buffer.from(buffer);
+        res.writeHead(200, {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": "attachment; filename=students.pdf",
+          "Content-Length": fileData.length,
         });
+        res.end(fileData);
       });
   } catch (error) {
     res.send({
@@ -1096,16 +1101,19 @@ const getAllTeachersPDF = async (req, res) => {
 
   pdf
     .create(html, options)
-    .toFile(path.join("invoices", "teachers.pdf"), (err, response) => {
+    .toFile(path.join("invoices", "teachers.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      res.send({
-        status: 201,
-        response,
-        msg: {
-          arabic: "تم ارجاع جميع المعلمين المسجلين",
-          english: "successful get all teachers",
-        },
+      const pdf = await fetch(
+        "https://server.moalime.com/invoices/teachers.pdf"
+      );
+      const buffer = await pdf.arrayBuffer();
+      const fileData = Buffer.from(buffer);
+      res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "attachment; filename=teachers.pdf",
+        "Content-Length": fileData.length,
       });
+      res.end(fileData);
     });
 };
 const getAllParentsPDF = async (req, res) => {
@@ -1166,16 +1174,19 @@ const getAllParentsPDF = async (req, res) => {
 
   pdf
     .create(html, options)
-    .toFile(path.join("invoices", "parents.pdf"), (err, response) => {
+    .toFile(path.join("invoices", "parents.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      res.send({
-        status: 201,
-        response,
-        msg: {
-          arabic: "تم ارجاع جميع الاباء المسجلين",
-          english: "successful get all parents",
-        },
+      const pdf = await fetch(
+        "https://server.moalime.com/invoices/parents.pdf"
+      );
+      const buffer = await pdf.arrayBuffer();
+      const fileData = Buffer.from(buffer);
+      res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "attachment; filename=parents.pdf",
+        "Content-Length": fileData.length,
       });
+      res.end(fileData);
     });
 };
 
