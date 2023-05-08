@@ -1042,14 +1042,15 @@ const getAllTeachersPDF = async (req, res) => {
     teachers.map(async (teacher) => {
       let c = 0;
       if (teacher.sessions) {
-        teacher.sessions.forEach((session) => {
-          if (session.isPaid) c++;
+        await teacher.sessions.forEach(async (session) => {
+          if (await session.isPaid) c += 1;
         });
       }
       teacher.sessionsCount = c;
       return teacher;
     })
   );
+
   // const teachers = await Teacher.findAll({
   //   include: { model: Session, where: { isPaid: true } },
   // });
