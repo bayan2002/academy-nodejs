@@ -52,6 +52,7 @@ const {
   createSocialMedia,
   editSocialMedia,
   getSocialMedia,
+  getWatsappPhone,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -313,6 +314,12 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getSocialMedia)
+);
+
+adminRouter.get(
+  "/whatsappPhone",
+
+  errorCatcher(getWatsappPhone)
 );
 
 adminRouter.put(

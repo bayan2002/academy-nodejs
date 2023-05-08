@@ -1324,6 +1324,18 @@ const getSocialMedia = async (req, res) => {
   });
 };
 
+const getWatsappPhone = async (req, res) => {
+  const admin = await Admin.findOne({ where: { id: 1 } });
+  res.send({
+    status: 200,
+    data: admin.whatsappPhone,
+    msg: {
+      arabic: "تم ارجاع رقم الواتس بنجاح",
+      english: "successful get whatsapp phone",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -1375,4 +1387,5 @@ module.exports = {
   createSocialMedia,
   editSocialMedia,
   getSocialMedia,
+  getWatsappPhone,
 };
