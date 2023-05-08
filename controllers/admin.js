@@ -1047,6 +1047,7 @@ const getAllTeachersPDF = async (req, res) => {
         });
       }
       teacher.sessions = c;
+      return teacher;
     })
   );
   // const teachers = await Teacher.findAll({
