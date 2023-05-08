@@ -27,6 +27,7 @@ const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
+const fetch = require("node-fetch");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
