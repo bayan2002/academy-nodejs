@@ -27,7 +27,6 @@ const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
-const fetch = require("node-fetch");
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
@@ -1005,16 +1004,11 @@ const getAllStudentsPDF = async (req, res) => {
   try {
     pdf
       .create(html, options)
-      .toFile(path.join("invoices", "students.pdf"), async (err, response) => {
+      .toFile(path.join("invoices", "students.pdf"), (err, response) => {
         if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-        const pdf = await fetch(
-          "https://server.moalime.com/invoices/students.pdf"
-        );
-        const data = await pdf.json();
-        // console.log(data);
         res.send({
           status: 201,
-          data,
+          response,
           msg: {
             arabic: "تم ارجاع جميع الطلاب المسجلين",
             english: "successful get all students",
@@ -1102,15 +1096,11 @@ const getAllTeachersPDF = async (req, res) => {
 
   pdf
     .create(html, options)
-    .toFile(path.join("invoices", "teachers.pdf"), async (err, response) => {
+    .toFile(path.join("invoices", "teachers.pdf"), (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      const pdf = await fetch(
-        "https://server.moalime.com/invoices/teachers.pdf"
-      );
-      const data = await pdf.json();
       res.send({
         status: 201,
-        data,
+        response,
         msg: {
           arabic: "تم ارجاع جميع المعلمين المسجلين",
           english: "successful get all teachers",
@@ -1176,15 +1166,11 @@ const getAllParentsPDF = async (req, res) => {
 
   pdf
     .create(html, options)
-    .toFile(path.join("invoices", "parents.pdf"), async (err, response) => {
+    .toFile(path.join("invoices", "parents.pdf"), (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
-      const pdf = await fetch(
-        "https://server.moalime.com/invoices/parents.pdf"
-      );
-      const data = await pdf.json();
       res.send({
         status: 201,
-        data,
+        response,
         msg: {
           arabic: "تم ارجاع جميع الاباء المسجلين",
           english: "successful get all parents",
