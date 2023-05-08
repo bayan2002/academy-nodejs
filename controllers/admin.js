@@ -1286,6 +1286,18 @@ const editSocialMedia = async (req, res) => {
   });
 };
 
+const getSocialMedia = async (req, res) => {
+  const socialMedia = await SocialMedia.findAll();
+  res.send({
+    status: 200,
+    data: socialMedia,
+    msg: {
+      arabic: "تم ارجاع السوشيال ميديا بنجاح",
+      english: "successful get SocialMedia",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -1336,4 +1348,5 @@ module.exports = {
   editWhatsappPhone,
   createSocialMedia,
   editSocialMedia,
+  getSocialMedia,
 };
