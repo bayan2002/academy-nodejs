@@ -968,7 +968,7 @@ const getAllWalletsPdf = async (req, res) => {
               <tr>
                 <td>${wallet.price}</td>
                 <td>${wallet.currency}</td>
-                <td>${wallet.Students?.name}</td>
+                <td>${wallet.Student?.name}</td>
               </tr>
             `
               )

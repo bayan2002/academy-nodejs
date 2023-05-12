@@ -316,11 +316,7 @@ adminRouter.get(
   errorCatcher(getSocialMedia)
 );
 
-adminRouter.get(
-  "/whatsappPhone",
-
-  errorCatcher(getWatsappPhone)
-);
+adminRouter.get("/whatsappPhone", errorCatcher(getWatsappPhone));
 
 adminRouter.put(
   "/editWhatsappPhone",
