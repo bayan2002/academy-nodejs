@@ -952,7 +952,7 @@ const getAllWalletsPdf = async (req, res) => {
         </style>
       </head>
       <body>
-        <h1>All Parents</h1>
+        <h1>Wallets details</h1>
         <table>
           <thead>
             <tr>
