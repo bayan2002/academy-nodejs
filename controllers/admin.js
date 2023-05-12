@@ -900,6 +900,30 @@ const getNumbers = async (req, res) => {
     },
   });
 };
+// const getAllWalletsPdf = async (req, res) => {
+//   const wallets = await Wallet.findAll({
+//     where: {
+//       isPaid: true,
+//       typeEn: "deposit",
+//     },
+//     include: [{ model: Student }],
+//   });
+
+//   const invoicename = "invoice-" + 1 + ".pdf";
+//   const invoicepath = path.join("invoices", invoicename);
+//   res.setHeader("Content-type", "application/pdf");
+//   res.setHeader("Content-Disposition", "inline;filename=" + invoicename + '"');
+//   const pdfDoc = new PDFDocument();
+//   pdfDoc.pipe(fs.createWriteStream(invoicepath));
+//   pdfDoc.pipe(res);
+//   wallets.forEach((wallet) => {
+//     pdfDoc.text(
+//       wallet.price + "," + wallet.currency + "," + wallet.Student.name
+//     );
+//   });
+//   pdfDoc.end();
+// };
+
 const getAllWalletsPdf = async (req, res) => {
   const wallets = await Wallet.findAll({
     where: {
@@ -909,19 +933,73 @@ const getAllWalletsPdf = async (req, res) => {
     include: [{ model: Student }],
   });
 
-  const invoicename = "invoice-" + 1 + ".pdf";
-  const invoicepath = path.join("invoices", invoicename);
-  res.setHeader("Content-type", "application/pdf");
-  res.setHeader("Content-Disposition", "inline;filename=" + invoicename + '"');
-  const pdfDoc = new PDFDocument();
-  pdfDoc.pipe(fs.createWriteStream(invoicepath));
-  pdfDoc.pipe(res);
-  wallets.forEach((wallet) => {
-    pdfDoc.text(
-      wallet.price + "," + wallet.currency + "," + wallet.Student.name
-    );
-  });
-  pdfDoc.end();
+  const html = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Parents</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Price</th>
+              <th>Currency</th>
+              <th>Student name</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${wallets
+              .map(
+                (wallet) => `
+              <tr>
+                <td>${wallet.price}</td>
+                <td>${wallet.currency}</td>
+                <td>${wallet.Students?.name}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const options = {
+    format: "A5",
+    orientation: "landscape",
+  };
+
+  pdf
+    .create(html, options)
+    .toFile(path.join("invoices", "wallets.pdf"), async (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+      const pdf = await fetch(
+        "https://server.moalime.com/invoices/wallets.pdf"
+      );
+      const buffer = await pdf.arrayBuffer();
+      const fileData = Buffer.from(buffer);
+      res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "attachment; filename=wallets.pdf",
+        "Content-Length": fileData.length,
+      });
+      res.end(fileData);
+    });
 };
 
 const getAllStudentsPDF = async (req, res) => {
