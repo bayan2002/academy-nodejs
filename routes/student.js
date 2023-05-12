@@ -92,7 +92,7 @@ studentRouter.patch(
   errorCatcher(acceptLesson)
 );
 
-studentRouter.post(
+studentRouter.get(
   "/nearestTeachers/:StudentId",
   verifyToken,
   checkUserAuth("student"),

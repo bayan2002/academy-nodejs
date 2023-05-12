@@ -767,7 +767,7 @@ const acceptLesson = async (req, res) => {
 
 const nearestTeachers = async (req, res) => {
   const { StudentId } = req.params;
-  const { distance } = req.body;
+  // const { distance } = req.body;
 
   const student = await Student.findOne({
     where: {
@@ -781,11 +781,11 @@ const nearestTeachers = async (req, res) => {
       english: "student not found",
     });
 
-  if (!distance)
-    throw serverErrs.BAD_REQUEST({
-      arabic: "المسافة غير موجودة",
-      english: "distance not found",
-    });
+  // if (!distance)
+  //   throw serverErrs.BAD_REQUEST({
+  //     arabic: "المسافة غير موجودة",
+  //     english: "distance not found",
+  //   });
 
   const teachers = await Teacher.findAll({});
 
@@ -808,17 +808,20 @@ const nearestTeachers = async (req, res) => {
 
     const d = R * c; // in metres
 
-    if (d < distance * 1000) {
+    if (d < 15 * 1000) {
       result.push(tch);
     }
+    // if (d < distance * 1000) {
+    //   result.push(tch);
+    // }
   });
 
   res.send({
     status: 201,
     result,
     msg: {
-      arabic: "تم ايجاد المعلمين في المسافة المطلوبة",
-      english: "successful get teachers in specefic distance",
+      arabic: "تم ايجاد المعلمين في مسافة 15 كيلو متر",
+      english: "successful get teachers in 15 kilo meter",
     },
   });
 };
