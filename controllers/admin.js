@@ -934,19 +934,68 @@ const getAllWalletsPdf = async (req, res) => {
     attributes: [
       "price",
       "currency",
-      [
-        Sequelize.fn(
-          "date_format",
-          Sequelize.col("wallet.createdAt"),
-          "%Y-%m-%d %H:%i:%s"
-        ),
-        "createdAt",
-      ],
+      // [
+      //   Sequelize.fn(
+      //     "date_format",
+      //     Sequelize.col("wallet.createdAt"),
+      //     "%Y-%m-%d %H:%i:%s"
+      //   ),
+      //   "createdAt",
+      // ],
     ],
     include: [{ model: Student }],
   });
 
   const htmlEN = `
+  <html>
+    <head>
+      <style>
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        h1 {
+          text-align: center;
+        }
+        th, td {
+          border: 1px solid black;
+          padding: 8px;
+          text-align: left;
+        }
+        th {
+          background-color: #ddd;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Wallets details</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Price</th>
+            <th>Currency</th>
+            <th>Student name</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${wallets
+            .map(
+              (wallet) => `
+            <tr>
+              <td>${wallet.price}</td>
+              <td>${wallet.currency}</td>
+              <td>${wallet.Student?.name}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </body>
+  </html>
+`;
+
+  const htmlAR = `
     <html>
       <head>
         <style>
@@ -960,7 +1009,7 @@ const getAllWalletsPdf = async (req, res) => {
           th, td {
             border: 1px solid black;
             padding: 8px;
-            text-align: ${language === "EN" ? "left" : "right"};
+            text-align: right;
           }
           th {
             background-color: #ddd;
@@ -968,39 +1017,10 @@ const getAllWalletsPdf = async (req, res) => {
         </style>
       </head>
       <body>
-      ${
-        language === "EN"
-          ? `
-        <h1>Wallets details</h1>
+     <h1>تفاصيل المحفظة</h1>
         <table>
           <thead>
             <tr>
-             <th>Price</th>
-              <th>Currency</th>
-              <th>Student name</th>
-              <th>Booking Pay</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${wallets
-              .map(
-                (wallet) => `
-              <tr>
-                <td>${wallet.price}</td>
-                <td>${wallet.currency}</td>
-                <td>${wallet.Student?.name}</td>
-                <td>${wallet.createdAt}</td>
-              </tr>
-            `
-              )
-              .join("")}
-          </tbody>
-        </table>`
-          : `<h1>تفاصيل المحفظة</h1>
-        <table>
-          <thead>
-            <tr>
-            <th>تاريخ الحجز</th>
             <th>إسم الطالب</th>
             <th>العملة</th>
             <th>السعر</th>
@@ -1011,7 +1031,6 @@ const getAllWalletsPdf = async (req, res) => {
               .map(
                 (wallet) => `
               <tr>
-              <td>${wallet.createdAt}</td>
               <td>${wallet.Student?.name}</td>
               <td>${wallet.currency}</td>
               <td>${wallet.price}</td>
@@ -1020,8 +1039,7 @@ const getAllWalletsPdf = async (req, res) => {
               )
               .join("")}
           </tbody>
-        </table>`
-      }
+        </table>
       </body>
     </html>
   `;
@@ -1030,9 +1048,9 @@ const getAllWalletsPdf = async (req, res) => {
     format: "A5",
     orientation: "landscape",
   };
-
+  const html = language === "EN" ? htmlEN : htmlAR;
   pdf
-    .create(htmlEN, options)
+    .create(html, options)
     .toFile(path.join("invoices", "wallets.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
