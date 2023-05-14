@@ -1348,6 +1348,9 @@ const getAllParentsPDF = async (req, res) => {
 };
 
 const allReports = async (req, res) => {
+  await getAllStudentsPDF();
+  await getAllTeachersPDF();
+  await getAllParentsPDF();
   const pdf1 = await fetch("https://server.moalime.com/invoices/teachers.pdf");
   const pdf2 = await fetch("https://server.moalime.com/invoices/students.pdf");
   const pdf3 = await fetch("https://server.moalime.com/invoices/parents.pdf");
