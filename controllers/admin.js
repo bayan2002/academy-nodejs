@@ -1252,7 +1252,7 @@ const getAllTeachersPDF = async (req, res) => {
   `;
 
   const options = {
-    format: "A3",
+    format: "A2",
     orientation: "landscape",
   };
 
@@ -1325,7 +1325,7 @@ const getAllParentsPDF = async (req, res) => {
   `;
 
   const options = {
-    format: "A5",
+    format: "A2",
     orientation: "landscape",
   };
 
