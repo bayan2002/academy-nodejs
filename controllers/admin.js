@@ -27,6 +27,7 @@ const generateToken = require("../middlewares/generateToken");
 const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
+const { promisify } = require("util");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
@@ -1574,13 +1575,11 @@ const allReports = async (req, res) => {
     .toFile(path.join("invoices", "students.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
     });
-  const pdf1 = await fetch("https://server.moalime.com/invoices/teachers.pdf");
-  const pdf2 = await fetch("https://server.moalime.com/invoices/students.pdf");
-  const pdf3 = await fetch("https://server.moalime.com/invoices/parents.pdf");
 
-  const buffer1 = await pdf1.arrayBuffer();
-  const buffer2 = await pdf2.arrayBuffer();
-  const buffer3 = await pdf3.arrayBuffer();
+  const readFileAsync = promisify(fs.readFile);
+  const buffer1 = await readFileAsync(path.join("invoices", "teachers.pdf"));
+  const buffer2 = await readFileAsync(path.join("invoices", "students.pdf"));
+  const buffer3 = await readFileAsync(path.join("invoices", "parents.pdf"));
 
   const pdfDoc = await PDFDocument.create();
 
