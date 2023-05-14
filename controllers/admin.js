@@ -24,7 +24,7 @@ const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
 const fetch = (...args) =>
@@ -925,15 +925,28 @@ const getNumbers = async (req, res) => {
 // };
 
 const getAllWalletsPdf = async (req, res) => {
+  const { language } = req.query;
   const wallets = await Wallet.findAll({
     where: {
       isPaid: true,
       typeEn: "deposit",
     },
+    attributes: [
+      "price",
+      "currency",
+      [
+        Sequelize.fn(
+          "date_format",
+          Sequelize.col("wallet.createdAt"),
+          "%Y-%m-%d %H:%i:%s"
+        ),
+        "createdAt",
+      ],
+    ],
     include: [{ model: Student }],
   });
 
-  const html = `
+  const htmlEN = `
     <html>
       <head>
         <style>
@@ -941,10 +954,13 @@ const getAllWalletsPdf = async (req, res) => {
             width: 100%;
             border-collapse: collapse;
           }
+          h1 {
+            text-align: center;
+          }
           th, td {
             border: 1px solid black;
             padding: 8px;
-            text-align: left;
+            text-align: ${language === "EN" ? "left" : "right"};
           }
           th {
             background-color: #ddd;
@@ -952,13 +968,17 @@ const getAllWalletsPdf = async (req, res) => {
         </style>
       </head>
       <body>
+      ${
+        language === "EN"
+          ? `
         <h1>Wallets details</h1>
         <table>
           <thead>
             <tr>
-              <th>Price</th>
+             <th>Price</th>
               <th>Currency</th>
               <th>Student name</th>
+              <th>Booking Pay</th>
             </tr>
           </thead>
           <tbody>
@@ -969,12 +989,39 @@ const getAllWalletsPdf = async (req, res) => {
                 <td>${wallet.price}</td>
                 <td>${wallet.currency}</td>
                 <td>${wallet.Student?.name}</td>
+                <td>${wallet.createdAt}</td>
               </tr>
             `
               )
               .join("")}
           </tbody>
-        </table>
+        </table>`
+          : `<h1>تفاصيل المحفظة</h1>
+        <table>
+          <thead>
+            <tr>
+            <th>تاريخ الحجز</th>
+            <th>إسم الطالب</th>
+            <th>العملة</th>
+            <th>السعر</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${wallets
+              .map(
+                (wallet) => `
+              <tr>
+              <td>${wallet.createdAt}</td>
+              <td>${wallet.Student?.name}</td>
+              <td>${wallet.currency}</td>
+              <td>${wallet.price}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>`
+      }
       </body>
     </html>
   `;
@@ -985,7 +1032,7 @@ const getAllWalletsPdf = async (req, res) => {
   };
 
   pdf
-    .create(html, options)
+    .create(htmlEN, options)
     .toFile(path.join("invoices", "wallets.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
