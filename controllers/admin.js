@@ -24,7 +24,7 @@ const { validateAdminSignUp, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
-const { Op, Sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
 const fetch = (...args) =>
@@ -931,18 +931,6 @@ const getAllWalletsPdf = async (req, res) => {
       isPaid: true,
       typeEn: "deposit",
     },
-    attributes: [
-      "price",
-      "currency",
-      [
-        Sequelize.fn(
-          "date_format",
-          Sequelize.col("wallet.createdAt"),
-          "%Y-%m-%d %H:%i:%s"
-        ),
-        "createdAt",
-      ],
-    ],
     include: [{ model: Student }],
   });
 
@@ -986,7 +974,7 @@ const getAllWalletsPdf = async (req, res) => {
               <td>${wallet.price}</td>
               <td>${wallet.currency}</td>
               <td>${wallet.Student?.name}</td>
-              <td>${wallet.createdAt}</td>
+              <td>${`${wallet.createdAt}`.substring(0, 24)}</td>
             </tr>
           `
             )
@@ -1023,6 +1011,7 @@ const getAllWalletsPdf = async (req, res) => {
         <table>
           <thead>
             <tr>
+            <th>تاريخ الحجز</th>
             <th>إسم الطالب</th>
             <th>العملة</th>
             <th>السعر</th>
@@ -1033,6 +1022,7 @@ const getAllWalletsPdf = async (req, res) => {
               .map(
                 (wallet) => `
               <tr>
+              <td>${`${wallet.createdAt}`.substring(0, 24)}</td>
               <td>${wallet.Student?.name}</td>
               <td>${wallet.currency}</td>
               <td>${wallet.price}</td>
