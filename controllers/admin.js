@@ -934,14 +934,14 @@ const getAllWalletsPdf = async (req, res) => {
     attributes: [
       "price",
       "currency",
-      // [
-      //   Sequelize.fn(
-      //     "date_format",
-      //     Sequelize.col("wallet.createdAt"),
-      //     "%Y-%m-%d %H:%i:%s"
-      //   ),
-      //   "createdAt",
-      // ],
+      [
+        Sequelize.fn(
+          "date_format",
+          Sequelize.col("wallet.createdAt"),
+          "%Y-%m-%d %H:%i:%s"
+        ),
+        "createdAt",
+      ],
     ],
     include: [{ model: Student }],
   });
