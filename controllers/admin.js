@@ -15,7 +15,7 @@ const {
   Parent,
   SocialMedia,
 } = require("../models");
-const PDFDocument = require("pdfkit");
+const { PDFDocument } = require("pdf-lib");
 const path = require("path");
 const fs = require("fs");
 const pdf = require("html-pdf");
@@ -1347,6 +1347,49 @@ const getAllParentsPDF = async (req, res) => {
     });
 };
 
+const allReports = async (req, res) => {
+  const pdf1 = await fetch("https://server.moalime.com/invoices/teachers.pdf");
+  const pdf2 = await fetch("https://server.moalime.com/invoices/students.pdf");
+  const pdf3 = await fetch("https://server.moalime.com/invoices/parents.pdf");
+
+  const buffer1 = await pdf1.arrayBuffer();
+  const buffer2 = await pdf2.arrayBuffer();
+  const buffer3 = await pdf3.arrayBuffer();
+
+  const pdfDoc = await PDFDocument.create();
+
+  const [pdf1Doc, pdf2Doc, pdf3Doc] = await Promise.all([
+    PDFDocument.load(buffer1),
+    PDFDocument.load(buffer2),
+    PDFDocument.load(buffer3),
+  ]);
+
+  // copy pages from each generated PDF file into new PDF document
+  const [pdf1Pages, pdf2Pages, pdf3Pages] = await Promise.all([
+    pdfDoc.copyPages(pdf1Doc, pdf1Doc.getPageIndices()),
+    pdfDoc.copyPages(pdf2Doc, pdf2Doc.getPageIndices()),
+    pdfDoc.copyPages(pdf3Doc, pdf3Doc.getPageIndices()),
+  ]);
+
+  // add copied pages to new PDF document
+  pdf1Pages.forEach((page) => pdfDoc.addPage(page));
+  pdf2Pages.forEach((page) => pdfDoc.addPage(page));
+  pdf3Pages.forEach((page) => pdfDoc.addPage(page));
+
+  // save final combined PDF file
+  const mergedPdf = await pdfDoc.save();
+  fs.writeFileSync(path.join("invoices", "combined.pdf"), mergedPdf);
+  const pdf = await fetch("https://server.moalime.com/invoices/combined.pdf");
+  const buffer = await pdf.arrayBuffer();
+  const fileData = Buffer.from(buffer);
+  res.writeHead(200, {
+    "Content-Type": "application/pdf",
+    "Content-Disposition": "attachment; filename=parents.pdf",
+    "Content-Length": fileData.length,
+  });
+  res.end(fileData);
+};
+
 const getSessionsForStudent = async (req, res) => {
   const { StudentId } = req.params;
   const sessions = await Session.findAll({
@@ -1523,4 +1566,5 @@ module.exports = {
   editSocialMedia,
   getSocialMedia,
   getWatsappPhone,
+  allReports,
 };

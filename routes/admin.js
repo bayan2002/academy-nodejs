@@ -53,6 +53,7 @@ const {
   editSocialMedia,
   getSocialMedia,
   getWatsappPhone,
+  allReports,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -293,6 +294,13 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getAllParentsPDF)
+);
+
+adminRouter.get(
+  "/allReportsPDF",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(allReports)
 );
 
 adminRouter.get(
