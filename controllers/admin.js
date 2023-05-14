@@ -1348,9 +1348,232 @@ const getAllParentsPDF = async (req, res) => {
 };
 
 const allReports = async (req, res) => {
-  await getAllStudentsPDF();
-  await getAllTeachersPDF();
-  await getAllParentsPDF();
+  const parents = await Parent.findAll({
+    include: { model: Student },
+  });
+
+  const teachers = await Teacher.findAll({
+    include: { model: Session },
+  });
+
+  teachers.map((teacher) => {
+    let c = 0;
+    if (teacher.Sessions) {
+      teacher.Sessions.forEach((Session) => {
+        if (Session.isPaid) c++;
+      });
+    }
+    teacher.sessionsCount = c;
+    return teacher;
+  });
+
+  const students = await Student.findAll({
+    include: [
+      { model: Level },
+      { model: Class },
+      { model: Curriculum },
+      { model: Parent },
+      { model: Session },
+    ],
+  });
+
+  students.map((student) => {
+    let c = 0;
+    if (student.Sessions) {
+      student.Sessions.forEach((Session) => {
+        if (Session.isPaid) c++;
+      });
+    }
+    student.sessionsCount = c;
+    return student;
+  });
+
+  const html1 = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Parents</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Number of children</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${parents
+              .map(
+                (parent) => `
+              <tr>
+                <td>${parent.email}</td>
+                <td>${parent.name}</td>
+                <td>${parent.Students?.length}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const html2 = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Teachers</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>City</th>
+              <th>Date of Birth</th>
+              <th>Phone Number</th>
+              <th>Country</th>
+              <th>Sessions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${teachers
+              .map(
+                (teacher) => `
+              <tr>
+                <td>${teacher.email}</td>
+                <td>${teacher.firstName + " " + teacher.lastName}</td>
+                <td>${teacher.gender}</td>
+                <td>${teacher.city}</td>
+                <td>${teacher.dateOfBirth}</td>
+                <td>${teacher.phone}</td>
+                <td>${teacher.country}</td>
+                <td>${teacher.sessionsCount}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const html3 = `
+    <html>
+      <head>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #ddd;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>All Students</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>City</th>
+              <th>Date of Birth</th>
+              <th>Nationality</th>
+              <th>Location</th>
+              <th>Phone Number</th>
+              <th>Level</th>
+              <th>Class</th>
+              <th>Curriculum</th>
+              <th>Sessions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${students
+              .map(
+                (student) => `
+              <tr>
+                <td>${student.email}</td>
+                <td>${student.name}</td>
+                <td>${student.gender}</td>
+                <td>${student.city}</td>
+                <td>${student.dateOfBirth}</td>
+                <td>${student.nationality}</td>
+                <td>${student.location}</td>
+                <td>${student.phoneNumber}</td>
+                <td>${student.Level?.titleEN || "not exist"}</td>
+                <td>${student.Class?.titleEN || "not exist"}</td>
+                <td>${student.Curriculum?.titleEN || "not exist"}</td>
+                <td>${student.sessionsCount}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const options = {
+    format: "A2",
+    orientation: "landscape",
+  };
+
+  pdf
+    .create(html1, options)
+    .toFile(path.join("invoices", "parents.pdf"), async (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+    });
+  pdf
+    .create(html2, options)
+    .toFile(path.join("invoices", "teachers.pdf"), async (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+    });
+  pdf
+    .create(html3, options)
+    .toFile(path.join("invoices", "students.pdf"), async (err, response) => {
+      if (err) throw serverErrs.BAD_REQUEST("PDF not created");
+    });
   const pdf1 = await fetch("https://server.moalime.com/invoices/teachers.pdf");
   const pdf2 = await fetch("https://server.moalime.com/invoices/students.pdf");
   const pdf3 = await fetch("https://server.moalime.com/invoices/parents.pdf");
@@ -1382,8 +1605,8 @@ const allReports = async (req, res) => {
   // save final combined PDF file
   const mergedPdf = await pdfDoc.save();
   fs.writeFileSync(path.join("invoices", "combined.pdf"), mergedPdf);
-  const pdf = await fetch("https://server.moalime.com/invoices/combined.pdf");
-  const buffer = await pdf.arrayBuffer();
+  const pdf4 = await fetch("https://server.moalime.com/invoices/combined.pdf");
+  const buffer = await pdf4.arrayBuffer();
   const fileData = Buffer.from(buffer);
   res.writeHead(200, {
     "Content-Type": "application/pdf",
