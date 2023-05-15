@@ -91,6 +91,7 @@ const checkoutSuccess = async (req, res) => {
       id: StudentId,
     },
   });
+  console.log('student from checkoutSuccess: ', student);
 
   student.wallet += +global.newPrice;
   await student.save();
@@ -190,6 +191,7 @@ const booking = async (req, res) => {
         id: StudentId,
       },
     });
+    console.log('student from booking payment type wallet: ', student);
     if (+student.wallet < +newPrice) {
       throw serverErrs.BAD_REQUEST(
         "your current wallet is less than the required price"
@@ -214,6 +216,7 @@ const booking = async (req, res) => {
         id: TeacherId,
       },
     });
+    console.log('teacher from booking: ', teacher);
 
     teacher.totalAmount += +newPrice * 0.8;
     teacher.bookingNumbers += 1;
@@ -308,6 +311,7 @@ const bookingSuccess = async (req, res) => {
       id: session.TeacherId,
     },
   });
+  console.log('teacher from booking success: ', teacher);
 
   teacher.totalAmount += +session.price * 0.8;
   teacher.bookingNumbers += 1;
@@ -319,6 +323,7 @@ const bookingSuccess = async (req, res) => {
       id: StudentId,
     },
   });
+  console.log('student from booking success: ', student);
 
   await Notifications.add({
     titleAR: `تم حجز الدرس من الطالب ${student.name}`,
