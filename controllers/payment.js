@@ -235,7 +235,7 @@ const booking = async (req, res) => {
       from: "info@moalime.com",
       to: student.email,
       subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
-      html: `<div>عزيزي ${student.name},<br>
+      html: `<div>عزيزي ${student},<br>
       تمت جدولة جلستك مع معلمك ${teacher.name} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
@@ -250,7 +250,7 @@ const booking = async (req, res) => {
       from: "info@moalime.com",
       to: teacher.email,
       subject: "منصة معلمي: تأكيد الحجز الناجح للجلسة",
-      html: `<div>عزيزي ${teacher.name},<br>
+      html: `<div>عزيزي ${teacher},<br>
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
       نحن نقدر فرصة التعلم من 
@@ -336,7 +336,7 @@ const bookingSuccess = async (req, res) => {
     from: "info@moalime.com",
     to: student.email,
     subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
-    html: `<div>عزيزي ${student.name},<br>
+    html: `<div>عزيزي ${student},<br>
       تمت جدولة جلستك مع معلمك ${teacher.name} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
@@ -351,7 +351,7 @@ const bookingSuccess = async (req, res) => {
     from: "info@moalime.com",
     to: teacher.email,
     subject: "منصة معلمي: تأكيد الحجز الناجح للجلسة",
-      html: `<div>عزيزي ${teacher.name},<br>
+      html: `<div>عزيزي ${teacher},<br>
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
       نحن نقدر فرصة التعلم من 
@@ -370,5 +370,6 @@ const bookingSuccess = async (req, res) => {
     },
   });
 };
+
 
 module.exports = { charge, checkoutSuccess, booking, bookingSuccess };
