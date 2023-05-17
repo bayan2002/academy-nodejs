@@ -91,7 +91,6 @@ const checkoutSuccess = async (req, res) => {
       id: StudentId,
     },
   });
-  console.log('student from checkoutSuccess: ', student);
 
   student.wallet += +global.newPrice;
   await student.save();
@@ -191,7 +190,6 @@ const booking = async (req, res) => {
         id: StudentId,
       },
     });
-    console.log('student from booking payment type wallet: ', student);
     if (+student.wallet < +newPrice) {
       throw serverErrs.BAD_REQUEST(
         "your current wallet is less than the required price"
@@ -216,7 +214,6 @@ const booking = async (req, res) => {
         id: TeacherId,
       },
     });
-    console.log('teacher from booking: ', teacher);
 
     teacher.totalAmount += +newPrice * 0.8;
     teacher.bookingNumbers += 1;
@@ -311,7 +308,6 @@ const bookingSuccess = async (req, res) => {
       id: session.TeacherId,
     },
   });
-  console.log('teacher from booking success: ', teacher);
 
   teacher.totalAmount += +session.price * 0.8;
   teacher.bookingNumbers += 1;
@@ -323,7 +319,6 @@ const bookingSuccess = async (req, res) => {
       id: StudentId,
     },
   });
-  console.log('student from booking success: ', student);
 
   await Notifications.add({
     titleAR: `تم حجز الدرس من الطالب ${student.name}`,
@@ -336,7 +331,7 @@ const bookingSuccess = async (req, res) => {
     from: "info@moalime.com",
     to: student.email,
     subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
-    html: `<div>عزيزي ${student},<br>
+    html: `<div>عزيزي ${student.name},<br>
       تمت جدولة جلستك مع معلمك ${teacher.name} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
