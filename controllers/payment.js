@@ -104,6 +104,19 @@ const checkoutSuccess = async (req, res) => {
 };
 
 const booking = async (req, res) => {
+  let {
+    title,
+    StudentId,
+    TeacherId,
+    price,
+    currency,
+    typeOfPayment,
+    type,
+    date,
+    period,
+  } = req.body;
+  date = date.split("/");
+
   const createSession = async () => {
     const session = await Session.create({
       title,
@@ -113,7 +126,7 @@ const booking = async (req, res) => {
       currency,
       typeOfPayment,
       type,
-      date,
+      date: new Date(+date[2], +date[1] - 1, +date[0] + 1),
       period,
       totalPrice,
     });
@@ -129,17 +142,7 @@ const booking = async (req, res) => {
     });
     return wallet;
   };
-  const {
-    title,
-    StudentId,
-    TeacherId,
-    price,
-    currency,
-    typeOfPayment,
-    type,
-    date,
-    period,
-  } = req.body;
+
   const totalPrice = +price * period;
   let currencyConverter = new CC();
 
@@ -232,8 +235,8 @@ const booking = async (req, res) => {
       from: "info@moalime.com",
       to: student.email,
       subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
-      html: `<div>عزيزي ${student.name},<br>
-      تمت جدولة جلستك مع معلمك ${teacher.name} بنجاح.
+      html: `<div style="text-align: right;">عزيزي ${student.name},<br>
+      تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
        .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع معلمك وتلقي إرشادات حول أدائك الأكاديمي<br>
@@ -247,7 +250,7 @@ const booking = async (req, res) => {
       from: "info@moalime.com",
       to: teacher.email,
       subject: "منصة معلمي: تأكيد الحجز الناجح للجلسة",
-      html: `<div>عزيزي ${teacher.name},<br>
+      html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
       نحن نقدر فرصة التعلم من 
@@ -331,8 +334,8 @@ const bookingSuccess = async (req, res) => {
     from: "info@moalime.com",
     to: student.email,
     subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
-    html: `<div>عزيزي ${student.name},<br>
-      تمت جدولة جلستك مع معلمك ${teacher.name} بنجاح.
+    html: `<div style="text-align: right;">عزيزي ${student.name},<br>
+      تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
        .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع معلمك وتلقي إرشادات حول أدائك الأكاديمي<br>
@@ -346,7 +349,7 @@ const bookingSuccess = async (req, res) => {
     from: "info@moalime.com",
     to: teacher.email,
     subject: "منصة معلمي: تأكيد الحجز الناجح للجلسة",
-      html: `<div>عزيزي ${teacher.name},<br>
+    html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
       نحن نقدر فرصة التعلم من 
