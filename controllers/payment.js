@@ -115,7 +115,6 @@ const booking = async (req, res) => {
     date,
     period,
   } = req.body;
-  date = date.split("/");
 
   const createSession = async () => {
     const session = await Session.create({
@@ -126,7 +125,7 @@ const booking = async (req, res) => {
       currency,
       typeOfPayment,
       type,
-      date: new Date(+date[2], +date[1] - 1, +date[0] + 1),
+      date,
       period,
       totalPrice,
     });
@@ -193,11 +192,11 @@ const booking = async (req, res) => {
         id: StudentId,
       },
     });
-    if (+student.wallet < +newPrice) {
-      throw serverErrs.BAD_REQUEST(
-        "your current wallet is less than the required price"
-      );
-    }
+    // if (+student.wallet < +newPrice) {
+    //   throw serverErrs.BAD_REQUEST(
+    //     "your current wallet is less than the required price"
+    //   );
+    // }
     const session = await createSession();
     session.isPaid = true;
     await session.save();
