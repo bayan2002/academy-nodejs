@@ -13,7 +13,7 @@ const Session = Sequelize.define("Session", {
     allowNull: false,
   },
   date: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   period: {
