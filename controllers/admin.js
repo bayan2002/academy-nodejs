@@ -969,8 +969,8 @@ const getAllWalletsPdf = async (req, res) => {
         </thead>
         <tbody>
           ${wallets
-            .map(
-              (wallet) => `
+      .map(
+        (wallet) => `
             <tr>
               <td>${wallet.price}</td>
               <td>${wallet.currency}</td>
@@ -978,8 +978,8 @@ const getAllWalletsPdf = async (req, res) => {
               <td>${`${wallet.createdAt}`.substring(0, 24)}</td>
             </tr>
           `
-            )
-            .join("")}
+      )
+      .join("")}
         </tbody>
       </table>
     </body>
@@ -1020,8 +1020,8 @@ const getAllWalletsPdf = async (req, res) => {
           </thead>
           <tbody>
             ${wallets
-              .map(
-                (wallet) => `
+      .map(
+        (wallet) => `
               <tr>
               <td>${`${wallet.createdAt}`.substring(0, 24)}</td>
               <td>${wallet.Student?.name}</td>
@@ -1029,8 +1029,8 @@ const getAllWalletsPdf = async (req, res) => {
               <td>${wallet.price}</td>
               </tr>
             `
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </body>
@@ -1121,8 +1121,8 @@ const getAllStudentsPDF = async (req, res) => {
           </thead>
           <tbody>
             ${students
-              .map(
-                (student) => `
+      .map(
+        (student) => `
               <tr>
                 <td>${student.email}</td>
                 <td>${student.name}</td>
@@ -1138,8 +1138,8 @@ const getAllStudentsPDF = async (req, res) => {
                 <td>${student.sessionsCount}</td>
               </tr>
             `
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </body>
@@ -1231,8 +1231,8 @@ const getAllTeachersPDF = async (req, res) => {
           </thead>
           <tbody>
             ${teachers
-              .map(
-                (teacher) => `
+      .map(
+        (teacher) => `
               <tr>
                 <td>${teacher.email}</td>
                 <td>${teacher.firstName + " " + teacher.lastName}</td>
@@ -1244,8 +1244,8 @@ const getAllTeachersPDF = async (req, res) => {
                 <td>${teacher.sessionsCount}</td>
               </tr>
             `
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </body>
@@ -1309,16 +1309,16 @@ const getAllParentsPDF = async (req, res) => {
           </thead>
           <tbody>
             ${parents
-              .map(
-                (parent) => `
+      .map(
+        (parent) => `
               <tr>
                 <td>${parent.email}</td>
                 <td>${parent.name}</td>
                 <td>${parent.Students?.length}</td>
               </tr>
             `
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </body>
@@ -1419,16 +1419,16 @@ const allReports = async (req, res) => {
           </thead>
           <tbody>
             ${parents
-              .map(
-                (parent) => `
+      .map(
+        (parent) => `
               <tr>
                 <td>${parent.email}</td>
                 <td>${parent.name}</td>
                 <td>${parent.Students?.length}</td>
               </tr>
             `
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </body>
@@ -1470,8 +1470,8 @@ const allReports = async (req, res) => {
           </thead>
           <tbody>
             ${teachers
-              .map(
-                (teacher) => `
+      .map(
+        (teacher) => `
               <tr>
                 <td>${teacher.email}</td>
                 <td>${teacher.firstName + " " + teacher.lastName}</td>
@@ -1483,8 +1483,8 @@ const allReports = async (req, res) => {
                 <td>${teacher.sessionsCount}</td>
               </tr>
             `
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </body>
@@ -1530,8 +1530,8 @@ const allReports = async (req, res) => {
           </thead>
           <tbody>
             ${students
-              .map(
-                (student) => `
+      .map(
+        (student) => `
               <tr>
                 <td>${student.email}</td>
                 <td>${student.name}</td>
@@ -1547,8 +1547,8 @@ const allReports = async (req, res) => {
                 <td>${student.sessionsCount}</td>
               </tr>
             `
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </body>
@@ -1738,6 +1738,25 @@ const getWatsappPhone = async (req, res) => {
     },
   });
 };
+const updateProfitRatio = async (req, res) => {
+const { profitRatio } = req.body;
+const id = req.user.userId;
+
+  const admin = await Admin.findOne({
+    where: {
+      id: id,
+    },
+  });
+  admin.profitRatio = profitRatio;
+  await admin.save();
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم تحديث نسبة الربح بنجاح",
+      english: "successful update profitRatio successfully",
+    },
+  });
+};
 
 module.exports = {
   signUp,
@@ -1792,4 +1811,5 @@ module.exports = {
   getSocialMedia,
   getWatsappPhone,
   allReports,
+  updateProfitRatio
 };

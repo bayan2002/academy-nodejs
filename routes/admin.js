@@ -54,6 +54,7 @@ const {
   getSocialMedia,
   getWatsappPhone,
   allReports,
+  updateProfitRatio,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -346,5 +347,11 @@ adminRouter.put(
   checkUserAuth("admin"),
   errorCatcher(editSocialMedia)
 );
+adminRouter.put(
+  '/updateProfitRatio',
+  verifyToken,
+  checkUserAuth('admin'),
+  errorCatcher(updateProfitRatio)
+)
 
 module.exports = adminRouter;
