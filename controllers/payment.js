@@ -94,6 +94,18 @@ const checkoutSuccess = async (req, res) => {
 
   student.wallet += +global.newPrice;
   await student.save();
+  
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: student.email,
+    subject: "منصة معلمي : تأكيد الدفع بنجاح",
+    html: `<div>عزيزي ${student.name},<br>
+    تم الدفع بنجاح في حسابك بقيمة${global.newPrice} بالريال العماني<br>
+    شكرا لك على استخدامك منصة معلمي<br>,
+    فريق معلمي
+    </div> `,
+  };
+  sendEmail(mailOptions);
   global.newPrice = null;
 
   res.send({
@@ -365,5 +377,4 @@ const bookingSuccess = async (req, res) => {
     },
   });
 };
-
 module.exports = { charge, checkoutSuccess, booking, bookingSuccess };
