@@ -20,7 +20,7 @@ const path = require("path");
 const fs = require("fs");
 const pdf = require("html-pdf");
 
-const { validateAdminSignUp, loginValidation } = require("../validation");
+const { validateAdminSignUp, loginValidation, profitValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
@@ -1740,6 +1740,7 @@ const getWatsappPhone = async (req, res) => {
 };
 const updateProfitRatio = async (req, res) => {
 const { profitRatio } = req.body;
+await profitValidation.validate({ profitRatio});
 const id = req.user.userId;
 
   const admin = await Admin.findOne({
