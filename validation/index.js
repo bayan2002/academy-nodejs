@@ -27,6 +27,10 @@ const loginValidation = yup.object().shape({
   password: yup.string().required().length(4),
 });
 
+const profitValidation = yup.object().shape({
+  profitRatio: yup.number().required().min(0).max(99),
+});
+
 
 module.exports = {
   validateTeacher,
@@ -34,4 +38,5 @@ module.exports = {
   loginValidation,
   validateParentSignUp,
   validateStudent,
+  profitValidation
 };

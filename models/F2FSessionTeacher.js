@@ -16,6 +16,13 @@ const F2FSessionTeacher = Sequelize.define("F2FSessionTeacher", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  discount: {
+    type: DataTypes.NUMBER,
+    defaultValue: 0,
+  },
+  priceAfterDiscount: {
+    type: DataTypes.STRING,
+  },
 });
 
 module.exports = F2FSessionTeacher;

@@ -16,6 +16,13 @@ const F2FSessionStd = Sequelize.define("F2FSessionStd", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  discount: {
+    type: DataTypes.NUMBER,
+    defaultValue: 0,
+  },
+  priceAfterDiscount: {
+    type: DataTypes.STRING,
+  },
 });
 
 module.exports = F2FSessionStd;

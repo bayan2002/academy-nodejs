@@ -2,7 +2,7 @@ const CC = require("currency-converter-lt");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const { serverErrs } = require("../middlewares/customError");
-const { Wallet, Student, Session, Teacher } = require("../models");
+const { Wallet, Student, Session, Teacher, Admin } = require("../models");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
 const sendEmail = require("../middlewares/sendEmail");
@@ -94,6 +94,18 @@ const checkoutSuccess = async (req, res) => {
 
   student.wallet += +global.newPrice;
   await student.save();
+  
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: student.email,
+    subject: "منصة معلمي : تأكيد الدفع بنجاح",
+    html: `<div>عزيزي ${student.name},<br>
+    تم الدفع بنجاح في حسابك بقيمة${global.newPrice} بالريال العماني<br>
+    شكرا لك على استخدامك منصة معلمي<br>,
+    فريق معلمي
+    </div> `,
+  };
+  sendEmail(mailOptions);
   global.newPrice = null;
 
   res.send({
@@ -192,11 +204,11 @@ const booking = async (req, res) => {
         id: StudentId,
       },
     });
-    // if (+student.wallet < +newPrice) {
-    //   throw serverErrs.BAD_REQUEST(
-    //     "your current wallet is less than the required price"
-    //   );
-    // }
+    if (+student.wallet < +newPrice) {
+      throw serverErrs.BAD_REQUEST(
+        "your current wallet is less than the required price"
+      );
+    }
     const session = await createSession();
     session.isPaid = true;
     await session.save();
@@ -216,12 +228,18 @@ const booking = async (req, res) => {
         id: TeacherId,
       },
     });
-
-    teacher.totalAmount += +newPrice * 0.8;
+    
+    const admin = await Admin.findOne({
+      where: {
+        id: 1,
+      },
+    });
+    discount = 1 - (+Admin.profitRatio/100.00);
+    teacher.totalAmount += +newPrice * discount;
     teacher.bookingNumbers += 1;
     teacher.hoursNumbers += +session.period;
     await teacher.save();
-
+    
     await Notifications.add({
       titleAR: `تم حجز الدرس من الطالب ${student.name}`,
       titleEn: `booking successfully from student ${student.name}`,
@@ -311,7 +329,14 @@ const bookingSuccess = async (req, res) => {
     },
   });
 
-  teacher.totalAmount += +session.price * 0.8;
+  const admin = await Admin.findOne({
+    where: {
+      id: 1,
+    },
+  });
+  discount = 1 - (+Admin.profitRatio/100.00);
+
+  teacher.totalAmount += +session.price * discount;
   teacher.bookingNumbers += 1;
   teacher.hoursNumbers += +session.period;
   await teacher.save();
@@ -325,10 +350,23 @@ const bookingSuccess = async (req, res) => {
   await Notifications.add({
     titleAR: `تم حجز الدرس من الطالب ${student.name}`,
     titleEn: `booking successfully from student ${student.name}`,
-    TeacherId,
+    TeacherId: teacher.id,
     seen: false,
     date: Date.now(),
   });
+
+  const mailOptions1 = {
+    from: "info@moalime.com",
+    to: student.email,
+    subject: "منصة معلمي : تأكيد الدفع بنجاح",
+    html: `<div>عزيزي ${student.name},<br>
+    تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${session.price} بالريال العماني<br>
+    شكرا لك على استخدامك منصة معلمي<br>,
+    فريق معلمي
+    </div> `,
+  };
+  sendEmail(mailOptions1);
+
   const mailOptions = {
     from: "info@moalime.com",
     to: student.email,

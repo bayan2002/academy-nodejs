@@ -16,6 +16,13 @@ const RemoteSession = Sequelize.define("RemoteSession", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  discount: {
+    type: DataTypes.NUMBER,
+    defaultValue: 0,
+  },
+  priceAfterDiscount: {
+    type: DataTypes.STRING,
+  },
 });
 
 module.exports = RemoteSession;

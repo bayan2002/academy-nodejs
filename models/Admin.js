@@ -23,6 +23,10 @@ const Admin = sequelize.define("Admin", {
   whatsappPhone: {
     type: DataTypes.STRING,
   },
+  profitRatio: {
+    type: DataTypes.INTEGER,
+    defaultValue:20,
+  },
 });
 
 module.exports = Admin;
