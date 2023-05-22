@@ -317,12 +317,7 @@ adminRouter.get(
   errorCatcher(getSessionsForTeacher)
 );
 
-adminRouter.get(
-  "/socialMedia/all",
-  verifyToken,
-  checkUserAuth("admin"),
-  errorCatcher(getSocialMedia)
-);
+adminRouter.get("/socialMedia/all", errorCatcher(getSocialMedia));
 
 adminRouter.get("/whatsappPhone", errorCatcher(getWatsappPhone));
 
