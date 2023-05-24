@@ -181,6 +181,7 @@ const signPassword = async (req, res) => {
       email,
       isRegistered: true,
     },
+    attributes: { exclude: ['password'] }
   });
 
   if (!teacher)
@@ -193,7 +194,6 @@ const signPassword = async (req, res) => {
 
   await teacher.update({ password: hashedPassword });
   await teacher.save();
-  delete teacher["password"];
 
   const token = await generateToken({
     userId: teacher.id,
