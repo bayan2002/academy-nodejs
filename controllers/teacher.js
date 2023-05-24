@@ -181,7 +181,6 @@ const signPassword = async (req, res) => {
       email,
       isRegistered: true,
     },
-    attributes: { exclude: ['password'] }
   });
 
   if (!teacher)
@@ -215,7 +214,7 @@ const signPassword = async (req, res) => {
     </div>`,
   };
   sendEmail(mailOptions);
-
+  delete teacher.password;
   res.send({
     status: 201,
     data: teacher,
