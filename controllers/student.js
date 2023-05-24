@@ -215,7 +215,6 @@ const signPassword = async (req, res) => {
     id: student.id,
     email: student.email,
     name: student.name,
-    password: student.password,
     gender: student.gender,
     image: student.image,
     city: student.city,
