@@ -214,10 +214,46 @@ const signPassword = async (req, res) => {
     </div>`,
   };
   sendEmail(mailOptions);
-  
+  const teacherData = {
+    id: teacher.id,
+    email: teacher.email,
+    firstName: teacher.firstName,
+    lastName: teacher.lastName,
+    phone: teacher.phone,
+    gender: teacher.gender,
+    image: teacher.image,
+    videoLink: teacher.videoLink,
+    dateOfBirth: teacher.dateOfBirth,
+    city: teacher.city,
+    country: teacher.country,
+    haveExperience: teacher.haveExperience,
+    experienceYears: teacher.experienceYears,
+    favStdGender: teacher.favStdGender,
+    haveCertificates: teacher.haveCertificates,
+    favHours: teacher.favHours,
+    timeZone: teacher.timeZone,
+    articleExperience: teacher.articleExperience,
+    shortHeadlineAr: teacher.shortHeadlineAr,
+    shortHeadlineEn: teacher.shortHeadlineEn,
+    descriptionAr: teacher.descriptionAr,
+    descriptionEn: teacher.descriptionEn,
+    instantBooking: teacher.instantBooking,
+    isRegistered: teacher.isRegistered,
+    isVerified: teacher.isVerified,
+    registerCode: teacher.registerCode,
+    rate: teacher.rate,
+    totalAmount: teacher.totalAmount,
+    dues: teacher.dues,
+    hoursNumbers: teacher.hoursNumbers,
+    bookingNumbers: teacher.bookingNumbers,
+    long: teacher.long,
+    lat: teacher.lat,
+    createdAt: teacher.createdAt,
+    updatedAt: teacher.updatedAt,
+  };
   res.send({
     status: 201,
-    data: teacher,
+    data: teacherData,
     msg: { arabic: "تم التسجيل بنجاح", english: "successful sign up" },
     token: token,
   });
@@ -501,9 +537,12 @@ const addSubjects = async (req, res) => {
     },
   });
 
-  remote.priceAfterDiscount = remote.price - remote.price * (remote.discount/100.00);
-  f2fStudent.priceAfterDiscount = f2fStudent.price - f2fStudent.price * (f2fStudent.discount/100.00);
-  f2fTeacher.priceAfterDiscount = f2fTeacher.price - f2fTeacher.price * (f2fTeacher.discount/100.00);
+  remote.priceAfterDiscount =
+    remote.price - remote.price * (remote.discount / 100.0);
+  f2fStudent.priceAfterDiscount =
+    f2fStudent.price - f2fStudent.price * (f2fStudent.discount / 100.0);
+  f2fTeacher.priceAfterDiscount =
+    f2fTeacher.price - f2fTeacher.price * (f2fTeacher.discount / 100.0);
 
   await TeacherSubject.bulkCreate(subjects).then(() =>
     console.log("Teacher Subjects data have been created")
