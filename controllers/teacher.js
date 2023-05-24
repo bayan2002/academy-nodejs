@@ -215,12 +215,17 @@ const signPassword = async (req, res) => {
   };
   sendEmail(mailOptions);
 
-  var updatedTeacher = Object.assign({}, teacher);
-  delete updatedTeacher.password;
+
+  var updatedObj = Object.keys(teacher).reduce(function(result, key) {
+    if (key !== 'password') {
+      result[key] = obj[key];
+    }
+    return result;
+  }, {});
 
   res.send({
     status: 201,
-    data: teacher,
+    data: updatedObj,
     msg: { arabic: "تم التسجيل بنجاح", english: "successful sign up" },
     token: token,
   });
