@@ -654,6 +654,7 @@ const signAvailability = async (req, res) => {
       TeacherId: teacher.id,
     },
     include: { all: true },
+    attributes: { exclude: ['password'] },
   });
 
   await teacher.save();
