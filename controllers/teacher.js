@@ -214,7 +214,10 @@ const signPassword = async (req, res) => {
     </div>`,
   };
   sendEmail(mailOptions);
-  delete teacher.password;
+
+  var updatedTeacher = Object.assign({}, teacher);
+  delete updatedTeacher.password;
+
   res.send({
     status: 201,
     data: teacher,
