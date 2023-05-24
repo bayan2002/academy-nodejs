@@ -174,7 +174,7 @@ const verifyCode = async (req, res) => {
 const signPassword = async (req, res) => {
   const { email, password } = req.body;
 
-  const student = await Student.findOne({
+  let student = await Student.findOne({
     where: {
       email,
       isRegistered: true,
@@ -211,6 +211,31 @@ const signPassword = async (req, res) => {
     </div>`,
   };
   sendEmail(mailOptions);
+  student = {
+    id: student.id,
+    email: student.email,
+    name: student.name,
+    password: student.password,
+    gender: student.gender,
+    image: student.image,
+    city: student.city,
+    dateOfBirth: student.dateOfBirth,
+    nationality: student.nationality,
+    location: student.location,
+    phoneNumber: student.phoneNumber,
+    regionTime: student.regionTime,
+    registerCode: student.registerCode,
+    isRegistered: student.isRegistered,
+    wallet: student.wallet,
+    long: student.long,
+    lat: student.lat,
+    createdAt: student.createdAt,
+    updatedAt: student.updatedAt,
+    LevelId: student.LevelId,
+    ClassId: student.ClassId,
+    CurriculumId: student.CurriculumId,
+    ParentId: student.ParentId,
+  };
   res.send({
     status: 201,
     data: student,
@@ -225,7 +250,7 @@ const signPassword = async (req, res) => {
 const signData = async (req, res) => {
   const { email, gender, levelId, curriculumId, classId } = req.body;
 
-  const student = await Student.findOne({
+  let student = await Student.findOne({
     where: {
       email: email,
       isRegistered: true,
@@ -246,6 +271,31 @@ const signData = async (req, res) => {
     isRegistered: true,
   });
   await student.save();
+  student = {
+    id: student.id,
+    email: student.email,
+    name: student.name,
+    password: student.password,
+    gender: student.gender,
+    image: student.image,
+    city: student.city,
+    dateOfBirth: student.dateOfBirth,
+    nationality: student.nationality,
+    location: student.location,
+    phoneNumber: student.phoneNumber,
+    regionTime: student.regionTime,
+    registerCode: student.registerCode,
+    isRegistered: student.isRegistered,
+    wallet: student.wallet,
+    long: student.long,
+    lat: student.lat,
+    createdAt: student.createdAt,
+    updatedAt: student.updatedAt,
+    LevelId: student.LevelId,
+    ClassId: student.ClassId,
+    CurriculumId: student.CurriculumId,
+    ParentId: student.ParentId,
+  };
   res.send({
     status: 201,
     data: student,
@@ -257,7 +307,9 @@ const signData = async (req, res) => {
 };
 
 const getStudents = async (req, res) => {
-  const Students = await Student.findAll();
+  const Students = await Student.findAll({
+    attributes: { exclude: ["password"] },
+  });
   res.send({
     status: 201,
     data: Students,
@@ -278,6 +330,7 @@ const getSingleStudent = async (req, res) => {
       { model: Class },
       { model: LangTeachStd },
     ],
+    attributes: { exclude: ["password"] },
   });
   res.send({
     status: 201,
@@ -295,6 +348,7 @@ const getLastTenStudent = async (req, res) => {
     limit: 10,
     order: [["id", "DESC"]],
     include: { all: true },
+    attributes: { exclude: ["password"] },
   });
   res.send({
     status: 201,
@@ -308,7 +362,10 @@ const getLastTenStudent = async (req, res) => {
 
 const editPersonalInformation = async (req, res) => {
   const { StudentId } = req.params;
-  const student = await Student.findOne({ where: { id: StudentId } });
+  const student = await Student.findOne({
+    where: { id: StudentId },
+    attributes: { exclude: ["password"] },
+  });
   if (!student)
     throw serverErrs.BAD_REQUEST({
       arabic: "الطالب غير موجود",
@@ -371,7 +428,10 @@ const editPersonalInformation = async (req, res) => {
 
 const editImageStudent = async (req, res) => {
   const { StudentId } = req.params;
-  const student = await Student.findOne({ where: { id: StudentId } });
+  const student = await Student.findOne({
+    where: { id: StudentId },
+    attributes: { exclude: ["password"] },
+  });
   if (!student)
     throw serverErrs.BAD_REQUEST({
       arabic: "الطالب غير موجود",
@@ -411,7 +471,7 @@ const editImageStudent = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   const { StudentId } = req.params;
-  const student = await Student.findOne({
+  let student = await Student.findOne({
     where: { id: StudentId },
     include: { all: true },
   });
@@ -428,6 +488,31 @@ const resetPassword = async (req, res) => {
     });
   const hashedPassword = await hash(newPassword, 12);
   await student.update({ password: hashedPassword });
+  student = {
+    id: student.id,
+    email: student.email,
+    name: student.name,
+    password: student.password,
+    gender: student.gender,
+    image: student.image,
+    city: student.city,
+    dateOfBirth: student.dateOfBirth,
+    nationality: student.nationality,
+    location: student.location,
+    phoneNumber: student.phoneNumber,
+    regionTime: student.regionTime,
+    registerCode: student.registerCode,
+    isRegistered: student.isRegistered,
+    wallet: student.wallet,
+    long: student.long,
+    lat: student.lat,
+    createdAt: student.createdAt,
+    updatedAt: student.updatedAt,
+    LevelId: student.LevelId,
+    ClassId: student.ClassId,
+    CurriculumId: student.CurriculumId,
+    ParentId: student.ParentId,
+  };
   res.send({
     status: 201,
     data: student,
@@ -457,6 +542,7 @@ const getSingleTeacher = async (req, res) => {
       { model: TeacherSubject, include: [Subject] },
       { model: Rate, include: [Student] },
     ],
+    attributes: { exclude: ["password"] },
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
@@ -510,6 +596,7 @@ const getStudentCredit = async (req, res) => {
   const student = await Student.findOne({
     where: { id: studentId },
     attributes: ["wallet"],
+    attributes: { exclude: ["password"] },
   });
   if (!student)
     throw serverErrs.BAD_REQUEST({
@@ -616,6 +703,7 @@ const rateTeacher = async (req, res) => {
     where: {
       id: TeacherId,
     },
+    attributes: { exclude: ["password"] },
   });
 
   const session = await Session.findOne({
