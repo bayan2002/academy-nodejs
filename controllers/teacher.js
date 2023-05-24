@@ -176,7 +176,7 @@ const verifyCode = async (req, res) => {
 const signPassword = async (req, res) => {
   const { email, password } = req.body;
 
-  const teacher = await Teacher.findOne({
+  let teacher = await Teacher.findOne({
     where: {
       email,
       isRegistered: true,
@@ -214,7 +214,7 @@ const signPassword = async (req, res) => {
     </div>`,
   };
   sendEmail(mailOptions);
-  const teacherData = {
+    teacher = {
     id: teacher.id,
     email: teacher.email,
     firstName: teacher.firstName,
@@ -253,7 +253,7 @@ const signPassword = async (req, res) => {
   };
   res.send({
     status: 201,
-    data: teacherData,
+    data: teacher,
     msg: { arabic: "تم التسجيل بنجاح", english: "successful sign up" },
     token: token,
   });
