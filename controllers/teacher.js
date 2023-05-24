@@ -214,18 +214,10 @@ const signPassword = async (req, res) => {
     </div>`,
   };
   sendEmail(mailOptions);
-
-
-  var updatedObj = Object.keys(teacher).reduce(function(result, key) {
-    if (key !== 'password') {
-      result[key] = obj[key];
-    }
-    return result;
-  }, {});
-
+  
   res.send({
     status: 201,
-    data: updatedObj,
+    data: teacher,
     msg: { arabic: "تم التسجيل بنجاح", english: "successful sign up" },
     token: token,
   });
