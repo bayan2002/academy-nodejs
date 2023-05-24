@@ -193,6 +193,7 @@ const signPassword = async (req, res) => {
 
   await teacher.update({ password: hashedPassword });
   await teacher.save();
+  delete teacher["password"];
 
   const token = await generateToken({
     userId: teacher.id,
