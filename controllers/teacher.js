@@ -321,9 +321,7 @@ const signAbout = async (req, res) => {
 
 const signAdditionalInfo = async (req, res) => {
   const { teacherId } = req.params;
-  // console.log("teacherId: ", teacherId);
-  const teacher = await Teacher.findOne({ where: { id: teacherId } });
-  // console.log("teacher: ", teacher);
+  let teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
       arabic: "المعلم غير موجود",
@@ -394,6 +392,45 @@ const signAdditionalInfo = async (req, res) => {
     include: { all: true },
   });
   await teacher.save();
+
+  teacher = {
+    id: teacher.id,
+    email: teacher.email,
+    firstName: teacher.firstName,
+    lastName: teacher.lastName,
+    phone: teacher.phone,
+    gender: teacher.gender,
+    image: teacher.image,
+    videoLink: teacher.videoLink,
+    dateOfBirth: teacher.dateOfBirth,
+    city: teacher.city,
+    country: teacher.country,
+    haveExperience: teacher.haveExperience,
+    experienceYears: teacher.experienceYears,
+    favStdGender: teacher.favStdGender,
+    haveCertificates: teacher.haveCertificates,
+    favHours: teacher.favHours,
+    timeZone: teacher.timeZone,
+    articleExperience: teacher.articleExperience,
+    shortHeadlineAr: teacher.shortHeadlineAr,
+    shortHeadlineEn: teacher.shortHeadlineEn,
+    descriptionAr: teacher.descriptionAr,
+    descriptionEn: teacher.descriptionEn,
+    instantBooking: teacher.instantBooking,
+    isRegistered: teacher.isRegistered,
+    isVerified: teacher.isVerified,
+    registerCode: teacher.registerCode,
+    rate: teacher.rate,
+    totalAmount: teacher.totalAmount,
+    dues: teacher.dues,
+    hoursNumbers: teacher.hoursNumbers,
+    bookingNumbers: teacher.bookingNumbers,
+    long: teacher.long,
+    lat: teacher.lat,
+    createdAt: teacher.createdAt,
+    updatedAt: teacher.updatedAt,
+  };
+
   res.send({
     status: 201,
     data: { teacher, teacherLevels, curriculumTeachers },
@@ -422,6 +459,7 @@ const getSingleTeacher = async (req, res) => {
       { model: F2FSessionStd },
       { model: F2FSessionTeacher },
     ],
+    attributes: { exclude: ['password'] }
   });
 
   if (!teacher)
@@ -615,7 +653,8 @@ const addSubjects = async (req, res) => {
 
 const signAvailability = async (req, res) => {
   const { teacherId } = req.params;
-  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  const teacher = await Teacher.findOne({ where: { id: teacherId },
+    attributes: { exclude: ['password'] } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
       arabic: "المعلم غير موجود",
@@ -669,7 +708,8 @@ const signAvailability = async (req, res) => {
 const addDescription = async (req, res) => {
   const { teacherId } = req.params;
 
-  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  const teacher = await Teacher.findOne({ where: { id: teacherId },
+    attributes: { exclude: ['password'] } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
       arabic: "المعلم غير موجود",
@@ -789,7 +829,8 @@ const signResume = async (req, res) => {
 
 const signVideoLink = async (req, res) => {
   const { teacherId } = req.params;
-  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  const teacher = await Teacher.findOne({ where: { id: teacherId } ,
+    attributes: { exclude: ['password'] }});
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
       arabic: "المعلم غير موجود",
@@ -860,6 +901,7 @@ const searchTeacherFilterSide = async (req, res) => {
   const teachers = await Teacher.findAll({
     where: whereTeacher,
     include: whereInclude,
+    attributes: { exclude: ['password'] }
   });
 
   await Promise.all(
@@ -947,6 +989,7 @@ const searchTeacherFilterTop = async (req, res) => {
   const teachers = await Teacher.findAll({
     where: { isVerified: 1 },
     include: whereInclude,
+    attributes: { exclude: ['password'] }
   });
 
   await Promise.all(
