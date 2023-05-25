@@ -852,7 +852,6 @@ const acceptLesson = async (req, res) => {
 
 const nearestTeachers = async (req, res) => {
   const { StudentId } = req.params;
-  const { long, lat } = req.body;
   // const { distance } = req.body;
 
   const student = await Student.findOne({
@@ -875,8 +874,8 @@ const nearestTeachers = async (req, res) => {
 
   const teachers = await Teacher.findAll({});
 
-  const lon1 = student.long || long;
-  const lat1 = student.lat || lat;
+  const lon1 = student.long;
+  const lat1 = student.lat;
   const result = [];
   teachers?.forEach((tch) => {
     const lon2 = tch.long;
