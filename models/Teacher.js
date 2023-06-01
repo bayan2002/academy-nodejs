@@ -80,6 +80,10 @@ const Teacher = Sequelize.define("Teacher", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  bankID: {
+    type: DataTypes.STRING,
+    defaultValue: "",
+  },
   shortHeadlineAr: {
     type: DataTypes.STRING,
     defaultValue: "",
