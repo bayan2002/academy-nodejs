@@ -344,7 +344,11 @@ const signAdditionalInfo = async (req, res) => {
     favStdGender,
     favHours,
     articleExperience,
-    bankID,
+    bank_name,
+    acc_name,
+    acc_number,
+    iban,
+    paypal_acc,
   } = req.body;
 
   let { levels, curriculums } = req.body;
@@ -362,7 +366,11 @@ const signAdditionalInfo = async (req, res) => {
     favStdGender,
     favHours,
     articleExperience,
-    bankID,
+    bank_name,
+    acc_name,
+    acc_number,
+    iban,
+    paypal_acc,
   });
   const curriculumTeacher = await CurriculumTeacher.destroy({
     where: {

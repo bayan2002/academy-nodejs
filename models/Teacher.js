@@ -80,7 +80,23 @@ const Teacher = Sequelize.define("Teacher", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  bankID: {
+  bank_name: {
+    type: DataTypes.STRING,
+    defaultValue: "",
+  },
+  acc_name: {
+    type: DataTypes.STRING,
+    defaultValue: "",
+  },
+  acc_number: {
+    type: DataTypes.STRING,
+    defaultValue: "",
+  },
+  iban: {
+    type: DataTypes.STRING,
+    defaultValue: "",
+  },
+  paypal_acc: {
     type: DataTypes.STRING,
     defaultValue: "",
   },
