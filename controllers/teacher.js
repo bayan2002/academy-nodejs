@@ -550,12 +550,12 @@ const addSubjects = async (req, res) => {
     },
   });
 
-  remote.priceAfterDiscount =
-    remote.price - remote.price * (remote.discount / 100.0);
-  f2fStudent.priceAfterDiscount =
-    f2fStudent.price - f2fStudent.price * (f2fStudent.discount / 100.0);
-  f2fTeacher.priceAfterDiscount =
-    f2fTeacher.price - f2fTeacher.price * (f2fTeacher.discount / 100.0);
+  remote['priceAfterDiscount'] =
+    +remote.price - +remote.price * (+remote.discount / 100.0);
+  f2fStudent['priceAfterDiscount'] =
+    +f2fStudent.price - +f2fStudent.price * (+f2fStudent.discount / 100.0);
+  f2fTeacher['priceAfterDiscount'] =
+    +f2fTeacher.price - +f2fTeacher.price * (+f2fTeacher.discount / 100.0);
 
   await TeacherSubject.bulkCreate(subjects).then(() =>
     console.log("Teacher Subjects data have been created")
