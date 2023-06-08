@@ -352,14 +352,14 @@ adminRouter.put(
 );
 
 adminRouter.delete(
-  "/deleteTeacher",
+  "/deleteTeacher/:TeacherId",
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(deleteTeacher)
 );
 
 adminRouter.delete(
-  "/deleteStudent",
+  "/deleteStudent/:StudentId",
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(deleteStudent)
