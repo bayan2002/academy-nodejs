@@ -1767,7 +1767,7 @@ const deleteTeacher = async (req, res) => {
   const { TeacherId } = req.params;
   const teacher = await Teacher.findOne({ where: { id: TeacherId } });
   if (!teacher) throw serverErrs.BAD_REQUEST("Teacher not found");
-  await teacher.destroy();
+  await teacher.update({ isEnable: false });
   res.send({
     status: 201,
     msg: {
@@ -1781,7 +1781,7 @@ const deleteStudent = async (req, res) => {
   const { StudentId } = req.params;
   const student = await Student.findOne({ where: { id: StudentId } });
   if (!student) throw serverErrs.BAD_REQUEST("Student not found");
-  await student.destroy();
+  await student.update({ isEnable: false });
   res.send({
     status: 201,
     msg: {
