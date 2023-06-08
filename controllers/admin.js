@@ -20,7 +20,11 @@ const path = require("path");
 const fs = require("fs");
 const pdf = require("html-pdf");
 
-const { validateAdminSignUp, loginValidation, profitValidation } = require("../validation");
+const {
+  validateAdminSignUp,
+  loginValidation,
+  profitValidation,
+} = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
 const { compare, hash } = require("bcrypt");
 const generateToken = require("../middlewares/generateToken");
@@ -969,8 +973,8 @@ const getAllWalletsPdf = async (req, res) => {
         </thead>
         <tbody>
           ${wallets
-      .map(
-        (wallet) => `
+            .map(
+              (wallet) => `
             <tr>
               <td>${wallet.price}</td>
               <td>${wallet.currency}</td>
@@ -978,8 +982,8 @@ const getAllWalletsPdf = async (req, res) => {
               <td>${`${wallet.createdAt}`.substring(0, 24)}</td>
             </tr>
           `
-      )
-      .join("")}
+            )
+            .join("")}
         </tbody>
       </table>
     </body>
@@ -1020,8 +1024,8 @@ const getAllWalletsPdf = async (req, res) => {
           </thead>
           <tbody>
             ${wallets
-      .map(
-        (wallet) => `
+              .map(
+                (wallet) => `
               <tr>
               <td>${`${wallet.createdAt}`.substring(0, 24)}</td>
               <td>${wallet.Student?.name}</td>
@@ -1029,8 +1033,8 @@ const getAllWalletsPdf = async (req, res) => {
               <td>${wallet.price}</td>
               </tr>
             `
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </body>
@@ -1121,8 +1125,8 @@ const getAllStudentsPDF = async (req, res) => {
           </thead>
           <tbody>
             ${students
-      .map(
-        (student) => `
+              .map(
+                (student) => `
               <tr>
                 <td>${student.email}</td>
                 <td>${student.name}</td>
@@ -1138,8 +1142,8 @@ const getAllStudentsPDF = async (req, res) => {
                 <td>${student.sessionsCount}</td>
               </tr>
             `
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </body>
@@ -1231,8 +1235,8 @@ const getAllTeachersPDF = async (req, res) => {
           </thead>
           <tbody>
             ${teachers
-      .map(
-        (teacher) => `
+              .map(
+                (teacher) => `
               <tr>
                 <td>${teacher.email}</td>
                 <td>${teacher.firstName + " " + teacher.lastName}</td>
@@ -1244,8 +1248,8 @@ const getAllTeachersPDF = async (req, res) => {
                 <td>${teacher.sessionsCount}</td>
               </tr>
             `
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </body>
@@ -1309,16 +1313,16 @@ const getAllParentsPDF = async (req, res) => {
           </thead>
           <tbody>
             ${parents
-      .map(
-        (parent) => `
+              .map(
+                (parent) => `
               <tr>
                 <td>${parent.email}</td>
                 <td>${parent.name}</td>
                 <td>${parent.Students?.length}</td>
               </tr>
             `
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </body>
@@ -1419,16 +1423,16 @@ const allReports = async (req, res) => {
           </thead>
           <tbody>
             ${parents
-      .map(
-        (parent) => `
+              .map(
+                (parent) => `
               <tr>
                 <td>${parent.email}</td>
                 <td>${parent.name}</td>
                 <td>${parent.Students?.length}</td>
               </tr>
             `
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </body>
@@ -1470,8 +1474,8 @@ const allReports = async (req, res) => {
           </thead>
           <tbody>
             ${teachers
-      .map(
-        (teacher) => `
+              .map(
+                (teacher) => `
               <tr>
                 <td>${teacher.email}</td>
                 <td>${teacher.firstName + " " + teacher.lastName}</td>
@@ -1483,8 +1487,8 @@ const allReports = async (req, res) => {
                 <td>${teacher.sessionsCount}</td>
               </tr>
             `
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </body>
@@ -1530,8 +1534,8 @@ const allReports = async (req, res) => {
           </thead>
           <tbody>
             ${students
-      .map(
-        (student) => `
+              .map(
+                (student) => `
               <tr>
                 <td>${student.email}</td>
                 <td>${student.name}</td>
@@ -1547,8 +1551,8 @@ const allReports = async (req, res) => {
                 <td>${student.sessionsCount}</td>
               </tr>
             `
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </body>
@@ -1739,9 +1743,9 @@ const getWatsappPhone = async (req, res) => {
   });
 };
 const updateProfitRatio = async (req, res) => {
-const { profitRatio } = req.body;
-await profitValidation.validate({ profitRatio});
-const id = req.user.userId;
+  const { profitRatio } = req.body;
+  await profitValidation.validate({ profitRatio });
+  const id = req.user.userId;
 
   const admin = await Admin.findOne({
     where: {
@@ -1755,6 +1759,34 @@ const id = req.user.userId;
     msg: {
       arabic: "تم تحديث نسبة الربح بنجاح",
       english: "successful update profitRatio successfully",
+    },
+  });
+};
+
+const deleteTeacher = async (req, res) => {
+  const { TeacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: TeacherId } });
+  if (!teacher) throw serverErrs.BAD_REQUEST("Teacher not found");
+  await teacher.destroy();
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم حذف المعلم بنجاح",
+      english: "successful delete teacher",
+    },
+  });
+};
+
+const deleteStudent = async (req, res) => {
+  const { StudentId } = req.params;
+  const student = await Student.findOne({ where: { id: StudentId } });
+  if (!student) throw serverErrs.BAD_REQUEST("Student not found");
+  await student.destroy();
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم حذف الطالب بنجاح",
+      english: "successful delete Student",
     },
   });
 };
@@ -1812,5 +1844,7 @@ module.exports = {
   getSocialMedia,
   getWatsappPhone,
   allReports,
-  updateProfitRatio
+  updateProfitRatio,
+  deleteTeacher,
+  deleteStudent,
 };

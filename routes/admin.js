@@ -55,6 +55,8 @@ const {
   getWatsappPhone,
   allReports,
   updateProfitRatio,
+  deleteTeacher,
+  deleteStudent,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -343,10 +345,24 @@ adminRouter.put(
   errorCatcher(editSocialMedia)
 );
 adminRouter.put(
-  '/updateProfitRatio',
+  "/updateProfitRatio",
   verifyToken,
-  checkUserAuth('admin'),
+  checkUserAuth("admin"),
   errorCatcher(updateProfitRatio)
-)
+);
+
+adminRouter.delete(
+  "/deleteTeacher",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(deleteTeacher)
+);
+
+adminRouter.delete(
+  "/deleteStudent",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(deleteStudent)
+);
 
 module.exports = adminRouter;
