@@ -57,6 +57,7 @@ const {
   updateProfitRatio,
   deleteTeacher,
   deleteStudent,
+  getProfitRatio,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -363,6 +364,13 @@ adminRouter.delete(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(deleteStudent)
+);
+
+adminRouter.get(
+  "/profitRatio",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getProfitRatio)
 );
 
 module.exports = adminRouter;

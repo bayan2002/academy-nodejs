@@ -1791,6 +1791,14 @@ const deleteStudent = async (req, res) => {
   });
 };
 
+const getProfitRatio = async (req, res) => {
+  const admin = await Admin.findOne({ where: { id: req.user.id } });
+  res.send({
+    status: 200,
+    profitRatio: admin.profitRatio,
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -1847,4 +1855,5 @@ module.exports = {
   updateProfitRatio,
   deleteTeacher,
   deleteStudent,
+  getProfitRatio,
 };
