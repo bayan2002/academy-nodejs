@@ -1792,7 +1792,7 @@ const deleteStudent = async (req, res) => {
 };
 
 const getProfitRatio = async (req, res) => {
-  const admin = await Admin.findOne({ where: { id: req.user.id } });
+  const admin = await Admin.findOne({ where: { id: req.user.userId } });
   res.send({
     status: 200,
     profitRatio: admin.profitRatio,
