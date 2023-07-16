@@ -17,7 +17,7 @@ const F2FSessionTeacher = Sequelize.define("F2FSessionTeacher", {
     allowNull: false,
   },
   discount: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.DOUBLE,
     defaultValue: 0,
   },
   priceAfterDiscount: {

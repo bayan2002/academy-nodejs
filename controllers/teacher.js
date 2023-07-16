@@ -95,7 +95,7 @@ const signUp = async (req, res) => {
     from: "info@moalime.com",
     to: email,
     subject: "منصة معلمي: رمز التحقق الخاص بك",
-    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا </ b>
+    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
     يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
     !للتحقق من حسابك أدخل الرمز من فضلك <br>
     <b> ${code} </b>
@@ -205,7 +205,7 @@ const signPassword = async (req, res) => {
     from: "info@moalime.com",
     to: email,
     subject: "!منصة معلمي : تم إنشاء الحساب بنجاح",
-    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا </ b>
+    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
     يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
     تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
     .نتطلع إلى تزويدك بتجربة استثنائية <br>
@@ -550,11 +550,11 @@ const addSubjects = async (req, res) => {
     },
   });
 
-  remote['priceAfterDiscount'] =
+  remote["priceAfterDiscount"] =
     +remote.price - +remote.price * (+remote.discount / 100.0);
-  f2fStudent['priceAfterDiscount'] =
+  f2fStudent["priceAfterDiscount"] =
     +f2fStudent.price - +f2fStudent.price * (+f2fStudent.discount / 100.0);
-  f2fTeacher['priceAfterDiscount'] =
+  f2fTeacher["priceAfterDiscount"] =
     +f2fTeacher.price - +f2fTeacher.price * (+f2fTeacher.discount / 100.0);
 
   await TeacherSubject.bulkCreate(subjects).then(() =>

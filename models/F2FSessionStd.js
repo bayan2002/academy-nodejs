@@ -17,7 +17,7 @@ const F2FSessionStd = Sequelize.define("F2FSessionStd", {
     allowNull: false,
   },
   discount: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.DOUBLE,
     defaultValue: 0,
   },
   priceAfterDiscount: {

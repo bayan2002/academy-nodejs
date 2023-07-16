@@ -17,7 +17,7 @@ const RemoteSession = Sequelize.define("RemoteSession", {
     allowNull: false,
   },
   discount: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.DOUBLE,
     defaultValue: 0,
   },
   priceAfterDiscount: {

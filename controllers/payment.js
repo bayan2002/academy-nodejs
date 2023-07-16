@@ -94,12 +94,12 @@ const checkoutSuccess = async (req, res) => {
 
   student.wallet += +global.newPrice;
   await student.save();
-  
+
   const mailOptions = {
     from: "info@moalime.com",
     to: student.email,
     subject: "منصة معلمي : تأكيد الدفع بنجاح",
-    html: `<div>عزيزي ${student.name},<br>
+    html: `<div style="text-align: right;">عزيزي ${student.name},<br>
     تم الدفع بنجاح في حسابك بقيمة${global.newPrice} بالريال العماني<br>
     شكرا لك على استخدامك منصة معلمي<br>,
     فريق معلمي
@@ -228,18 +228,18 @@ const booking = async (req, res) => {
         id: TeacherId,
       },
     });
-    
+
     const admin = await Admin.findOne({
       where: {
         id: 1,
       },
     });
-    discount = 1 - (+Admin.profitRatio/100.00);
+    discount = 1 - +Admin.profitRatio / 100.0;
     teacher.totalAmount += +newPrice * discount;
     teacher.bookingNumbers += 1;
     teacher.hoursNumbers += +session.period;
     await teacher.save();
-    
+
     await Notifications.add({
       titleAR: `تم حجز الدرس من الطالب ${student.name}`,
       titleEn: `booking successfully from student ${student.name}`,
@@ -334,7 +334,7 @@ const bookingSuccess = async (req, res) => {
       id: 1,
     },
   });
-  discount = 1 - (+Admin.profitRatio/100.00);
+  discount = 1 - +Admin.profitRatio / 100.0;
 
   teacher.totalAmount += +session.price * discount;
   teacher.bookingNumbers += 1;
@@ -359,7 +359,7 @@ const bookingSuccess = async (req, res) => {
     from: "info@moalime.com",
     to: student.email,
     subject: "منصة معلمي : تأكيد الدفع بنجاح",
-    html: `<div>عزيزي ${student.name},<br>
+    html: `<div style="text-align: right;">عزيزي ${student.name},<br>
     تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${session.price} بالريال العماني<br>
     شكرا لك على استخدامك منصة معلمي<br>,
     فريق معلمي
