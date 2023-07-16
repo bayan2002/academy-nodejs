@@ -893,7 +893,7 @@ const nearestTeachers = async (req, res) => {
 
     const d = R * c; // in metres
 
-    if (d < 15 * 1000) {
+    if (d < 10 * 1000) {
       result.push(tch);
     }
     // if (d < distance * 1000) {
