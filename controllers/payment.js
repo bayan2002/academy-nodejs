@@ -98,7 +98,7 @@ const checkoutSuccess = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: student.email,
-    subject: "منصة معلمي : تأكيد الدفع بنجاح",
+    subject: "moalime: confirm payment successfully",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
     تم الدفع بنجاح في حسابك بقيمة${global.newPrice} بالريال العماني<br>
     شكرا لك على استخدامك منصة معلمي<br>,
@@ -251,7 +251,8 @@ const booking = async (req, res) => {
     const mailOptions = {
       from: "info@moalime.com",
       to: student.email,
-      subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
+      subject: "moalime: confirm - session with teacher",
+      // subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
       html: `<div style="text-align: right;">عزيزي ${student.name},<br>
       تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
@@ -370,7 +371,8 @@ const bookingSuccess = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: student.email,
-    subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
+    subject: "moalime: confirm - session with teacher",
+    // subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
       تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>

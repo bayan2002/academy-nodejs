@@ -31,7 +31,7 @@ const forgetPassword = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: email,
-    subject: "منصة معلمي: رمز التحقق الخاص بك",
+    subject: "moalime: verification code",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
       تم رصد محاولة لتغيير كلمة المرور <br>
       لإتمام العملية يرجى ادخال الرمز التالي <br>
@@ -121,7 +121,7 @@ const editForgottenPassword = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: email,
-    subject: "!منصة معلمي : تم تغيير كلمة المرور بنجاح",
+    subject: "moalime: password successfully changed",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
       يسعدنا إخبارك أنه تم تغيير كلمة المرور بنجاح. <br>
       .نتطلع إلى تزويدك بتجربة استثنائية <br>

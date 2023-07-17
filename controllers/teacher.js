@@ -94,7 +94,7 @@ const signUp = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: email,
-    subject: "منصة معلمي: رمز التحقق الخاص بك",
+    subject: "moalime: verification code",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
     يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
     !للتحقق من حسابك أدخل الرمز من فضلك <br>
@@ -204,7 +204,7 @@ const signPassword = async (req, res) => {
   const mailOptions = {
     from: "info@moalime.com",
     to: email,
-    subject: "!منصة معلمي : تم إنشاء الحساب بنجاح",
+    subject: "moalime: Account successfully created",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
     يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
     تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
