@@ -100,6 +100,9 @@ const addStudentToParent = async (req, res) => {
     throw serverErrs.BAD_REQUEST({
       arabic: "الأب غير موجود",
       english: "parent not exist",
+      ParentId,
+      StudentId,
+      parent,
     });
   if (!student)
     throw serverErrs.BAD_REQUEST({
