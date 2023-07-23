@@ -112,7 +112,6 @@ const addStudentToParent = async (req, res) => {
 
   const oldParentStudent = await ParentStudent.findOne({
     where: { ParentId, StudentId, status: { [Op.ne]: -1 } },
-    include: { all: true },
   });
 
   if (oldParentStudent)
@@ -141,7 +140,6 @@ const getStudentsByParentId = async (req, res) => {
   const { ParentId } = req.params;
   const students = await Student.findAll({
     where: { ParentId },
-    include: { all: true },
   });
 
   res.send({
