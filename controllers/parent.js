@@ -87,24 +87,17 @@ const getSingleParent = async (req, res) => {
 const addStudentToParent = async (req, res) => {
   const { ParentId, StudentId } = req.body;
   console.log(ParentId, StudentId);
-  const parents = await Parent.findAll();
   const parent = await Parent.findOne({
     where: { id: ParentId },
-    include: { all: true },
   });
   const student = await Student.findOne({
     where: { id: StudentId },
-    include: { all: true },
   });
 
   if (!parent)
     throw serverErrs.BAD_REQUEST({
       arabic: "الأب غير موجود",
       english: "parent not exist",
-      ParentId,
-      StudentId,
-      parent,
-      parents,
     });
   if (!student)
     throw serverErrs.BAD_REQUEST({
