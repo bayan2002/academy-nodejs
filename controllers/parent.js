@@ -138,14 +138,9 @@ const addStudentToParent = async (req, res) => {
 
 const getStudentsByParentId = async (req, res) => {
   const { ParentId } = req.params;
-  const studentsId = await ParentStudent.findAll({
-    where: { ParentId, status: 1 },
+  const students = await Student.findAll({
+    where: { ParentId },
   });
-  const ids = [];
-  studentsId.forEach((studentId) => {
-    ids.push(studentId.id);
-  });
-  const students = await Student.findAll({ where: { id: { [Op.in]: ids } } });
 
   res.send({
     status: 201,
