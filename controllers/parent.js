@@ -126,6 +126,8 @@ const addStudentToParent = async (req, res) => {
   });
   await newParentStudent.save();
 
+  await student.update({ ParentId });
+
   res.send({
     status: 201,
     data: newParentStudent,
